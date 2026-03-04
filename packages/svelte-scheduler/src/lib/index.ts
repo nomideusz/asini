@@ -60,3 +60,6 @@ export type {
 // ─── In-memory adapter ──────────────────────────────────
 export { createMemoryAdapter } from './adapters/index.js';
 export type { MemoryAdapterSeed } from './adapters/index.js';
+
+// ─── Svelte components ──────────────────────────────────
+export { BookingFlow, CancelFlow, AvailabilityPicker, GroupManifest, useScheduler } from './components/index.js';
