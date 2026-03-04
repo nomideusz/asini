@@ -82,6 +82,9 @@ It contains proven business logic for every feature thebest.travel needs.
 | `src/lib/utils/qr-generation.ts` | `packages/svelte-qr/src/core/encode.ts` (future) | QR PNG/SVG/Buffer generation |
 | `src/lib/db/schema/drizzle.ts` | Reference for `apps/thebest` DB schema | All entity shapes — tours, slots, bookings, payments, payouts |
 | `src/lib/email/templates/` | Reference for `@nomideusz/svelte-notify` (future) | Email template structure, all notification types |
+| `src/lib/utils/image-storage.ts` | `packages/svelte-media/` (future) | Image upload, sharp optimization, multi-size variants (thumbnail/medium/large) |
+| `src/lib/utils/minio-client.ts` | `packages/svelte-media/` (future) | MinIO S3-compatible client init, bucket management |
+| `src/lib/i18n.ts` + `messages/*.json` | `packages/svelte-i18n/` (future) | Language store, message loading, Paraglide runtime |
 
 **What Zaur got wrong (do not replicate):**
 - In-progress schema migration — `refundStatus`/`refundStatusNew` dual columns. thebest.travel starts clean.
@@ -99,14 +102,9 @@ It contains proven business logic for every feature thebest.travel needs.
 | Path | Package name | Status | Role |
 |---|---|---|---|
 | `packages/svelte-calendar` | `@nomideusz/svelte-calendar` | ✅ published | Calendar rendering |
-| `packages/svelte-scheduler` | `@nomideusz/svelte-scheduler` | 🏗️ core logic implemented | Booking/scheduling logic |
+| `packages/svelte-scheduler` | `@nomideusz/svelte-scheduler` | ✅ core complete, components in progress | Booking/scheduling logic |
+| `apps/thebest` | private | 🏗️ scaffolded (PR #20) | thebest.travel platform |
 | `apps/yoga` | private | ✅ live at szkolyjogi.pl | Real directory + package sandbox |
-
-### To be created
-
-| Path | Package | Priority | Logic source |
-|---|---|---|---|
-| `apps/thebest` | private | 🔨 next | built on packages |
 
 ### Future packages
 
@@ -114,7 +112,9 @@ It contains proven business logic for every feature thebest.travel needs.
 |---|---|---|
 | `@nomideusz/svelte-payments` | Stripe Connect UI, payout flows | Zaur `src/lib/stripe.server.ts` |
 | `@nomideusz/svelte-qr` | QR generation + scanning | Zaur `src/lib/utils/qr-generation.ts` |
-| `@nomideusz/svelte-notify` | Email/SMS templates, i18n | Zaur `src/lib/email/templates/` |
+| `@nomideusz/svelte-notify` | Email/SMS templates | Zaur `src/lib/email/templates/` |
+| `@nomideusz/svelte-media` | Image upload, optimization (sharp), multi-size storage (MinIO/S3) | Zaur `src/lib/utils/image-storage.ts`, `avatar-storage.ts`, `minio-client.ts` |
+| `@nomideusz/svelte-i18n` | Multi-language support, message loading | Zaur `src/lib/i18n.ts`, `messages/{en,pl,de}.json`, Paraglide runtime |
 | `@nomideusz/channel-manager` | Viator/GYG availability sync | Not yet — requires certification |
 
 ---
@@ -132,6 +132,10 @@ packages/svelte-scheduler
 packages/svelte-calendar
     ↓
 nothing
+
+Future (same rule — downward only):
+apps/* → svelte-payments, svelte-media, svelte-i18n, svelte-qr, svelte-notify
+svelte-payments, svelte-media, etc. → nothing (or svelte-calendar/scheduler as peers)
 ```
 
 **Hard violations — never:**
@@ -151,6 +155,7 @@ No Zaur code copied in. No Zaur naming anywhere.
 
 **Stack (same as Zaur — proven choices):**
 - SvelteKit 5 + Svelte 5
+- Tailwind CSS 4 + DaisyUI 5 (app-level styling — never in packages)
 - PostgreSQL + Drizzle ORM (clean schema — no migration debt)
 - Lucia v3 + OAuth2
 - Stripe Connect
@@ -342,7 +347,11 @@ tools/yoga-scraper/
 
 All packages use only `--asini-*` CSS custom properties internally.
 Never hardcode colors or fonts. Never use Tailwind or DaisyUI inside packages.
-Apps may use any framework they want.
+
+**Apps** use Tailwind CSS 4 + DaisyUI 5 for styling:
+- `apps/thebest` — Tailwind CSS 4 (`@tailwindcss/vite` plugin) + DaisyUI 5 (`@plugin "daisyui"` in CSS)
+- `apps/yoga` — Tailwind CSS 4 + DaisyUI 5 (same setup)
+- Apps map `--asini-*` tokens to DaisyUI semantic colors so packages render correctly
 
 ```css
 --asini-bg              --asini-surface         --asini-surface-raised
@@ -401,25 +410,39 @@ Step 5 — Implement scheduler core ✅ DONE
   Gate:    100% state machine transitions tested
   Result:  PR #16 merged. Full booking state machine with capacity tracking.
 
-Step 6 — Svelte components 🏗️ IN PROGRESS
+Step 6 — Svelte components ✅ DONE
   Tasks:   BookingFlow.svelte, CancelFlow.svelte
            GroupManifest.svelte, AvailabilityPicker.svelte
            useScheduler.svelte.ts
   Gate:    Full booking flow end-to-end, memory adapter only
-  Status:  Issue #10, PR #17 — Copilot agent working
+  Result:  PR #17 merged. All scheduler Svelte components implemented.
 
-Step 7 — Calendar bridge 🏗️ IN PROGRESS
+Step 7 — Calendar bridge ✅ DONE
   Tasks:   toCalendarAdapter.ts, toTimelineEvent.ts
   Gate:    yoga shows scheduler-driven schedule via svelte-calendar
            Full, at-risk, cancelled states render correctly
-  Status:  Issue #11, PR #18 — Copilot agent working (parallel with Step 6)
+  Result:  PR #18 merged. Calendar bridge integration complete.
 
-Step 8 — Scaffold apps/thebest
-  Tasks:   SvelteKit app, fresh Drizzle schema (Zaur as reference, not copy)
-           Auth (Lucia), Stripe Connect, Resend, MinIO
-           Drizzle adapter for svelte-scheduler
-           Guide onboarding flow
-  Gate:    Guide creates tour, tourist completes booking end-to-end
+Step 8 — Build apps/thebest
+  8a — Scaffold (PR #20, pending merge)
+    Tasks:   SvelteKit app, Drizzle schema, drizzle-adapter, route stubs
+    Gate:    pnpm check + pnpm build pass
+  8b — App shell + styling (Issue #21)
+    Tasks:   Tailwind CSS 4 + DaisyUI 5 setup, navbar, footer, homepage
+             --asini-* token mapping to DaisyUI theme
+    Gate:    Responsive app shell renders, theme switching works
+  8c — Authentication (Issue #22, parallel with 8b)
+    Tasks:   Lucia v3, email/password signup + login, session hooks
+             Protected guide routes
+    Gate:    Guide can register, log in, access /guide area
+  8d — Guide tour management (Issue #23, requires 8b + 8c)
+    Tasks:   Tour CRUD, pricing model forms (all 4 models)
+             Schedule builder, cancellation policy selection
+    Gate:    Guide creates a tour with pricing and schedule
+  8e — Public booking flow (Issue #24, requires 8d)
+    Tasks:   Public tour listing, tour detail, BookingFlow integration
+             Confirmation page, cancellation page
+    Gate:    Tourist completes booking end-to-end
 
 Step 9 — First pilot guides on thebest.travel
   Gate:    5 real guides live, real bookings processing
@@ -513,7 +536,8 @@ Generate from ScheduleRule on demand. Do not pre-store all slots.
 Only cancelled instances are persisted.
 
 **7. CSS frameworks in packages**
-`--asini-*` variables only inside packages. Tailwind stays in apps.
+`--asini-*` variables only inside packages. Tailwind CSS 4 + DaisyUI 5 in apps only.
+DaisyUI semantic colors (`primary`, `base-100`, etc.) for theming — avoid raw Tailwind colors (`red-500`).
 
 **8. autoColor — set category, never color**
 Always `category` on calendar events. Never direct `color`.
