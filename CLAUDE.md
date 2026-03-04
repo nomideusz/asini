@@ -13,6 +13,7 @@
 ```
 packages/
   svelte-calendar/     — Svelte 5 calendar component library (@nomideusz/svelte-calendar)
+  svelte-scheduler/    — booking/scheduling logic library (@nomideusz/svelte-scheduler)
 apps/
   yoga/                — SvelteKit web app (szkolyjogi.pl)
 tools/
@@ -22,8 +23,10 @@ tools/
 ## Workspace Relationships
 
 - `apps/yoga` depends on `packages/svelte-calendar` via `workspace:*`
+- `packages/svelte-scheduler` peers on `packages/svelte-calendar`
 - `tools/yoga-scraper` is a Python project (not part of pnpm workspace), shares Turso DB with `apps/yoga`
 - `packages/svelte-calendar` is also published to npm as `@nomideusz/svelte-calendar`
+- `packages/svelte-scheduler` is also published to npm as `@nomideusz/svelte-scheduler`
 
 ## Commands
 
@@ -33,12 +36,15 @@ pnpm install
 
 # Dev servers
 pnpm dev:calendar        # calendar demo site (packages/svelte-calendar)
+pnpm dev:scheduler       # scheduler demo site (packages/svelte-scheduler)
 pnpm dev:yoga            # szkolyjogi.pl app (apps/yoga)
 
 # Build
 pnpm build:calendar      # build calendar
+pnpm build:scheduler     # build scheduler
 pnpm build:yoga          # build yoga app
 pnpm package:calendar    # package calendar for npm publish
+pnpm package:scheduler   # package scheduler for npm publish
 
 # Quality
 pnpm check               # typecheck all JS packages
