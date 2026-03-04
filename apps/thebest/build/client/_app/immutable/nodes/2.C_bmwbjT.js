@@ -1,0 +1,1 @@
+import{a as m,f as d}from"../chunks/CSfnKIZ1.js";import"../chunks/CTFJb_ns.js";import{s as n,c as o,r as i}from"../chunks/CKDDdjhn.js";import{s as f}from"../chunks/BXTR841g.js";var p=d('<div><header><a href="/guide/tours">My Tours</a></header> <main><!></main></div>');function c(s,t){var a=p(),r=n(o(a),2),e=o(r);f(e,t,"default",{}),i(r),i(a),m(s,a)}export{c as component};
