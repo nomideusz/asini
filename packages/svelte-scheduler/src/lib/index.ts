@@ -38,6 +38,10 @@ export {
 	describeRefund,
 } from './core/index.js';
 
+// ─── Pricing engine ─────────────────────────────────────
+export type { StripeFeeEntry, PricingInput } from './core/index.js';
+export { STRIPE_FEES, calculatePrice } from './core/index.js';
+
 // ─── Adapter interface ──────────────────────────────────
 export type {
 	SchedulerAdapter,
