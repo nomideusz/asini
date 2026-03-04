@@ -61,5 +61,8 @@ export type {
 export { createMemoryAdapter } from './adapters/index.js';
 export type { MemoryAdapterSeed } from './adapters/index.js';
 
+// ─── Svelte components ──────────────────────────────────
+export { BookingFlow, CancelFlow, AvailabilityPicker, GroupManifest, useScheduler } from './components/index.js';
+
 // ─── Calendar bridge ─────────────────────────────────────
 export { toTimelineEvent, toCalendarAdapter } from './bridge/index.js';
