@@ -20,19 +20,6 @@ jobs:
       || github.event.pull_request.user.login == 'copilot[bot]'
 
     steps:
-      - name: Wait for CI to pass
-        uses: lewagon/wait-on-check-action@v1.3.4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          check-name: "Typecheck & Test"
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          wait-interval: 30
-
-      - name: Auto-approve Copilot PR
-        uses: hmarr/auto-approve-action@v4
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Enable auto-merge
         run: gh pr merge ${{ github.event.pull_request.number }} --auto --squash
         env:
