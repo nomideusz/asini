@@ -56,7 +56,7 @@
 						daysOfWeek: [2, 4, 6],
 						startTime: '10:00',
 						endTime: '12:00',
-						validFrom: new Date(now.getFullYear(), now.getMonth(), 1).toISOString(),
+						validFrom: `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`,
 						timezone: 'Europe/Warsaw',
 					},
 				],
@@ -100,7 +100,7 @@
 						daysOfWeek: [3, 6],
 						startTime: '09:00',
 						endTime: '12:00',
-						validFrom: new Date(now.getFullYear(), now.getMonth(), 1).toISOString(),
+						validFrom: `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`,
 						timezone: 'Europe/Warsaw',
 					},
 				],
@@ -165,12 +165,14 @@
 
 	let activeDemo = $state<'booking' | 'cancel' | 'availability' | 'manifest'>('availability');
 	let selectedSlotId = $state<string | null>(null);
+	let selectedSlot = $state<TourSlot | undefined>(undefined);
 	let completedBookingId = $state<string | null>(null);
 	let cancelTarget = $state('booking-existing');
 	const pickerRange = { start: now, end: d(14) };
 
 	function handleSlotSelect(slot: TourSlot) {
 		selectedSlotId = slot.id;
+		selectedSlot = slot;
 		activeDemo = 'booking';
 	}
 
@@ -231,6 +233,7 @@
 					<BookingFlow
 						{adapter}
 						slotId={selectedSlotId}
+						initialSlot={selectedSlot}
 						onbooked={handleBooked}
 						oncancelled={() => activeDemo = 'availability'}
 					/>

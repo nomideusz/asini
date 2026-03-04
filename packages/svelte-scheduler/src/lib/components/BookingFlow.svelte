@@ -7,11 +7,12 @@
 	interface Props {
 		adapter: SchedulerAdapter;
 		slotId: string;
+		initialSlot?: TourSlot;
 		onbooked?: (booking: Booking) => void;
 		oncancelled?: () => void;
 	}
 
-	let { adapter, slotId, onbooked, oncancelled }: Props = $props();
+	let { adapter, slotId, initialSlot, onbooked, oncancelled }: Props = $props();
 
 	// Steps: 1=slot-summary, 2=guest-details, 3=participants, 4=price-summary, 5=confirm, 6=confirmation
 	let step = $state(1);
@@ -40,6 +41,12 @@
 		error = null;
 		try {
 			slot = (await adapter.getSlotById(slotId)) ?? null;
+			if (!slot && initialSlot) {
+				// Virtual slot from generator — materialize it in the adapter
+				const { id: _id, ...slotData } = initialSlot;
+				slot = await adapter.createSlot(slotData);
+				slotId = slot.id;
+			}
 			if (!slot) {
 				error = 'Slot not found.';
 				return;
