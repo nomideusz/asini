@@ -28,6 +28,10 @@ export {
 	describeRefund,
 } from './policy.js';
 
+// ─── Pricing engine ─────────────────────────────────────
+export type { StripeFeeEntry, PricingInput } from './pricing/index.js';
+export { STRIPE_FEES, calculatePrice } from './pricing/index.js';
+
 export type { OccurrencePair } from './events/recurrence.js';
 export { expandRule } from './events/recurrence.js';
 export { generateSlots } from './events/generator.js';

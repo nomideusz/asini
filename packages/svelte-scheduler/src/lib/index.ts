@@ -38,6 +38,10 @@ export {
 	describeRefund,
 } from './core/index.js';
 
+// ─── Pricing engine ─────────────────────────────────────
+export type { StripeFeeEntry, PricingInput } from './core/index.js';
+export { STRIPE_FEES, calculatePrice } from './core/index.js';
+
 // ─── Recurrence & slot generation ───────────────────────
 export type { OccurrencePair } from './core/index.js';
 export { expandRule, generateSlots } from './core/index.js';
