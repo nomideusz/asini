@@ -21,6 +21,13 @@ export type {
 	GuideAvailability,
 } from './types.js';
 
+export {
+	CANCELLATION_POLICIES,
+	getApplicableRule,
+	calculateRefund,
+	describeRefund,
+} from './policy.js';
+
 export type { OccurrencePair } from './events/recurrence.js';
 export { expandRule } from './events/recurrence.js';
 export { generateSlots } from './events/generator.js';

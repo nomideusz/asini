@@ -30,6 +30,14 @@ export type {
 	GuideAvailability,
 } from './core/index.js';
 
+// ─── Cancellation policy ────────────────────────────────
+export {
+	CANCELLATION_POLICIES,
+	getApplicableRule,
+	calculateRefund,
+	describeRefund,
+} from './core/index.js';
+
 // ─── Recurrence & slot generation ───────────────────────
 export type { OccurrencePair } from './core/index.js';
 export { expandRule, generateSlots } from './core/index.js';
@@ -38,3 +46,7 @@ export { expandRule, generateSlots } from './core/index.js';
 export type {
 	SchedulerAdapter,
 } from './adapters/index.js';
+
+// ─── In-memory adapter ──────────────────────────────────
+export { createMemoryAdapter } from './adapters/index.js';
+export type { MemoryAdapterSeed } from './adapters/index.js';
