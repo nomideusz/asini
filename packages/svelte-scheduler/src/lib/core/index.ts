@@ -35,3 +35,9 @@ export { STRIPE_FEES, calculatePrice } from './pricing/index.js';
 export type { OccurrencePair } from './events/recurrence.js';
 export { expandRule } from './events/recurrence.js';
 export { generateSlots } from './events/generator.js';
+
+// ─── Capacity utilities ─────────────────────────────────
+export { availableSpots, isFull, isAtRisk, checkCapacity } from './capacity.js';
+
+// ─── Booking state machine ──────────────────────────────
+export { createBooking, cancelBooking, BookingError } from './booking.js';

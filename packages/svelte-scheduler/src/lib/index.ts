@@ -46,6 +46,12 @@ export { STRIPE_FEES, calculatePrice } from './core/index.js';
 export type { OccurrencePair } from './core/index.js';
 export { expandRule, generateSlots } from './core/index.js';
 
+// ─── Capacity utilities ─────────────────────────────────
+export { availableSpots, isFull, isAtRisk, checkCapacity } from './core/index.js';
+
+// ─── Booking state machine ──────────────────────────────
+export { createBooking, cancelBooking, BookingError } from './core/index.js';
+
 // ─── Adapter interface ──────────────────────────────────
 export type {
 	SchedulerAdapter,
