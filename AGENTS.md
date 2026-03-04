@@ -42,7 +42,7 @@ asini/
 
   packages/
     svelte-calendar/        @nomideusz/svelte-calendar — PUBLIC npm package
-    svelte-scheduler/       @nomideusz/svelte-scheduler — PUBLIC npm package (scaffolded, types only)
+    svelte-scheduler/       @nomideusz/svelte-scheduler — PUBLIC npm package (core logic implemented)
 
   apps/
     thebest/                thebest.travel — SvelteKit, PRIVATE, new platform
@@ -99,7 +99,7 @@ It contains proven business logic for every feature thebest.travel needs.
 | Path | Package name | Status | Role |
 |---|---|---|---|
 | `packages/svelte-calendar` | `@nomideusz/svelte-calendar` | ✅ published | Calendar rendering |
-| `packages/svelte-scheduler` | `@nomideusz/svelte-scheduler` | 🏗️ scaffolded (types only) | Booking/scheduling logic |
+| `packages/svelte-scheduler` | `@nomideusz/svelte-scheduler` | 🏗️ core logic implemented | Booking/scheduling logic |
 | `apps/yoga` | private | ✅ live at szkolyjogi.pl | Real directory + package sandbox |
 
 ### To be created
@@ -383,31 +383,36 @@ Step 3 — Scaffold svelte-scheduler ✅ DONE
            + SchedulerAdapter interface (tour CRUD, slot mgmt, booking lifecycle)
            + re-exports TimelineEvent, CalendarAdapter, DateRange from calendar
 
-Step 4 — Extract logic from Zaur into scheduler
+Step 4 — Extract logic from Zaur into scheduler ✅ DONE
   Tasks:   cancellation-policies.ts → core/policy.ts
            pricing-calculations.ts → core/pricing/engine.ts
            STRIPE_FEES → core/pricing/currency.ts
            (+ booking-platform) collection.ts → adapters/memory.ts
            (+ booking-platform) recurrence.ts → core/events/recurrence.ts
-           (+ booking-platform) ticket-qr.ts → core/qr.ts
   Gate:    pnpm check passes, all extracted logic has unit tests
+  Result:  4 PRs merged (#12 policy, #13 pricing, #14 memory adapter, #15 recurrence)
+           All modules have full unit test coverage
+           Exports wired through core/index.ts and lib/index.ts
 
-Step 5 — Implement scheduler core
+Step 5 — Implement scheduler core ✅ DONE
   Tasks:   core/booking.ts — state machine
            core/capacity.ts — spots, conflict detection
            core/events/generator.ts — lazy slot generation
   Gate:    100% state machine transitions tested
+  Result:  PR #16 merged. Full booking state machine with capacity tracking.
 
-Step 6 — Svelte components
+Step 6 — Svelte components 🏗️ IN PROGRESS
   Tasks:   BookingFlow.svelte, CancelFlow.svelte
            GroupManifest.svelte, AvailabilityPicker.svelte
            useScheduler.svelte.ts
   Gate:    Full booking flow end-to-end, memory adapter only
+  Status:  Issue #10, PR #17 — Copilot agent working
 
-Step 7 — Calendar bridge
+Step 7 — Calendar bridge 🏗️ IN PROGRESS
   Tasks:   toCalendarAdapter.ts, toTimelineEvent.ts
   Gate:    yoga shows scheduler-driven schedule via svelte-calendar
            Full, at-risk, cancelled states render correctly
+  Status:  Issue #11, PR #18 — Copilot agent working (parallel with Step 6)
 
 Step 8 — Scaffold apps/thebest
   Tasks:   SvelteKit app, fresh Drizzle schema (Zaur as reference, not copy)
