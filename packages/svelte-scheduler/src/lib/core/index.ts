@@ -20,3 +20,10 @@ export type {
 	CancellationRule,
 	GuideAvailability,
 } from './types.js';
+
+export {
+	CANCELLATION_POLICIES,
+	getApplicableRule,
+	calculateRefund,
+	describeRefund,
+} from './policy.js';
