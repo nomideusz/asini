@@ -147,8 +147,8 @@ export function expandRule(rule: ScheduleRule, range: DateRange): OccurrencePair
 	const end = parseHHMM(endHHMM);
 
 	if (rule.pattern === 'once') {
-		// validFrom is an ISO date string like '2024-03-15'
-		const [y, mo, d] = rule.validFrom.split('-').map(Number);
+		// validFrom is an ISO date string like '2024-03-15' (may include time portion)
+		const [y, mo, d] = rule.validFrom.slice(0, 10).split('-').map(Number);
 		const slotStart = localToUTC(y, mo, d, start.hours, start.minutes, timezone);
 		const slotEnd = localToUTC(y, mo, d, end.hours, end.minutes, timezone);
 
@@ -168,7 +168,7 @@ export function expandRule(rule: ScheduleRule, range: DateRange): OccurrencePair
 		const results: OccurrencePair[] = [];
 
 		// Determine the effective start: the later of range.start and validFrom.
-		const [vy, vmo, vd] = rule.validFrom.split('-').map(Number);
+		const [vy, vmo, vd] = rule.validFrom.slice(0, 10).split('-').map(Number);
 		const validFromUTC = localToUTC(vy, vmo, vd, 0, 0, timezone);
 		const effectiveStart = validFromUTC > range.start ? validFromUTC : range.start;
 
@@ -176,7 +176,7 @@ export function expandRule(rule: ScheduleRule, range: DateRange): OccurrencePair
 		// validUntil is inclusive — we use the start of the next day as the exclusive bound.
 		let effectiveEnd = range.end;
 		if (rule.validUntil) {
-			const [ey, emo, ed] = rule.validUntil.split('-').map(Number);
+			const [ey, emo, ed] = rule.validUntil.slice(0, 10).split('-').map(Number);
 			const { year: ny, month: nm, day: nd } = addOneDay(ey, emo, ed);
 			const validUntilExclusive = localToUTC(ny, nm, nd, 0, 0, timezone);
 			if (validUntilExclusive < effectiveEnd) {
