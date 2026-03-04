@@ -60,3 +60,6 @@ export type {
 // ─── In-memory adapter ──────────────────────────────────
 export { createMemoryAdapter } from './adapters/index.js';
 export type { MemoryAdapterSeed } from './adapters/index.js';
+
+// ─── Calendar bridge ─────────────────────────────────────
+export { toTimelineEvent, toCalendarAdapter } from './bridge/index.js';
