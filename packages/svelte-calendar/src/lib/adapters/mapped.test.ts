@@ -108,9 +108,10 @@ describe('createMappedAdapter', () => {
 
 			expect(events[0].start).toBeInstanceOf(Date);
 			expect(events[0].end).toBeInstanceOf(Date);
-			expect(events[0].start.getHours()).toBe(7);
-			expect(events[0].end.getHours()).toBe(8);
-			expect(events[0].end.getMinutes()).toBe(15);
+			// Use UTC hours since CI may run in a different timezone
+			expect(events[0].start.getUTCHours()).toBe(6); // 07:00+01:00 = 06:00 UTC
+			expect(events[0].end.getUTCHours()).toBe(7); // 08:15+01:00 = 07:15 UTC
+			expect(events[0].end.getUTCMinutes()).toBe(15);
 		});
 
 		it('maps subtitle from teacher', async () => {
