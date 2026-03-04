@@ -14,7 +14,10 @@ jobs:
   auto-merge:
     name: Auto-merge if Copilot PR & CI green
     runs-on: ubuntu-latest
-    if: github.event.pull_request.user.login == 'copilot[bot]' || github.event.pull_request.user.login == 'github-actions[bot]'
+    if: >-
+      github.event.pull_request.user.login == 'Copilot'
+      || github.event.pull_request.user.login == 'copilot-swe-agent[bot]'
+      || github.event.pull_request.user.login == 'copilot[bot]'
 
     steps:
       - name: Wait for CI to pass
