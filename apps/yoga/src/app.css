@@ -1,0 +1,422 @@
+/* ══════════════════════════════════════════════════════
+   SZKOLYJOGI.PL — Unified Design Tokens
+   Aesthetic: Scandinavian frost — editorial, refined,
+   warm copper on cool slate.  DM Sans body + Playfair
+   Display headlines + JetBrains Mono data.
+   ══════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Typography ────────────────────── */
+  --font-display: "Playfair Display", "Georgia", serif;
+  --font-body:
+    "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono:
+    "JetBrains Mono", "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo,
+    monospace;
+
+  /* ── Palette ───────────────────────── */
+  --sf-bg: #f5f7fb;
+  --sf-card: #ffffff;
+  --sf-dark: #151d2b;
+  --sf-text: #3a4558;
+  --sf-muted: #54667a;
+  --sf-ice: #cddff5;
+  --sf-frost: #e9f0f8;
+  --sf-accent: #4a7fb5;
+  --sf-accent-hover: #3a6899;
+  --sf-warm: #c49a6c;
+  --sf-warm-bg: #f5ede4;
+  --sf-line: #dce4ee;
+  --sf-danger: #e05252;
+
+  /* ── Legacy aliases (consumed by existing code) ── */
+  --bg-color: var(--sf-bg);
+  --surface-color: var(--sf-card);
+  --text-color: var(--sf-dark);
+  --text-muted: var(--sf-muted);
+  --accent-color: var(--sf-accent);
+  --link-color: var(--sf-dark);
+  --visited-color: var(--sf-dark);
+  --border-color: var(--sf-line);
+  --header-bg: transparent;
+
+  /* ── Container ───────────────────────── */
+  --sf-container: 1440px;
+  --sf-gutter: clamp(24px, 5vw, 80px);
+
+  /* ── Spacing scale ─────────────────── */
+  --spacing-xs: 8px;
+  --spacing-sm: 16px;
+  --spacing-md: 24px;
+  --spacing-lg: 48px;
+  --spacing-xl: 64px;
+  --spacing-xxl: 96px;
+
+  /* ── Radius ────────────────────────── */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-pill: 999px;
+
+  /* ── Shadows ───────────────────────── */
+  --shadow-sm: 0 1px 3px rgba(21, 29, 43, 0.04);
+  --shadow-md: 0 4px 20px rgba(74, 127, 181, 0.07);
+  --shadow-lg: 0 8px 36px rgba(74, 127, 181, 0.1);
+
+  /* ── Transitions ───────────────────── */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 0.15s;
+  --dur-med: 0.25s;
+}
+
+/* ── Global reset ────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--sf-bg);
+}
+
+/* ══════════════════════════════════════════════════
+   Scoped to .app — main site styles.
+   Design-archive pages never have .app.
+   ══════════════════════════════════════════════════ */
+
+.app {
+  font-family: var(--font-body);
+  background-color: var(--sf-bg);
+  color: var(--sf-text);
+  line-height: 1.65;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app ::selection {
+  background: var(--sf-ice);
+  color: var(--sf-dark);
+}
+
+.app :focus-visible {
+  outline: 2px solid var(--sf-warm);
+  outline-offset: 2px;
+}
+
+.app a {
+  color: var(--sf-dark);
+  text-decoration: none;
+  transition: color var(--dur-fast) ease;
+}
+
+.app a:hover {
+  color: var(--sf-accent);
+}
+
+.app a:visited {
+  color: var(--sf-dark);
+}
+
+/* ── Layout — Header ─────────────────── */
+.app header.site-header {
+  background-color: var(--header-bg);
+  padding: 28px var(--sf-gutter);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: var(--sf-container);
+  margin: 0 auto;
+  width: 100%;
+}
+
+.app .site-logo a {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--sf-dark);
+  text-decoration: none;
+}
+
+.app .site-logo a:hover {
+  color: var(--sf-accent);
+}
+
+.app .site-nav {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  display: flex;
+  gap: 36px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.app .site-nav a {
+  color: var(--sf-muted);
+  text-decoration: none;
+  transition: color var(--dur-fast) ease;
+  position: relative;
+}
+
+.app .site-nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0;
+  height: 1.5px;
+  background: var(--sf-accent);
+  transition: width var(--dur-med) var(--ease-out);
+}
+
+.app .site-nav a:hover {
+  color: var(--sf-dark);
+}
+
+.app .site-nav a:hover::after {
+  width: 100%;
+}
+
+/* ── Layout — Main ───────────────────── */
+.app main {
+  flex: 1;
+  width: 100%;
+}
+
+/* ── Layout — Footer ─────────────────── */
+.app footer.site-footer {
+  border-top: 1px solid var(--sf-frost);
+  padding: 36px var(--sf-gutter);
+  max-width: var(--sf-container);
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.app .footer-copy {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--sf-muted);
+  letter-spacing: 0.04em;
+}
+
+.app .footer-links {
+  display: flex;
+  gap: 24px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.app .footer-links a {
+  color: var(--sf-muted);
+}
+
+.app .footer-links a:hover {
+  color: var(--sf-accent);
+}
+
+/* ── Typography ──────────────────────── */
+.app h1,
+.app h2,
+.app h3,
+.app h4 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  color: var(--sf-dark);
+  letter-spacing: -0.025em;
+}
+
+.app h1 {
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  line-height: 1.08;
+  margin-bottom: var(--spacing-sm);
+}
+
+.app h2 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  margin-bottom: var(--spacing-sm);
+}
+
+.app h3 {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  margin-bottom: var(--spacing-xs);
+}
+
+.app h4 {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  color: var(--sf-accent);
+  margin-bottom: var(--spacing-sm);
+}
+
+/* ── Shared Utility Classes ─────────── */
+
+/* Section label (uppercase kicker) */
+.sf-section-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--sf-accent);
+  font-weight: 600;
+  margin-bottom: 28px;
+}
+
+/* Primary button */
+.app .primary-button,
+.app .primary-button:visited {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--sf-accent);
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 13px 28px;
+  text-decoration: none;
+  border: 1px solid var(--sf-accent);
+  border-radius: var(--radius-sm);
+  transition: all var(--dur-fast) ease;
+}
+
+.app .primary-button:hover {
+  background-color: var(--sf-accent-hover);
+  border-color: var(--sf-accent-hover);
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Secondary button (ghost) */
+.app .secondary-button,
+.app .secondary-button:visited {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: var(--sf-accent);
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 13px 28px;
+  text-decoration: none;
+  border: 1px solid var(--sf-line);
+  border-radius: var(--radius-sm);
+  transition: all var(--dur-fast) ease;
+}
+
+.app .secondary-button:hover {
+  border-color: var(--sf-accent);
+  transform: translateY(-1px);
+}
+
+/* Badge */
+.app .free-badge {
+  border: 1px solid var(--sf-warm);
+  color: var(--sf-dark);
+  background: var(--sf-warm-bg);
+  padding: 2px 8px;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  border-radius: var(--radius-pill);
+  letter-spacing: 0.04em;
+}
+
+.app .muted {
+  color: var(--sf-muted);
+}
+
+.app .map-link {
+  color: var(--sf-accent);
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.app .map-link:hover {
+  color: var(--sf-accent-hover);
+  text-decoration: underline;
+}
+
+/* ── Page shell (shared across routes) ── */
+.sf-page-shell {
+  max-width: var(--sf-container);
+  margin: 0 auto;
+  padding: clamp(32px, 5vh, 56px) var(--sf-gutter) var(--spacing-xxl);
+}
+
+/* ── Card base ───────────────────────── */
+.sf-card {
+  background: var(--sf-card);
+  border: 1px solid var(--sf-line);
+  border-radius: var(--radius-md);
+  transition:
+    border-color var(--dur-med) ease,
+    box-shadow var(--dur-med) ease,
+    transform var(--dur-med) var(--ease-out);
+}
+
+.sf-card:hover {
+  border-color: var(--sf-accent);
+}
+
+/* ── Staggered fade-in animation ─────── */
+@keyframes sf-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.sf-animate {
+  animation: sf-fade-up 0.35s var(--ease-out) both;
+}
+
+/* ── Top accent line ─────────────────── */
+.sf-topline {
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--sf-accent),
+    var(--sf-ice),
+    var(--sf-warm)
+  );
+}

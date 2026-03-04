@@ -1,0 +1,199 @@
+﻿.venv\Scripts\python.exe : 21:44:15 [INFO] Connecting to remote Turso: 
+https://yogadb-nomideusz.aws-eu-west-1.turso.io
+At line:1 char:32
++ ... OENCODING="utf-8"; .venv\Scripts\python.exe _validate.py 2>&1 | Out-F ...
++                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (21:44:15 [INFO]...west-1.turso.io 
+   :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+================================================================================
+  Luna Pilates House (Katowice)
+  website:  https://www.lunapilateshouse.pl/
+  pricing:  https://www.lunapilateshouse.pl/cennik
+  schedule: https://www.lunapilateshouse.pl/grafik
+================================================================================
+[INIT].... ÔåÆ Crawl4AI 0.8.0 
+[FETCH]... Ôåô https://www.lunapilateshouse.pl/                                  
+| Ô£ô | ÔÅ▒: 0.34s 
+[COMPLETE] ÔùÅ https://www.lunapilateshouse.pl/                                  
+| Ô£ô | ÔÅ▒: 0.35s 
+[INIT].... ÔåÆ Crawl4AI 0.8.0 
+[FETCH]... Ôåô https://www.lunapilateshouse.pl/cennik                            
+| Ô£ô | ÔÅ▒: 0.04s 
+[COMPLETE] ÔùÅ https://www.lunapilateshouse.pl/cennik                            
+| Ô£ô | ÔÅ▒: 0.04s 
+C:\cmder\apps\yoga-scraper\.venv\Lib\site-packages\requests\__init__.py:113: 
+RequestsDependencyWarning: urllib3 (2.6.3) or chardet 
+(6.0.0.post1)/charset_normalizer (3.4.4) doesn't match a supported version!
+  warnings.warn(
+21:44:35 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions 
+"HTTP/1.1 200 OK"
+
+  Crawled 2 pages
+
+  --- homepage (https://www.lunapilateshouse.pl/) ---
+  Markdown length: 7014 chars
+  | ![Revisit consent button](https://lunapilateshouse.pl/wp-content/plugins/cookie-law-info/lite/frontend/images/revisit.svg)
+  | Cenimy prywatno┼ø─ç u┼╝ytkownik├│w
+  | U┼╝ywamy plik├│w cookie, aby poprawi─ç jako┼ø─ç przegl─àdania, wy┼øwietla─ç reklamy lub tre┼øci dostosowane do indywidualnych potrzeb u┼╝ytkownik├│w oraz analizowa─ç ruch na stronie. Klikni─Öcie przycisku ÔÇ×Akceptuj wszystkieÔÇØ oznacza zgod─Ö na wykorzystywanie przez nas plik├│w cookie. [POLITYKA PRYWATNO┼ÜCI](https://lunapilateshouse.pl/polityka-prywatnosci/)
+  | Akceptuj wszystko
+  | Dostosuj preferencje dotycz─àce zgody ![Close](https://lunapilateshouse.pl/wp-conten
+  | ... (6414 more chars)
+
+  --- pricing (https://www.lunapilateshouse.pl/cennik) ---
+  Markdown length: 2670 chars
+  | ![Revisit consent button](https://lunapilateshouse.pl/wp-content/plugins/cookie-law-info/lite/frontend/images/revisit.svg)
+  | Dostosuj preferencje dotycz─àce zgody ![Close](https://lunapilateshouse.pl/wp-content/plugins/cookie-law-info/lite/frontend/images/close.svg)
+  | U┼╝ywamy plik├│w cookie, aby pom├│c u┼╝ytkownikom w sprawnej nawigacji i wykonywaniu okre┼ølonych funkcji. Szczeg├│┼éowe informacje na temat wszystkich plik├│w cookie odpowiadaj─àcych poszczeg├│lnym kategoriom zgody znajduj─à si─Ö poni┼╝ej.
+  | Pliki cookie sklasyfikowane jako ÔÇ×niezb─ÖdneÔÇØ s─à przechowywane w przegl─àdarce u┼╝ytkownika, poniewa┼╝ s─à niezb─Ö
+  | ... (2070 more chars)
+
+  Discovered about URL: https://lunapilateshouse.pl/o-nas/
+
+  >>> PRICING EXTRACTION <<<
+  monthly_pass: None PLN
+  single_class: 120 PLN
+  trial_price:  None PLN
+  trial_info:   None
+  discounts:    None
+  notes:        None
+  tiers (10):
+    Reformer Pilates ÔÇô 1 wej┼øcie: 120 PLN (single)
+    Reformer Pilates ÔÇô 4 wej┼øcia: 440 PLN (pack) (4 entries)
+    Reformer Pilates ÔÇô 8 wej┼ø─ç: 720 PLN (pack) (8 entries)
+    Reformer Pilates ÔÇô 12 wej┼ø─ç: 960 PLN (pack) (12 entries)
+    Trening personalny ÔÇô 1 wej┼øcie: 250 PLN (single)
+    Trening personalny ÔÇô 4 wej┼øcia: 960 PLN (pack) (4 entries)
+    Trening personalny ÔÇô 8 wej┼ø─ç: 1600 PLN (pack) (8 entries)
+    Trening duo ÔÇô 1 wej┼øcie: 350 PLN (single)
+    Trening duo ÔÇô 4 wej┼øcia: 1280 PLN (pack) (4 entries)
+    Trening duo ÔÇô 8 wej┼ø─ç: 2300 PLN (pack) (8 entries)
+
+  >>> SCHEDULE EXTRACTION <<<
+[INIT].... ÔåÆ Crawl4AI 0.8.0 
+[FETCH]... Ôåô https://www.lunapilateshouse.pl/grafik                            
+| Ô£ô | ÔÅ▒: 0.05s 
+[COMPLETE] ÔùÅ https://www.lunapilateshouse.pl/grafik                            
+| Ô£ô | ÔÅ▒: 0.07s 
+  Regular crawl: 2717 chars, schedule signals: False
+  Trying JS-aware crawl...
+[INIT].... ÔåÆ Crawl4AI 0.8.0 
+[FETCH]... Ôåô https://www.lunapilateshouse.pl/grafik                            
+| Ô£ô | ÔÅ▒: 10.88s 
+[SCRAPE].. Ôùå https://www.lunapilateshouse.pl/grafik                            
+| Ô£ô | ÔÅ▒: 0.09s 
+[COMPLETE] ÔùÅ https://www.lunapilateshouse.pl/grafik                            
+| Ô£ô | ÔÅ▒: 10.99s 
+  JS crawl: 2677 chars, schedule signals: False
+  SKIPPED: no schedule signals detected ÔÇö would NOT send to LLM (prevents hallucination)
+
+  >>> ABOUT EXTRACTION <<<
+[INIT].... ÔåÆ Crawl4AI 0.8.0 
+[FETCH]... Ôåô https://lunapilateshouse.pl/o-nas/                                
+| Ô£ô | ÔÅ▒: 0.07s 
+[COMPLETE] ÔùÅ https://lunapilateshouse.pl/o-nas/                                
+| Ô£ô | ÔÅ▒: 0.08s 
+21:45:06 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions 
+"HTTP/1.1 200 OK"
+  Also crawled about page: https://lunapilateshouse.pl/o-nas/ (6089 chars)
+  Combined about content: 13110 chars
+  styles: ['Pilates', 'Pilates Reformer']
+  description (817 chars): Witamy w Luna Pilates House! Specjalizujemy si─Ö w zaj─Öciach pilates na reformerach, pomagaj─àc naszym klientom poprawi─ç si┼é─Ö, elastyczno┼ø─ç i og├│ln─à kondycj─Ö. Nasz zesp├│┼é profesjonalist├│w zadba o Twoje zdrowie i dobre samopoczucie. Poznaj nasz─à ofert─Ö i przekonaj si─Ö, dlaczego warto do nas do┼é─àczy─ç. J...
+  phone: +48 573 825 100
+  email: kontakt@lunapilateshouse.pl
+
+================================================================================
+  Z Mi┼éo┼øci Studio ÔÇô Joga, ┼Üwiadomo┼ø─ç Cz─Östochowa (Cz─Östochowa)
+  website:  https://zmiloscistudio.pl/
+  pricing:  https://zmiloscistudio.pl/cennik
+  schedule: https://zmiloscistudio.pl/zajecia
+================================================================================
+[INIT].... ÔåÆ Crawl4AI 0.8.0 
+[FETCH]... Ôåô https://zmiloscistudio.pl/                                        
+| Ô£ô | ÔÅ▒: 0.05s 
+[COMPLETE] ÔùÅ https://zmiloscistudio.pl/                                        
+| Ô£ô | ÔÅ▒: 0.08s 
+[INIT].... ÔåÆ Crawl4AI 0.8.0 
+[FETCH]... Ôåô https://zmiloscistudio.pl/cennik                                  
+| Ô£ô | ÔÅ▒: 0.04s 
+[COMPLETE] ÔùÅ https://zmiloscistudio.pl/cennik                                  
+| Ô£ô | ÔÅ▒: 0.06s 
+21:45:25 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions 
+"HTTP/1.1 200 OK"
+
+  Crawled 2 pages
+
+  --- homepage (https://zmiloscistudio.pl/) ---
+  Markdown length: 7046 chars
+  | ![Revisit consent button](https://zmiloscistudio.pl/wp-content/plugins/cookie-law-info/lite/frontend/images/revisit.svg)
+  | Cenimy prywatno┼ø─ç u┼╝ytkownik├│w
+  | U┼╝ywamy plik├│w cookie, aby poprawi─ç jako┼ø─ç przegl─àdania, wy┼øwietla─ç reklamy lub tre┼øci dostosowane do indywidualnych potrzeb u┼╝ytkownik├│w oraz analizowa─ç ruch na stronie. Klikni─Öcie przycisku ÔÇ×Akceptuj wszystkieÔÇØ oznacza zgod─Ö na wykorzystywanie przez nas plik├│w cookie.
+  | Dostosuj Odrzu─ç wszystkie Akceptuj wszystko
+  | Dostosuj preferencje dotycz─àce zgody ![Close](https://zmiloscistudio.pl/wp-content/plugins/cookie-law-info/lite/frontend/images/close
+  | ... (6446 more chars)
+
+  --- pricing (https://zmiloscistudio.pl/cennik) ---
+  Markdown length: 4439 chars
+  | ![Revisit consent button](https://zmiloscistudio.pl/wp-content/plugins/cookie-law-info/lite/frontend/images/revisit.svg)
+  | Dostosuj preferencje dotycz─àce zgody ![Close](https://zmiloscistudio.pl/wp-content/plugins/cookie-law-info/lite/frontend/images/close.svg)
+  | U┼╝ywamy plik├│w cookie, aby pom├│c u┼╝ytkownikom w sprawnej nawigacji i wykonywaniu okre┼ølonych funkcji. Szczeg├│┼éowe informacje na temat wszystkich plik├│w cookie odpowiadaj─àcych poszczeg├│lnym kategoriom zgody znajduj─à si─Ö poni┼╝ej.
+  | Pliki cookie sklasyfikowane jako ÔÇ×niezb─ÖdneÔÇØ s─à przechowywane w przegl─àdarce u┼╝ytkownika, poniewa┼╝ s─à niezb─Ödne 
+  | ... (3839 more chars)
+
+  Discovered about URL: https://zmiloscistudio.pl/o-nas/
+
+  >>> PRICING EXTRACTION <<<
+  monthly_pass: None PLN
+  single_class: 49 PLN
+  trial_price:  None PLN
+  trial_info:   None
+  discounts:    None
+  notes:        None
+  tiers (12):
+    1 wej┼øcie: 49 PLN (single) valid 40d
+    4 wej┼øcia: 149 PLN (pack) (4 entries) valid 40d
+    6 wej┼ø─ç: 199 PLN (pack) (6 entries) valid 40d
+    8 wej┼ø─ç: 249 PLN (pack) (8 entries) valid 40d
+    1 zaj─Öcie indywidualne: 140 PLN (private) valid 30d
+    1 zaj─Öcie indywidualne + 4 wej┼øcia grupowe: 249 PLN (private) valid 30d
+    1 zaj─Öcia indywidualne: 480 PLN (private) valid 30d
+    karta MEDICOVER: 20 PLN (other)
+    Ceramika dla doros┼éych: 150 PLN (other)
+    Ceramika dla dziecka: 80 PLN (other)
+    Malarstwo: 120 PLN (other)
+    Warsztaty rozwoju duchowego (2 dni): 550 PLN (other)
+
+  >>> SCHEDULE EXTRACTION <<<
+[INIT].... ÔåÆ Crawl4AI 0.8.0 
+[FETCH]... Ôåô https://zmiloscistudio.pl/zajecia                                 
+| Ô£ô | ÔÅ▒: 0.03s 
+[COMPLETE] ÔùÅ https://zmiloscistudio.pl/zajecia                                 
+| Ô£ô | ÔÅ▒: 0.04s 
+  Regular crawl: 5584 chars, schedule signals: False
+  Trying JS-aware crawl...
+[INIT].... ÔåÆ Crawl4AI 0.8.0 
+[FETCH]... Ôåô https://zmiloscistudio.pl/zajecia                                 
+| Ô£ô | ÔÅ▒: 8.42s 
+[SCRAPE].. Ôùå https://zmiloscistudio.pl/zajecia                                 
+| Ô£ô | ÔÅ▒: 0.15s 
+[COMPLETE] ÔùÅ https://zmiloscistudio.pl/zajecia                                 
+| Ô£ô | ÔÅ▒: 8.62s 
+  JS crawl: 5584 chars, schedule signals: False
+  SKIPPED: no schedule signals detected ÔÇö would NOT send to LLM (prevents hallucination)
+
+  >>> ABOUT EXTRACTION <<<
+[INIT].... ÔåÆ Crawl4AI 0.8.0 
+[FETCH]... Ôåô https://zmiloscistudio.pl/o-nas/                                  
+| Ô£ô | ÔÅ▒: 0.64s 
+[COMPLETE] ÔùÅ https://zmiloscistudio.pl/o-nas/                                  
+| Ô£ô | ÔÅ▒: 0.64s 
+21:45:50 [INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions 
+"HTTP/1.1 200 OK"
+  Also crawled about page: https://zmiloscistudio.pl/o-nas/ (6800 chars)
+  Combined about content: 13853 chars
+  styles: ['Kundalini', 'Nidra']
+  description (749 chars): Witaj w _**Z Mi┼éo┼øci Studio**_ ÔÇô miejscu, w kt├│rym ka┼╝dy ruch, oddech i moment staj─à si─Ö powrotem do r├│wnowagi. To przestrze┼ä uwa┼╝no┼øci, jogi i spotkania ze sob─à. Miejsce, w kt├│rym cia┼éo, umys┼é i serce mog─à wreszcie z┼éapa─ç wsp├│lny rytm. Mo┼╝na si─Ö zatrzyma─ç, odetchn─à─ç i us┼éysze─ç siebie troch─Ö wyra┼║ni...
+  phone: +48 790 232 548
+  email: kornelia.mermer@gmail.com
