@@ -42,3 +42,7 @@ export {
 export type {
 	SchedulerAdapter,
 } from './adapters/index.js';
+
+// ─── In-memory adapter ──────────────────────────────────
+export { createMemoryAdapter } from './adapters/index.js';
+export type { MemoryAdapterSeed } from './adapters/index.js';
