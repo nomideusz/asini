@@ -24,6 +24,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build packages (dependency order)
+        run: |
+          pnpm --filter @nomideusz/svelte-calendar package
+          pnpm --filter @nomideusz/svelte-scheduler build
+
       - name: Typecheck all packages
         run: pnpm -r check
 
