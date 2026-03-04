@@ -5,54 +5,64 @@ on:
     types: [opened, synchronize, reopened, ready_for_review]
   check_suite:
     types: [completed]
-  workflow_run:
-    workflows: ["Running Copilot coding agent"]
-    types: [completed]
 
 permissions:
   contents: write
   pull-requests: write
 
 jobs:
-  # When Copilot coding agent finishes, mark its draft PR as ready
-  mark-ready:
-    name: Mark Copilot PR as ready
-    runs-on: ubuntu-latest
-    if: >-
-      github.event_name == 'workflow_run'
-      && github.event.workflow_run.conclusion == 'success'
-    steps:
-      - name: Find and mark PR ready
-        run: |
-          BRANCH="${{ github.event.workflow_run.head_branch }}"
-          PR=$(gh pr list --head "$BRANCH" --json number,isDraft --jq '.[] | select(.isDraft) | .number')
-          if [ -n "$PR" ]; then
-            echo "Marking PR #$PR as ready..."
-            gh pr ready "$PR"
-            echo "Enabling auto-merge on PR #$PR..."
-            gh pr merge "$PR" --auto --squash
-          else
-            echo "No draft PR found for branch $BRANCH"
-          fi
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_REPO: ${{ github.repository }}
-
-  # On PR events, enable auto-merge for Copilot PRs
   auto-merge:
     name: Auto-merge if Copilot PR & CI green
     runs-on: ubuntu-latest
-    if: >-
-      github.event_name != 'workflow_run'
-      && (
-        github.event.pull_request.user.login == 'Copilot'
-        || github.event.pull_request.user.login == 'copilot-swe-agent[bot]'
-        || github.event.pull_request.user.login == 'copilot[bot]'
-      )
-
     steps:
-      - name: Enable auto-merge
-        run: gh pr merge ${{ github.event.pull_request.number }} --auto --squash
+      - name: Find Copilot PR and enable auto-merge
+        run: |
+          # Determine the branch based on event type
+          if [ "${{ github.event_name }}" = "check_suite" ]; then
+            BRANCH="${{ github.event.check_suite.head_branch }}"
+          elif [ "${{ github.event_name }}" = "pull_request" ]; then
+            BRANCH="${{ github.event.pull_request.head.ref }}"
+          else
+            echo "Unknown event: ${{ github.event_name }}"
+            exit 0
+          fi
+
+          echo "Event: ${{ github.event_name }}, Branch: $BRANCH"
+
+          # Skip main branch check suites
+          if [ "$BRANCH" = "main" ]; then
+            echo "Skipping main branch"
+            exit 0
+          fi
+
+          # Find PR for this branch
+          PR_JSON=$(gh pr list --head "$BRANCH" --json number,isDraft,author --jq '.[0]')
+          if [ -z "$PR_JSON" ] || [ "$PR_JSON" = "null" ]; then
+            echo "No PR found for branch $BRANCH"
+            exit 0
+          fi
+
+          PR_NUM=$(echo "$PR_JSON" | jq -r '.number')
+          IS_DRAFT=$(echo "$PR_JSON" | jq -r '.isDraft')
+          AUTHOR=$(echo "$PR_JSON" | jq -r '.author.login')
+
+          echo "PR #$PR_NUM by $AUTHOR (draft=$IS_DRAFT)"
+
+          # Only auto-merge Copilot PRs
+          if [ "$AUTHOR" != "Copilot" ] && [ "$AUTHOR" != "copilot-swe-agent[bot]" ] && [ "$AUTHOR" != "app/copilot-swe-agent" ]; then
+            echo "Not a Copilot PR (author=$AUTHOR), skipping"
+            exit 0
+          fi
+
+          # Mark ready if still a draft
+          if [ "$IS_DRAFT" = "true" ]; then
+            echo "Marking PR #$PR_NUM as ready..."
+            gh pr ready "$PR_NUM"
+          fi
+
+          # Enable auto-merge (will merge once required checks pass)
+          echo "Enabling auto-merge on PR #$PR_NUM..."
+          gh pr merge "$PR_NUM" --auto --squash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
