@@ -1,1 +1,0 @@
-import{a as t,f as m}from"../chunks/CSfnKIZ1.js";import"../chunks/CTFJb_ns.js";var e=m("<main><h1>thebest.travel</h1> <p>Coming soon — the best tours, made simple.</p></main>");function r(o){var a=e();t(o,a)}export{r as component};

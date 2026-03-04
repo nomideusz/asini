@@ -1,1 +1,0 @@
-import{a as s,f as e}from"../chunks/CSfnKIZ1.js";import"../chunks/CTFJb_ns.js";import{s as f,f as n}from"../chunks/CKDDdjhn.js";import{s as i}from"../chunks/BXTR841g.js";var m=e('<nav><a href="/">thebest.travel</a> <span>|</span> <a href="/guide/tours">Guide area</a></nav> <!>',1);function v(r,o){var a=m(),t=f(n(a),2);i(t,o,"default",{}),s(r,a)}export{v as component};
