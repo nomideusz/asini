@@ -20,13 +20,47 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            // Define the dependency chain: when issue N closes, assign these next
-            const chain = {
+            // Simple chains: when issue N closes, assign these next immediately
+            const simpleChain = {
               9:  [10, 11],  // Step 5 done → assign Steps 6 + 7 in parallel
             };
 
+            // Gate chains: ALL listed issues must be closed before assigning targets
+            const gateChain = [
+              { requires: [10, 11], assigns: [19] },  // Steps 6+7 done → Step 8
+            ];
+
             const closed = context.payload.issue.number;
-            const next = chain[closed] || [];
+            const next = [];
+
+            // Check simple chains
+            const simple = simpleChain[closed] || [];
+            next.push(...simple);
+
+            // Check gate chains — only fire if ALL prerequisites are closed
+            for (const gate of gateChain) {
+              if (!gate.requires.includes(closed)) continue;
+
+              const others = gate.requires.filter(n => n !== closed);
+              let allClosed = true;
+              for (const num of others) {
+                const { data: issue } = await github.rest.issues.get({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: num,
+                });
+                if (issue.state !== 'closed') {
+                  allClosed = false;
+                  console.log(`Gate blocked: #${num} is still ${issue.state}`);
+                  break;
+                }
+              }
+              if (allClosed) {
+                next.push(...gate.assigns);
+                console.log(`Gate passed: all of [${gate.requires}] closed → assigning [${gate.assigns}]`);
+              }
+            }
+
             core.setOutput('issues', JSON.stringify(next));
             console.log(`Issue #${closed} closed. Next issues: ${JSON.stringify(next)}`);
 
