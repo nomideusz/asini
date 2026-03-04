@@ -23,11 +23,14 @@ jobs:
             // Simple chains: when issue N closes, assign these next immediately
             const simpleChain = {
               9:  [10, 11],  // Step 5 done → assign Steps 6 + 7 in parallel
+              19: [21, 22],  // Step 8a (scaffold) done → assign styling + auth in parallel
             };
 
             // Gate chains: ALL listed issues must be closed before assigning targets
             const gateChain = [
-              { requires: [10, 11], assigns: [19] },  // Steps 6+7 done → Step 8
+              { requires: [10, 11], assigns: [19] },      // Steps 6+7 done → Step 8a
+              { requires: [21, 22], assigns: [23] },       // Styling+Auth done → Guide tours
+              { requires: [23],     assigns: [24] },       // Guide tours done → Public booking
             ];
 
             const closed = context.payload.issue.number;
