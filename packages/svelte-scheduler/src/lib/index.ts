@@ -30,6 +30,14 @@ export type {
 	GuideAvailability,
 } from './core/index.js';
 
+// ─── Cancellation policy ────────────────────────────────
+export {
+	CANCELLATION_POLICIES,
+	getApplicableRule,
+	calculateRefund,
+	describeRefund,
+} from './core/index.js';
+
 // ─── Adapter interface ──────────────────────────────────
 export type {
 	SchedulerAdapter,
