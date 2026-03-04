@@ -19,5 +19,10 @@ setup:
       pnpm --filter @nomideusz/svelte-calendar package
       pnpm --filter @nomideusz/svelte-scheduler build
 
+  - name: Set dummy env vars for yoga app
+    run: |
+      echo "TURSO_DATABASE_URL=libsql://dummy-ci.turso.io" >> $GITHUB_ENV
+      echo "TURSO_AUTH_TOKEN=dummy-ci-token" >> $GITHUB_ENV
+
   - name: Verify typecheck passes
     run: pnpm -r check

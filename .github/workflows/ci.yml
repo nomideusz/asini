@@ -11,6 +11,10 @@ jobs:
     name: Typecheck & Test
     runs-on: ubuntu-latest
 
+    env:
+      TURSO_DATABASE_URL: "libsql://dummy-ci.turso.io"
+      TURSO_AUTH_TOKEN: "dummy-ci-token"
+
     steps:
       - uses: actions/checkout@v4
 
@@ -23,6 +27,11 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Build packages (dependency order)
+        run: |
+          pnpm --filter @nomideusz/svelte-calendar package
+          pnpm --filter @nomideusz/svelte-scheduler build
 
       - name: Typecheck all packages
         run: pnpm -r check
