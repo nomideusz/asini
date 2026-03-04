@@ -20,3 +20,7 @@ export type {
 	CancellationRule,
 	GuideAvailability,
 } from './types.js';
+
+// ─── Pricing engine ─────────────────────────────────────
+export type { StripeFeeEntry, PricingInput } from './pricing/index.js';
+export { STRIPE_FEES, calculatePrice } from './pricing/index.js';
