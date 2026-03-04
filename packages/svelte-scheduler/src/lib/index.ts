@@ -42,6 +42,10 @@ export {
 export type { StripeFeeEntry, PricingInput } from './core/index.js';
 export { STRIPE_FEES, calculatePrice } from './core/index.js';
 
+// ─── Recurrence & slot generation ───────────────────────
+export type { OccurrencePair } from './core/index.js';
+export { expandRule, generateSlots } from './core/index.js';
+
 // ─── Adapter interface ──────────────────────────────────
 export type {
 	SchedulerAdapter,
