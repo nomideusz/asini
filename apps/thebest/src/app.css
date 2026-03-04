@@ -1,0 +1,26 @@
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: light --default, dark --prefersdark;
+}
+
+/* ── Map --asini-* tokens to DaisyUI 5 semantic colors ── */
+:root {
+  --asini-bg: var(--color-base-100);
+  --asini-surface: var(--color-base-200);
+  --asini-surface-raised: var(--color-base-300);
+  --asini-border: color-mix(in oklch, var(--color-base-content) 20%, transparent);
+  --asini-border-strong: color-mix(in oklch, var(--color-base-content) 40%, transparent);
+  --asini-text: var(--color-base-content);
+  --asini-text-2: color-mix(in oklch, var(--color-base-content) 70%, transparent);
+  --asini-text-3: color-mix(in oklch, var(--color-base-content) 50%, transparent);
+  --asini-accent: var(--color-primary);
+  --asini-accent-muted: color-mix(in oklch, var(--color-primary) 20%, transparent);
+  --asini-success: var(--color-success);
+  --asini-warning: var(--color-warning);
+  --asini-danger: var(--color-error);
+  --asini-info: var(--color-info);
+  --asini-font-sans: inherit;
+  --asini-font-mono: ui-monospace, monospace;
+  --asini-radius: var(--radius-box);
+  --asini-radius-sm: var(--radius-field);
+}
