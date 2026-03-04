@@ -21,6 +21,13 @@ export type {
 	GuideAvailability,
 } from './types.js';
 
+export {
+	CANCELLATION_POLICIES,
+	getApplicableRule,
+	calculateRefund,
+	describeRefund,
+} from './policy.js';
+
 // ─── Pricing engine ─────────────────────────────────────
 export type { StripeFeeEntry, PricingInput } from './pricing/index.js';
 export { STRIPE_FEES, calculatePrice } from './pricing/index.js';

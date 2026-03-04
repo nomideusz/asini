@@ -30,6 +30,14 @@ export type {
 	GuideAvailability,
 } from './core/index.js';
 
+// ─── Cancellation policy ────────────────────────────────
+export {
+	CANCELLATION_POLICIES,
+	getApplicableRule,
+	calculateRefund,
+	describeRefund,
+} from './core/index.js';
+
 // ─── Pricing engine ─────────────────────────────────────
 export type { StripeFeeEntry, PricingInput } from './core/index.js';
 export { STRIPE_FEES, calculatePrice } from './core/index.js';
@@ -38,3 +46,7 @@ export { STRIPE_FEES, calculatePrice } from './core/index.js';
 export type {
 	SchedulerAdapter,
 } from './adapters/index.js';
+
+// ─── In-memory adapter ──────────────────────────────────
+export { createMemoryAdapter } from './adapters/index.js';
+export type { MemoryAdapterSeed } from './adapters/index.js';
