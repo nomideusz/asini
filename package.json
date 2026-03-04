@@ -7,6 +7,9 @@
 		"dev:yoga": "pnpm --filter yoga dev",
 		"build:calendar": "pnpm --filter @nomideusz/svelte-calendar build",
 		"build:yoga": "pnpm --filter yoga build",
+		"dev:scheduler": "pnpm --filter @nomideusz/svelte-scheduler dev",
+		"build:scheduler": "pnpm --filter @nomideusz/svelte-scheduler build",
+		"package:scheduler": "pnpm --filter @nomideusz/svelte-scheduler package",
 		"package:calendar": "pnpm --filter @nomideusz/svelte-calendar package",
 		"check": "pnpm -r check",
 		"test": "pnpm -r test"
