@@ -1,0 +1,23 @@
+# Environment setup for GitHub Copilot coding agent
+# This runs in a cloud VM before the agent starts working on an issue.
+# Docs: https://docs.github.com/en/copilot/using-github-copilot/using-copilot-coding-agent
+
+setup:
+  - name: Install Node.js 20
+    uses: actions/setup-node@v4
+    with:
+      node-version: "20"
+
+  - name: Install pnpm
+    run: corepack enable && corepack prepare pnpm@10.12.1 --activate
+
+  - name: Install dependencies
+    run: pnpm install --frozen-lockfile
+
+  - name: Build packages (calendar first, then scheduler)
+    run: |
+      pnpm --filter @nomideusz/svelte-calendar package
+      pnpm --filter @nomideusz/svelte-scheduler build
+
+  - name: Verify typecheck passes
+    run: pnpm -r check
