@@ -1,0 +1,60 @@
+name: Chain Copilot Issues
+
+on:
+  issues:
+    types: [closed]
+
+permissions:
+  issues: write
+
+jobs:
+  assign-next:
+    name: Assign Copilot to next issues
+    runs-on: ubuntu-latest
+    if: >-
+      contains(github.event.issue.labels.*.name, 'copilot')
+
+    steps:
+      - name: Determine next issues
+        id: next
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Define the dependency chain: when issue N closes, assign these next
+            const chain = {
+              9:  [10, 11],  // Step 5 done → assign Steps 6 + 7 in parallel
+            };
+
+            const closed = context.payload.issue.number;
+            const next = chain[closed] || [];
+            core.setOutput('issues', JSON.stringify(next));
+            console.log(`Issue #${closed} closed. Next issues: ${JSON.stringify(next)}`);
+
+      - name: Assign Copilot to next issues
+        if: fromJSON(steps.next.outputs.issues)[0] != null
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issues = ${{ steps.next.outputs.issues }};
+            for (const num of issues) {
+              console.log(`Assigning Copilot to issue #${num}...`);
+              try {
+                await github.rest.issues.addAssignees({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: num,
+                  assignees: ['Copilot'],
+                });
+                console.log(`✓ Assigned Copilot to #${num}`);
+              } catch (err) {
+                console.log(`✗ Failed to assign #${num}: ${err.message}`);
+                // Fall back to commenting to trigger Copilot
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: num,
+                  body: `Issue #${context.payload.issue.number} (dependency) is now closed. @copilot please start working on this issue. Read the agent spec in \`.github/agents/\` for full instructions.`,
+                });
+                console.log(`  → Posted comment on #${num} instead`);
+              }
+            }
