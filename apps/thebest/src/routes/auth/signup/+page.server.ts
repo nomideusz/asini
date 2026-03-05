@@ -27,18 +27,22 @@ export const actions: Actions = {
 		}
 
 		const db = getDb();
-		const existing = await db.select().from(guides).where(eq(guides.email, email)).limit(1);
-		if (existing.length > 0) {
-			return fail(400, { error: 'An account with this email already exists.' });
-		}
 
 		const passwordHash = await new Argon2id().hash(password);
 		const id = crypto.randomUUID();
 
-		await db.insert(guides).values({ id, email, name, passwordHash });
+		const [created] = await db
+			.insert(guides)
+			.values({ id, email, name, passwordHash })
+			.onConflictDoNothing({ target: guides.email })
+			.returning({ id: guides.id });
+
+		if (!created) {
+			return fail(400, { error: 'An account with this email already exists.' });
+		}
 
 		const lucia = getLucia();
-		const session = await lucia.createSession(id, {});
+		const session = await lucia.createSession(created.id, {});
 		const sessionCookie = lucia.createSessionCookie(session.id);
 		cookies.set(sessionCookie.name, sessionCookie.value, {
 			path: '/',
