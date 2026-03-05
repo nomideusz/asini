@@ -1,7 +1,10 @@
 import { redirect } from '@sveltejs/kit';
-import type { Actions } from './$types.js';
+import type { Actions, PageServerLoad } from './$types.js';
 import { getLucia } from '$lib/server/auth.js';
 
+export const load: PageServerLoad = async () => {
+	throw redirect(302, '/');
+};
 export const actions: Actions = {
 	default: async ({ locals, cookies }) => {
 		if (!locals.session) {
