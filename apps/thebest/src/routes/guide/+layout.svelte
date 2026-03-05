@@ -1,6 +1,7 @@
-<!-- TODO: auth flow — protect this layout with authentication check -->
 <script lang="ts">
-	let { children } = $props();
+	import type { LayoutData } from './$types.js';
+
+	let { data, children }: { data: LayoutData; children: import('svelte').Snippet } = $props();
 </script>
 
 <div class="flex min-h-[calc(100vh-4rem)]">
@@ -14,6 +15,13 @@
 			<li><a href="/guide/bookings" class="text-base-content/40 pointer-events-none">Bookings <span class="badge badge-xs">Soon</span></a></li>
 			<li><a href="/guide/settings" class="text-base-content/40 pointer-events-none">Settings <span class="badge badge-xs">Soon</span></a></li>
 		</ul>
+
+		<div class="mt-auto flex items-center gap-2 px-3 py-2 border-t border-base-300">
+			<span class="text-sm flex-1 truncate">{data.user.name}</span>
+			<form method="POST" action="/auth/logout">
+				<button type="submit" class="btn btn-ghost btn-xs">Log out</button>
+			</form>
+		</div>
 	</aside>
 
 	<!-- Content area -->

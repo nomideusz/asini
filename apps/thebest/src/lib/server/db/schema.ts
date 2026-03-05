@@ -13,6 +13,7 @@ import {
 	boolean,
 	timestamp,
 	jsonb,
+	primaryKey,
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
@@ -22,6 +23,8 @@ export const guides = pgTable('guides', {
 	id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
 	email: text('email').notNull().unique(),
 	name: text('name').notNull(),
+	/** Argon2id hashed password. */
+	passwordHash: text('password_hash'),
 	/** Stripe Connect account ID — populated after onboarding. */
 	stripeAccountId: text('stripe_account_id'),
 	/** Whether the guide has completed Stripe Connect onboarding. */
@@ -154,3 +157,30 @@ export type Slot = typeof slots.$inferSelect;
 export type NewSlot = typeof slots.$inferInsert;
 export type BookingRow = typeof bookings.$inferSelect;
 export type NewBookingRow = typeof bookings.$inferInsert;
+
+// ─── Auth — Sessions ──────────────────────────────────────────────────────────
+
+export const sessions = pgTable('sessions', {
+	id: text('id').primaryKey(),
+	userId: uuid('user_id')
+		.notNull()
+		.references(() => guides.id, { onDelete: 'cascade' }),
+	expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
+});
+
+// ─── Auth — OAuth accounts (stub for future Google OAuth) ─────────────────────
+
+export const oauthAccounts = pgTable(
+	'oauth_accounts',
+	{
+		providerId: text('provider_id').notNull(),
+		providerUserId: text('provider_user_id').notNull(),
+		userId: uuid('user_id')
+			.notNull()
+			.references(() => guides.id, { onDelete: 'cascade' }),
+	},
+	(table) => [primaryKey({ columns: [table.providerId, table.providerUserId] })],
+);
+
+export type Session = typeof sessions.$inferSelect;
+export type OauthAccount = typeof oauthAccounts.$inferSelect;
