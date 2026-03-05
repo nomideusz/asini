@@ -423,23 +423,27 @@ Step 7 — Calendar bridge ✅ DONE
            Full, at-risk, cancelled states render correctly
   Result:  PR #18 merged. Calendar bridge integration complete.
 
-Step 8 — Build apps/thebest
-  8a — Scaffold (PR #20, pending merge)
+Step 8 — Build apps/thebest ✅ DONE
+  8a — Scaffold (PR #20) ✅ DONE
     Tasks:   SvelteKit app, Drizzle schema, drizzle-adapter, route stubs
     Gate:    pnpm check + pnpm build pass
-  8b — App shell + styling (Issue #21)
+
+  8b — App shell + styling (Issue #21) ✅ DONE
     Tasks:   Tailwind CSS 4 + DaisyUI 5 setup, navbar, footer, homepage
              --asini-* token mapping to DaisyUI theme
     Gate:    Responsive app shell renders, theme switching works
-  8c — Authentication (Issue #22, parallel with 8b)
+
+  8c — Authentication (Issue #22) ✅ DONE
     Tasks:   Lucia v3, email/password signup + login, session hooks
              Protected guide routes
     Gate:    Guide can register, log in, access /guide area
-  8d — Guide tour management (Issue #23, requires 8b + 8c)
+
+  8d — Guide tour management (Issue #23) ✅ DONE
     Tasks:   Tour CRUD, pricing model forms (all 4 models)
              Schedule builder, cancellation policy selection
     Gate:    Guide creates a tour with pricing and schedule
-  8e — Public booking flow (Issue #24, requires 8d)
+
+  8e — Public booking flow (Issue #24) ✅ DONE
     Tasks:   Public tour listing, tour detail, BookingFlow integration
              Confirmation page, cancellation page
     Gate:    Tourist completes booking end-to-end
