@@ -3,7 +3,6 @@ import type { Actions, PageServerLoad } from './$types.js';
 import { getLucia } from '$lib/server/auth.js';
 import { getDb } from '$lib/server/db/index.js';
 import { guides } from '$lib/server/db/schema.js';
-import { eq } from 'drizzle-orm';
 import { Argon2id } from 'oslo/password';
 
 export const load: PageServerLoad = async ({ locals }) => {
