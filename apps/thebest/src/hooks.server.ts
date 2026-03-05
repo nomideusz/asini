@@ -39,7 +39,15 @@ export const handle: Handle = async ({ event, resolve }) => {
 	const db = getDb();
 	const [guide] = await db.select().from(guides).where(eq(guides.id, user.id)).limit(1);
 
-	event.locals.user = guide ?? null;
+	// Avoid storing sensitive fields like passwordHash in locals
+	const safeUser =
+		guide &&
+		(() => {
+			const { passwordHash, ...rest } = guide as typeof guide & { passwordHash?: unknown };
+			return rest;
+		})();
+
+	event.locals.user = safeUser ?? null;
 	event.locals.session = session;
 
 	return resolve(event);
