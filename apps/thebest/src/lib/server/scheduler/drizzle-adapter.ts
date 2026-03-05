@@ -113,7 +113,9 @@ function rowToBooking(row: typeof bookings.$inferSelect): Booking {
 	};
 }
 
-export type DrizzleAdapter = SchedulerAdapter & {
+export type DrizzleAdapter = Omit<SchedulerAdapter, 'getTours'> & {
+	/** Fetch tours, optionally filtered by status and/or guideId. */
+	getTours(filter?: { status?: 'active' | 'draft'; guideId?: string }): Promise<TourDefinition[]>;
 	/** Create a tour for a specific guide. Replaces createTour() until auth is implemented. */
 	createTourForGuide(guideId: string, tour: Omit<TourDefinition, 'id'>): Promise<TourDefinition>;
 };
@@ -123,9 +125,13 @@ export type DrizzleAdapter = SchedulerAdapter & {
 export function createDrizzleAdapter(db: Database): DrizzleAdapter {
 	// ─── Tour CRUD ───────────────────────────────────────
 
-	async function getTours(filter?: { status?: 'active' | 'draft' }): Promise<TourDefinition[]> {
-		const rows = filter?.status
-			? await db.select().from(tours).where(eq(tours.status, filter.status))
+	async function getTours(filter?: { status?: 'active' | 'draft'; guideId?: string }): Promise<TourDefinition[]> {
+		const conditions = [];
+		if (filter?.status) conditions.push(eq(tours.status, filter.status));
+		if (filter?.guideId) conditions.push(eq(tours.guideId, filter.guideId));
+
+		const rows = conditions.length > 0
+			? await db.select().from(tours).where(and(...conditions))
 			: await db.select().from(tours);
 		return rows.map(rowToTour);
 	}
