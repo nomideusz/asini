@@ -7,7 +7,7 @@ import { eq } from 'drizzle-orm';
 import { Argon2id } from 'oslo/password';
 
 export const load: PageServerLoad = async ({ locals }) => {
-	if (locals.user) redirect(302, '/guide/tours');
+	if (locals.user) throw redirect(302, '/guide/tours');
 	return {};
 };
 
@@ -41,6 +41,6 @@ export const actions: Actions = {
 			...sessionCookie.attributes,
 		});
 
-		redirect(302, '/guide/tours');
+		throw redirect(302, '/guide/tours');
 	},
 };

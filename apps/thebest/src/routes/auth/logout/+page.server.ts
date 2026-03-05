@@ -8,7 +8,7 @@ export const load: PageServerLoad = async () => {
 export const actions: Actions = {
 	default: async ({ locals, cookies }) => {
 		if (!locals.session) {
-			redirect(302, '/');
+			throw redirect(302, '/');
 		}
 
 		const lucia = getLucia();
@@ -20,6 +20,6 @@ export const actions: Actions = {
 			...sessionCookie.attributes,
 		});
 
-		redirect(302, '/');
+		throw redirect(302, '/');
 	},
 };
