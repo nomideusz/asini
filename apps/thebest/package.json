@@ -35,6 +35,8 @@
 		"drizzle-orm": "^0.45.1",
 		"lucia": "^3.2.2",
 		"oslo": "^1.2.1",
-		"postgres": "^3.4.7"
+		"postgres": "^3.4.7",
+		"resend": "^6.9.3",
+		"stripe": "^20.4.0"
 	}
 }
