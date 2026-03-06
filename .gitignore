@@ -36,3 +36,6 @@ __pycache__/
 # Scraper output
 tools/yoga-scraper/output/
 package-lock.json
+
+# Git worktrees
+.worktrees/
