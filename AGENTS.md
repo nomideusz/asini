@@ -450,25 +450,43 @@ Step 8 — Build apps/thebest ✅ DONE
              Confirmation page, cancellation page
     Gate:    Tourist completes booking end-to-end
 
-Step 9 — First pilot guides on thebest.travel
-  9a — Stripe + payments + email + guide tools ✅ DONE
-    Tasks:   stripe/resend packages, stripe.ts singleton, email.ts
-             Stripe Connect onboarding for guides (/guide/settings)
-             Stripe Checkout for tourists (/api/checkout, /bookings/[ref]/confirmed)
-             Stripe webhook handler (/api/webhooks/stripe)
-             Guide bookings dashboard (/guide/bookings)
-             Tourist cancellation + Stripe refund (/bookings/[ref]/cancel)
-             .env.example, AGENTS.md update
-    Gate:    Guide connects Stripe; tourist pays; webhook confirms booking + emails sent;
-             guide sees bookings; tourist can cancel with policy-driven refund
+Step 9 — Payments, email, guide tools ✅ DONE
+  Tasks:   @nomideusz/svelte-notify (email templates), @nomideusz/svelte-payments (StripeConnectStatus)
+           Stripe Connect onboarding (/guide/settings), Stripe Checkout (/api/checkout)
+           Stripe webhook handler, guide bookings dashboard, tourist cancellation + refund
+  Gate:    Guide connects Stripe; tourist pays; webhook confirms + emails sent;
+           guide sees bookings; tourist can cancel with policy-driven refund
 
-  9b — Production deployment (human decision required)
-    Tasks:   Choose hosting platform (Railway / Fly.io / VPS)
-             Configure DNS for thebest.travel
-             Verify email domain for @thebest.travel with Resend
-             Register Stripe webhook endpoint in Stripe dashboard
-             Set platform fee % (human decision — currently 0%)
-    Gate:    5 real guides live, real bookings processing
+Step 10 — svelte-media (image upload + storage)
+  Tasks:   Package scaffold (@nomideusz/svelte-media)
+           MinIO/S3 client (from Zaur minio-client.ts + image-storage.ts)
+           Image upload, sharp optimization, multi-size variants (thumbnail/medium/large)
+           <ImageUpload> and <ImageGallery> Svelte components — no Tailwind, --asini-* only
+           Integrate into apps/thebest: tour photos, guide avatar
+           Integrate into apps/yoga: school photos
+  Gate:    Guide can upload tour photos; pnpm check passes in thebest + yoga
+
+Step 11 — svelte-qr (QR ticket generation)
+  Tasks:   Package scaffold (@nomideusz/svelte-qr)
+           QR PNG/SVG generation (from Zaur qr-generation.ts)
+           <QrCode> display component
+           Integrate into apps/thebest: QR ticket in booking confirmation email + confirmed page
+  Gate:    Confirmed booking shows QR; pnpm check passes in thebest
+
+Step 12 — svelte-i18n (internationalisation)
+  Tasks:   Package scaffold (@nomideusz/svelte-i18n)
+           Language store, message loading, Paraglide runtime (from Zaur i18n.ts)
+           Integrate into apps/thebest: EN primary, PL secondary
+           Integrate into apps/yoga: PL primary
+  Gate:    Both apps render in correct language; pnpm check passes in both
+
+Step 13 — Deploy thebest.travel (human decisions required)
+  Tasks:   Choose hosting platform (Railway / Fly.io / VPS)
+           Configure DNS for thebest.travel
+           Verify email domain @thebest.travel in Resend
+           Register Stripe webhook endpoint in Stripe dashboard
+           Set platform fee % (currently 0% — human decision required before launch)
+  Gate:    5 real guides live, real bookings processing
 ```
 
 ---
