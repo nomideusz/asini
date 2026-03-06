@@ -2,5 +2,8 @@
 build/
 .svelte-kit/
 
+# Environment
+.env
+
 # Dependencies
 node_modules/

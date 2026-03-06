@@ -449,7 +449,24 @@ Step 8 — Build apps/thebest ✅ DONE
     Gate:    Tourist completes booking end-to-end
 
 Step 9 — First pilot guides on thebest.travel
-  Gate:    5 real guides live, real bookings processing
+  9a — Stripe + payments + email + guide tools (this plan) 🏗️ IN PROGRESS
+    Tasks:   stripe/resend packages, stripe.ts singleton, email.ts
+             Stripe Connect onboarding for guides (/guide/settings)
+             Stripe Checkout for tourists (/api/checkout, /bookings/[ref]/confirmed)
+             Stripe webhook handler (/api/webhooks/stripe)
+             Guide bookings dashboard (/guide/bookings)
+             Tourist cancellation + Stripe refund (/bookings/[ref]/cancel)
+             .env.example, AGENTS.md update
+    Gate:    Guide connects Stripe; tourist pays; webhook confirms booking + emails sent;
+             guide sees bookings; tourist can cancel with policy-driven refund
+
+  9b — Production deployment (human decision required)
+    Tasks:   Choose hosting platform (Railway / Fly.io / VPS)
+             Configure DNS for thebest.travel
+             Verify email domain for @thebest.travel with Resend
+             Register Stripe webhook endpoint in Stripe dashboard
+             Set platform fee % (human decision — currently 0%)
+    Gate:    5 real guides live, real bookings processing
 ```
 
 ---
