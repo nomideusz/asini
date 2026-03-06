@@ -43,6 +43,8 @@ asini/
   packages/
     svelte-calendar/        @nomideusz/svelte-calendar — PUBLIC npm package
     svelte-scheduler/       @nomideusz/svelte-scheduler — PUBLIC npm package (core logic implemented)
+    svelte-notify/          @nomideusz/svelte-notify — PUBLIC npm package (email templates)
+    svelte-payments/        @nomideusz/svelte-payments — PUBLIC npm package (Stripe Connect UI)
 
   apps/
     thebest/                thebest.travel — SvelteKit, PRIVATE, new platform
@@ -81,7 +83,7 @@ It contains proven business logic for every feature thebest.travel needs.
 | `src/lib/utils/refund-handler.ts` | Reference only for `apps/thebest` | Pre-transfer vs post-transfer refund paths |
 | `src/lib/utils/qr-generation.ts` | `packages/svelte-qr/src/core/encode.ts` (future) | QR PNG/SVG/Buffer generation |
 | `src/lib/db/schema/drizzle.ts` | Reference for `apps/thebest` DB schema | All entity shapes — tours, slots, bookings, payments, payouts |
-| `src/lib/email/templates/` | Reference for `@nomideusz/svelte-notify` (future) | Email template structure, all notification types |
+| `src/lib/email/templates/` | `packages/svelte-notify/src/lib/templates/` | Email template structure, all notification types |
 | `src/lib/utils/image-storage.ts` | `packages/svelte-media/` (future) | Image upload, sharp optimization, multi-size variants (thumbnail/medium/large) |
 | `src/lib/utils/minio-client.ts` | `packages/svelte-media/` (future) | MinIO S3-compatible client init, bucket management |
 | `src/lib/i18n.ts` + `messages/*.json` | `packages/svelte-i18n/` (future) | Language store, message loading, Paraglide runtime |
@@ -103,6 +105,8 @@ It contains proven business logic for every feature thebest.travel needs.
 |---|---|---|---|
 | `packages/svelte-calendar` | `@nomideusz/svelte-calendar` | ✅ published | Calendar rendering |
 | `packages/svelte-scheduler` | `@nomideusz/svelte-scheduler` | ✅ complete (core + components + bridge) | Booking/scheduling logic |
+| `packages/svelte-notify` | `@nomideusz/svelte-notify` | ✅ 0.1.0 — 3 templates + tests | Email notification templates |
+| `packages/svelte-payments` | `@nomideusz/svelte-payments` | ✅ 0.1.0 — StripeConnectStatus | Stripe Connect UI components |
 | `apps/thebest` | private | ✅ Step 9a complete — auth, tours, bookings, Stripe, email | thebest.travel platform |
 | `apps/yoga` | private | ✅ live at szkolyjogi.pl | Real directory + package sandbox |
 
@@ -110,9 +114,7 @@ It contains proven business logic for every feature thebest.travel needs.
 
 | Package | Role | Logic already proven in |
 |---|---|---|
-| `@nomideusz/svelte-payments` | Stripe Connect UI, payout flows | Zaur `src/lib/stripe.server.ts` |
 | `@nomideusz/svelte-qr` | QR generation + scanning | Zaur `src/lib/utils/qr-generation.ts` |
-| `@nomideusz/svelte-notify` | Email/SMS templates | Zaur `src/lib/email/templates/` |
 | `@nomideusz/svelte-media` | Image upload, optimization (sharp), multi-size storage (MinIO/S3) | Zaur `src/lib/utils/image-storage.ts`, `avatar-storage.ts`, `minio-client.ts` |
 | `@nomideusz/svelte-i18n` | Multi-language support, message loading | Zaur `src/lib/i18n.ts`, `messages/{en,pl,de}.json`, Paraglide runtime |
 | `@nomideusz/channel-manager` | Viator/GYG availability sync | Not yet — requires certification |
