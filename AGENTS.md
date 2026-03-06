@@ -451,7 +451,7 @@ Step 8 — Build apps/thebest ✅ DONE
     Gate:    Tourist completes booking end-to-end
 
 Step 9 — First pilot guides on thebest.travel
-  9a — Stripe + payments + email + guide tools (this plan) 🏗️ IN PROGRESS
+  9a — Stripe + payments + email + guide tools ✅ DONE
     Tasks:   stripe/resend packages, stripe.ts singleton, email.ts
              Stripe Connect onboarding for guides (/guide/settings)
              Stripe Checkout for tourists (/api/checkout, /bookings/[ref]/confirmed)
