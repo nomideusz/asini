@@ -33,11 +33,17 @@
 		{adapter}
 		slotId={data.slot.id}
 		{initialSlot}
-		onbooked={() => {
-			// Stay on confirmation step (BookingFlow shows it internally)
+		onbooked={async (booking) => {
+			const res = await fetch('/api/checkout', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ bookingId: booking.id }),
+			});
+			if (res.ok) {
+				const { checkoutUrl } = await res.json();
+				window.location.href = checkoutUrl;
+			}
 		}}
 		oncancelled={() => goto(`/tours/${data.tour.id}`)}
 	/>
-
-	<!-- TODO: Stripe Connect onboarding — integrate payment once guide has completed onboarding -->
 </section>
