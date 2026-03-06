@@ -102,8 +102,8 @@ It contains proven business logic for every feature thebest.travel needs.
 | Path | Package name | Status | Role |
 |---|---|---|---|
 | `packages/svelte-calendar` | `@nomideusz/svelte-calendar` | ✅ published | Calendar rendering |
-| `packages/svelte-scheduler` | `@nomideusz/svelte-scheduler` | ✅ core complete, components in progress | Booking/scheduling logic |
-| `apps/thebest` | private | 🏗️ scaffolded (PR #20) | thebest.travel platform |
+| `packages/svelte-scheduler` | `@nomideusz/svelte-scheduler` | ✅ complete (core + components + bridge) | Booking/scheduling logic |
+| `apps/thebest` | private | ✅ Step 9a complete — auth, tours, bookings, Stripe, email | thebest.travel platform |
 | `apps/yoga` | private | ✅ live at szkolyjogi.pl | Real directory + package sandbox |
 
 ### Future packages
