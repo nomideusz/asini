@@ -39,3 +39,4 @@ package-lock.json
 
 # Git worktrees
 .worktrees/
+bun.lock
