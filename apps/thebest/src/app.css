@@ -88,119 +88,122 @@ body {
   --asini-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-/* ── Buttons ── */
-.asini-btn {
-  @apply px-3 py-1.5 text-sm font-medium cursor-pointer inline-flex items-center gap-1.5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
-  border-radius: var(--asini-radius);
-  border: 1px solid var(--asini-border);
-  background: var(--asini-surface);
-  color: var(--asini-text);
-}
-.asini-btn:hover:not(:disabled) {
-  border-color: var(--asini-border-strong);
-  background: var(--asini-bg-subtle);
-}
-.asini-btn-primary {
-  background: var(--asini-accent);
-  color: #fff;
-  border-color: transparent;
-}
-.asini-btn-primary:hover:not(:disabled) {
-  background: var(--asini-accent-hover);
-  border-color: transparent;
-}
-.asini-btn-danger {
-  background: var(--asini-danger);
-  color: #fff;
-  border-color: transparent;
-}
-.asini-btn-danger:hover:not(:disabled) {
-  opacity: 0.9;
-  border-color: transparent;
-}
-.asini-btn-ghost {
-  background: transparent;
-  border-color: transparent;
-}
-.asini-btn-ghost:hover:not(:disabled) {
-  background: var(--asini-surface);
-  border-color: transparent;
-}
-.asini-btn-sm {
-  @apply px-2 py-1 text-xs;
-}
-.asini-btn-lg {
-  @apply px-4 py-2 text-sm;
-}
+/* ── Components (in @layer so Tailwind utilities can override) ── */
+@layer components {
+  /* ── Buttons ── */
+  .asini-btn {
+    @apply px-3 py-1.5 text-sm font-medium cursor-pointer inline-flex items-center gap-1.5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
+    border-radius: var(--asini-radius);
+    border: 1px solid var(--asini-border);
+    background: var(--asini-surface);
+    color: var(--asini-text);
+  }
+  .asini-btn:hover:not(:disabled) {
+    border-color: var(--asini-border-strong);
+    background: var(--asini-bg-subtle);
+  }
+  .asini-btn-primary {
+    background: var(--asini-accent);
+    color: #fff;
+    border-color: transparent;
+  }
+  .asini-btn-primary:hover:not(:disabled) {
+    background: var(--asini-accent-hover);
+    border-color: transparent;
+  }
+  .asini-btn-danger {
+    background: var(--asini-danger);
+    color: #fff;
+    border-color: transparent;
+  }
+  .asini-btn-danger:hover:not(:disabled) {
+    opacity: 0.9;
+    border-color: transparent;
+  }
+  .asini-btn-ghost {
+    background: transparent;
+    border-color: transparent;
+  }
+  .asini-btn-ghost:hover:not(:disabled) {
+    background: var(--asini-surface);
+    border-color: transparent;
+  }
+  .asini-btn-sm {
+    @apply px-2 py-1 text-xs;
+  }
+  .asini-btn-lg {
+    @apply px-4 py-2 text-sm;
+  }
 
-/* ── Inputs ── */
-.asini-input {
-  @apply w-full px-3 py-1.5 text-sm transition-colors;
-  border-radius: var(--asini-radius);
-  border: 1px solid var(--asini-border);
-  background: var(--asini-bg);
-  color: var(--asini-text);
-}
-.asini-input::placeholder {
-  color: var(--asini-text-3);
-}
-.asini-input:focus {
-  outline: none;
-  border-color: var(--asini-accent);
-  box-shadow: 0 0 0 2px color-mix(in oklch, var(--asini-accent) 20%, transparent);
-}
+  /* ── Inputs ── */
+  .asini-input {
+    @apply w-full px-3 py-1.5 text-sm transition-colors;
+    border-radius: var(--asini-radius);
+    border: 1px solid var(--asini-border);
+    background: var(--asini-bg);
+    color: var(--asini-text);
+  }
+  .asini-input::placeholder {
+    color: var(--asini-text-3);
+  }
+  .asini-input:focus {
+    outline: none;
+    border-color: var(--asini-accent);
+    box-shadow: 0 0 0 2px color-mix(in oklch, var(--asini-accent) 20%, transparent);
+  }
 
-/* ── Badges ── */
-.asini-badge {
-  @apply inline-flex items-center px-2 py-0.5 text-xs font-medium;
-  border-radius: var(--asini-radius-sm);
-  background: var(--asini-surface);
-  color: var(--asini-text-2);
-  border: 1px solid var(--asini-border);
-}
-.asini-badge-success {
-  background: color-mix(in oklch, var(--asini-success) 10%, var(--asini-bg));
-  color: var(--asini-success);
-  border-color: color-mix(in oklch, var(--asini-success) 25%, transparent);
-}
-.asini-badge-warning {
-  background: color-mix(in oklch, var(--asini-warning) 10%, var(--asini-bg));
-  color: var(--asini-warning);
-  border-color: color-mix(in oklch, var(--asini-warning) 25%, transparent);
-}
-.asini-badge-danger {
-  background: color-mix(in oklch, var(--asini-danger) 10%, var(--asini-bg));
-  color: var(--asini-danger);
-  border-color: color-mix(in oklch, var(--asini-danger) 25%, transparent);
-}
-.asini-badge-info {
-  background: color-mix(in oklch, var(--asini-info) 10%, var(--asini-bg));
-  color: var(--asini-info);
-  border-color: color-mix(in oklch, var(--asini-info) 25%, transparent);
-}
+  /* ── Badges ── */
+  .asini-badge {
+    @apply inline-flex items-center px-2 py-0.5 text-xs font-medium;
+    border-radius: var(--asini-radius-sm);
+    background: var(--asini-surface);
+    color: var(--asini-text-2);
+    border: 1px solid var(--asini-border);
+  }
+  .asini-badge-success {
+    background: color-mix(in oklch, var(--asini-success) 10%, var(--asini-bg));
+    color: var(--asini-success);
+    border-color: color-mix(in oklch, var(--asini-success) 25%, transparent);
+  }
+  .asini-badge-warning {
+    background: color-mix(in oklch, var(--asini-warning) 10%, var(--asini-bg));
+    color: var(--asini-warning);
+    border-color: color-mix(in oklch, var(--asini-warning) 25%, transparent);
+  }
+  .asini-badge-danger {
+    background: color-mix(in oklch, var(--asini-danger) 10%, var(--asini-bg));
+    color: var(--asini-danger);
+    border-color: color-mix(in oklch, var(--asini-danger) 25%, transparent);
+  }
+  .asini-badge-info {
+    background: color-mix(in oklch, var(--asini-info) 10%, var(--asini-bg));
+    color: var(--asini-info);
+    border-color: color-mix(in oklch, var(--asini-info) 25%, transparent);
+  }
 
-/* ── Alerts ── */
-.asini-alert {
-  @apply flex items-center gap-2 px-3 py-2 text-sm;
-  border-radius: var(--asini-radius);
-}
-.asini-alert-success {
-  background: color-mix(in oklch, var(--asini-success) 10%, var(--asini-bg));
-  color: var(--asini-success);
-  border: 1px solid color-mix(in oklch, var(--asini-success) 25%, transparent);
-}
-.asini-alert-warning {
-  background: color-mix(in oklch, var(--asini-warning) 10%, var(--asini-bg));
-  color: var(--asini-warning);
-  border: 1px solid color-mix(in oklch, var(--asini-warning) 25%, transparent);
-}
-.asini-alert-danger {
-  background: color-mix(in oklch, var(--asini-danger) 10%, var(--asini-bg));
-  color: var(--asini-danger);
-  border: 1px solid color-mix(in oklch, var(--asini-danger) 25%, transparent);
-}
-.asini-alert-info {
-  background: color-mix(in oklch, var(--asini-info) 10%, var(--asini-bg));
-  color: var(--asini-info);
-  border: 1px solid color-mix(in oklch, var(--asini-info) 25%, transparent);
+  /* ── Alerts ── */
+  .asini-alert {
+    @apply flex items-center gap-2 px-3 py-2 text-sm;
+    border-radius: var(--asini-radius);
+  }
+  .asini-alert-success {
+    background: color-mix(in oklch, var(--asini-success) 10%, var(--asini-bg));
+    color: var(--asini-success);
+    border: 1px solid color-mix(in oklch, var(--asini-success) 25%, transparent);
+  }
+  .asini-alert-warning {
+    background: color-mix(in oklch, var(--asini-warning) 10%, var(--asini-bg));
+    color: var(--asini-warning);
+    border: 1px solid color-mix(in oklch, var(--asini-warning) 25%, transparent);
+  }
+  .asini-alert-danger {
+    background: color-mix(in oklch, var(--asini-danger) 10%, var(--asini-bg));
+    color: var(--asini-danger);
+    border: 1px solid color-mix(in oklch, var(--asini-danger) 25%, transparent);
+  }
+  .asini-alert-info {
+    background: color-mix(in oklch, var(--asini-info) 10%, var(--asini-bg));
+    color: var(--asini-info);
+    border: 1px solid color-mix(in oklch, var(--asini-info) 25%, transparent);
+  }
 }
