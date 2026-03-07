@@ -1,0 +1,96 @@
+{
+  "nav_home": "Strona główna",
+  "nav_explore": "Odkrywaj",
+  "nav_login": "Zaloguj się",
+  "nav_signup": "Zarejestruj się",
+  "nav_logout": "Wyloguj",
+
+  "home_title": "Znajdź najlepsze wycieczki i atrakcje",
+  "home_subtitle": "Połącz się z lokalnymi przewodnikami i przeżyj niezapomniane przygody",
+  "home_explore": "Przeglądaj wycieczki",
+  "home_become_guide": "Zostań przewodnikiem",
+
+  "footer_tagline": "thebest.travel — Znajdź swoją następną przygodę",
+
+  "auth_login_title": "Logowanie przewodnika",
+  "auth_login_email": "Email",
+  "auth_login_password": "Hasło",
+  "auth_login_submit": "Zaloguj się",
+  "auth_login_no_account": "Nie masz konta?",
+  "auth_login_signup_link": "Zarejestruj się",
+
+  "auth_signup_title": "Utwórz konto przewodnika",
+  "auth_signup_name": "Imię i nazwisko",
+  "auth_signup_email": "Email",
+  "auth_signup_password": "Hasło",
+  "auth_signup_submit": "Zarejestruj się",
+  "auth_signup_has_account": "Masz już konto?",
+  "auth_signup_login_link": "Zaloguj się",
+
+  "tours_page_title": "Przeglądaj wycieczki | thebest.travel",
+  "tours_page_meta": "Przeglądaj i rezerwuj wycieczki z lokalnymi przewodnikami.",
+  "tours_heading": "Przeglądaj wycieczki",
+  "tours_subtitle": "Odkryj wyjątkowe doświadczenia z lokalnymi przewodnikami.",
+  "tours_empty": "Brak dostępnych wycieczek. Sprawdź ponownie wkrótce!",
+  "tours_contact_pricing": "Zapytaj o cenę",
+
+  "tour_duration": "Czas trwania",
+  "tour_group_size": "Wielkość grupy",
+  "tour_group_up_to": "Do {capacity}",
+  "tour_languages": "Języki",
+  "tour_included": "W cenie",
+  "tour_requirements": "Wymagania",
+  "tour_per_person": "za osobę",
+  "tour_available_dates": "Dostępne terminy",
+  "tour_click_to_book": "Kliknij termin, aby zarezerwować.",
+
+  "breadcrumb_home": "Strona główna",
+  "breadcrumb_tours": "Wycieczki",
+  "breadcrumb_book": "Rezerwacja",
+
+  "book_heading": "Rezerwuj: {tourName}",
+
+  "confirmed_title": "Rezerwacja potwierdzona!",
+  "confirmed_thanks": "Dziękujemy za rezerwację {tourName}.",
+  "confirmed_email_sent": "Potwierdzenie wysłano na {email}.",
+  "confirmed_reference": "Numer rezerwacji",
+  "confirmed_qr_hint": "Pokaż ten kod QR podczas wycieczki",
+  "confirmed_browse_more": "Przeglądaj więcej wycieczek",
+
+  "cancel_title": "Anuluj rezerwację",
+  "cancel_tour": "Wycieczka: {tourName}",
+  "cancel_reference": "Numer rezerwacji: {reference}",
+  "cancel_participants": "Uczestnicy: {count}",
+  "cancel_amount_paid": "Zapłacono: {amount}",
+  "cancel_refund": "Zwrot: {amount}",
+  "cancel_no_refund": "Brak zwrotu zgodnie z polityką anulowania.",
+  "cancel_confirm": "Potwierdź anulowanie",
+  "cancel_keep": "Zachowaj rezerwację",
+
+  "cancelled_title": "Rezerwacja anulowana",
+  "cancelled_refund_notice": "Twoja rezerwacja zosta\u0142a anulowana. Je\u015bli przys\u0142uguje zwrot, pojawi si\u0119 w ci\u0105gu 5\u201310 dni roboczych.",
+
+  "guide_area": "Panel przewodnika",
+  "guide_my_tours": "Moje wycieczki",
+  "guide_bookings": "Rezerwacje",
+  "guide_settings": "Ustawienia",
+
+  "guide_bookings_title": "Rezerwacje",
+  "guide_bookings_empty": "Brak rezerwacji.",
+  "guide_bookings_col_reference": "Numer",
+  "guide_bookings_col_tour": "Wycieczka",
+  "guide_bookings_col_guest": "Gość",
+  "guide_bookings_col_date": "Data rezerwacji",
+  "guide_bookings_col_participants": "Uczestnicy",
+  "guide_bookings_col_amount": "Kwota",
+  "guide_bookings_col_status": "Status",
+  "guide_bookings_col_payment": "Płatność",
+
+  "settings_title": "Ustawienia",
+  "settings_avatar": "Zdjęcie profilowe",
+  "settings_upload_avatar": "Prześlij zdjęcie",
+  "settings_stripe": "Płatności Stripe",
+
+  "locale_en": "English",
+  "locale_pl": "Polski"
+}

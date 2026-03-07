@@ -4,11 +4,13 @@
   let {
     tag = "",
     title = "",
+    titleLines = [],
     subtitle = "",
     compact = false,
   }: {
     tag?: string;
-    title: string;
+    title?: string;
+    titleLines?: string[];
     subtitle?: string;
     compact?: boolean;
   } = $props();
@@ -34,7 +36,7 @@
     {#if tag}
       <div class="sf-hero-tag">{tag}</div>
     {/if}
-    <h1 class="sf-hero-title">{@html title}</h1>
+    <h1 class="sf-hero-title">{#if titleLines.length > 0}{#each titleLines as line, i}{line}{#if i < titleLines.length - 1}<br/>{/if}{/each}{:else}{title}{/if}</h1>
     <div class="sf-hero-line"></div>
     {#if subtitle}
       <p class="sf-hero-sub">{subtitle}</p>
@@ -86,7 +88,7 @@
 <style>
   .sf-hero {
     position: relative;
-    padding: clamp(40px, 8vh, 96px) 0 clamp(28px, 5vh, 56px);
+    padding: clamp(40px, 8vh, 80px) 0 clamp(20px, 3vh, 36px);
   }
 
   .sf-hero--compact {

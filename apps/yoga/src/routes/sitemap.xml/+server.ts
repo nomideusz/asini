@@ -38,7 +38,7 @@ export const GET: RequestHandler = async () => {
 
 	// City pages
 	for (const city of cities) {
-		urls.push(urlEntry(`${BASE}/${encodeURIComponent(city)}`, 'weekly', '0.7'));
+		urls.push(urlEntry(`${BASE}/${encodeURIComponent(city.toLowerCase())}`, 'weekly', '0.7'));
 	}
 
 	// Category pages

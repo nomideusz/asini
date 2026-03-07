@@ -6,12 +6,74 @@
   let { data } = $props();
   let slug = $derived(data.slug);
   let categoryListings = $derived(data.listings);
-  let categoryName = $derived(slug ? slug.replace(/-/g, " ") : "");
+  let categoryName = $derived(data.styleName ?? (slug ? slug.replace(/-/g, " ") : ""));
+
+  /** FAQ structured data for SEO */
+  let faqJsonLd = $derived.by(() => {
+    const priced = categoryListings.filter(s => s.price != null);
+    const avgPrice = priced.length > 0 ? Math.round(priced.reduce((sum, s) => sum + s.price!, 0) / priced.length) : null;
+    const cities = [...new Set(categoryListings.map(s => s.city))].sort();
+
+    const faq: Array<{ q: string; a: string }> = [];
+
+    faq.push({
+      q: `Ile szkół oferuje styl ${categoryName} w Polsce?`,
+      a: `W katalogu szkolyjogi.pl znajduje się ${categoryListings.length} ${categoryListings.length === 1 ? 'szkoła' : 'szkół'} oferujących zajęcia w stylu ${categoryName}.`,
+    });
+
+    if (avgPrice != null) {
+      faq.push({
+        q: `Ile kosztuje ${categoryName}?`,
+        a: `Średnia cena miesięcznego karnetu na zajęcia ${categoryName} wynosi ${avgPrice} PLN.`,
+      });
+    }
+
+    if (cities.length > 0) {
+      faq.push({
+        q: `W jakich miastach dostępne są zajęcia ${categoryName}?`,
+        a: `Zajęcia ${categoryName} dostępne są w ${cities.length} ${cities.length === 1 ? 'mieście' : 'miastach'}: ${cities.slice(0, 10).join(', ')}${cities.length > 10 ? ' i innych' : ''}.`,
+      });
+    }
+
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faq.map(f => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: f.a,
+        },
+      })),
+    };
+  });
 </script>
 
 <svelte:head>
   <link rel="canonical" href="https://szkolyjogi.pl/category/{slug}" />
   <title>{categoryName ? categoryName.charAt(0).toUpperCase() + categoryName.slice(1) : ''} | szkolyjogi.pl</title>
+  <meta
+    name="description"
+    content="Szkoły jogi w stylu {categoryName} — {categoryListings.length} {categoryListings.length === 1 ? 'placówka' : 'placówek'} w katalogu szkolyjogi.pl."
+  />
+  <meta property="og:title" content="{categoryName ? categoryName.charAt(0).toUpperCase() + categoryName.slice(1) : ''} | szkolyjogi.pl" />
+  <meta property="og:description" content="Szkoły jogi w stylu {categoryName} — {categoryListings.length} {categoryListings.length === 1 ? 'placówka' : 'placówek'} w katalogu szkolyjogi.pl." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://szkolyjogi.pl/category/{slug}" />
+  {@html `<script type="application/ld+json">${JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: categoryName ? categoryName.charAt(0).toUpperCase() + categoryName.slice(1) : '',
+    numberOfItems: categoryListings.length,
+    itemListElement: categoryListings.slice(0, 20).map((s, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      url: `https://szkolyjogi.pl/listing/${s.id}`,
+      name: s.name,
+    })),
+  }).replace(/</g, '\\u003c')}</script>`}
+  {@html `<script type="application/ld+json">${JSON.stringify(faqJsonLd).replace(/</g, '\\u003c')}</script>`}
 </svelte:head>
 
 <div class="sf-page-shell">

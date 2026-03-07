@@ -26,7 +26,7 @@
 
   <PageHero
     tag="Regulamin"
-    title="Warunki<br/>korzystania"
+    titleLines={["Warunki", "korzystania"]}
     subtitle="Zasady korzystania z serwisu szkolyjogi.pl."
     compact
   />
@@ -54,7 +54,7 @@
       <h2 class="section-title">§3 Dane szkół jogi</h2>
       <ol>
         <li>Dane szkół jogi są zbierane automatycznie ze źródeł publicznie dostępnych.</li>
-        <li>Właściciel studia jogi może przejąć profil swojej szkoły, kontaktując się z administratorem na adres <a href="mailto:kontakt@szkolyjogi.pl">kontakt@szkolyjogi.pl</a>.</li>
+        <li>Właściciel studia jogi może przejąć profil swojej szkoły, kontaktując się z administratorem na adres <a href="mailto:joga@zaur.app">joga@zaur.app</a>.</li>
         <li>Administrator dokłada starań, aby prezentowane dane były aktualne, jednak nie gwarantuje ich poprawności.</li>
       </ol>
     </section>
@@ -71,7 +71,7 @@
       <h2 class="section-title">§5 Kontakt</h2>
       <p>
         W sprawach związanych z Serwisem prosimy o kontakt na adres
-        <a href="mailto:kontakt@szkolyjogi.pl">kontakt@szkolyjogi.pl</a>.
+        <a href="mailto:joga@zaur.app">joga@zaur.app</a>.
       </p>
     </section>
   </div>

@@ -147,7 +147,7 @@ def is_yoga_related(place: dict) -> bool:
     fitness_types = {"gym", "health", "fitness_center", "yoga_studio", "spa"}
     if types & fitness_types:
         return True
-    return True
+    return False
 
 
 def _extract_neighborhood(place: dict) -> str:

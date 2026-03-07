@@ -16,6 +16,97 @@ load_dotenv()
 
 log = logging.getLogger("yoga-scraper.db")
 
+# ── Canonical yoga styles (whitelist) ─────────────────────────────────────────
+# Only these styles are allowed in the `styles` table.
+# The STYLE_ALIASES map normalizes LLM output and Polish names to canonical form.
+
+CANONICAL_STYLES = [
+    "Ashtanga", "Vinyasa", "Hatha", "Iyengar", "Kundalini", "Yin",
+    "Yin/Restorative", "Aerial", "Hot Yoga", "Pregnancy", "Nidra",
+    "Mysore", "Power Yoga", "Jivamukti", "Pilates", "Pilates Reformer",
+    "Stretching", "Meditation", "Pranayama", "Therapeutic", "Tai Chi",
+    "Barre",
+]
+
+STYLE_ALIASES: dict[str, str] = {
+    # Canonical (lowercase) → Canonical
+    s.lower(): s for s in CANONICAL_STYLES
+} | {
+    # Common LLM variations
+    "hatha yoga": "Hatha",
+    "ashtanga yoga": "Ashtanga",
+    "ashtanga vinyasa": "Ashtanga",
+    "vinyasa yoga": "Vinyasa",
+    "vinyasa flow": "Vinyasa",
+    "flow yoga": "Vinyasa",
+    "flow": "Vinyasa",
+    "iyengar yoga": "Iyengar",
+    "kundalini yoga": "Kundalini",
+    "yin yoga": "Yin",
+    "restorative": "Yin/Restorative",
+    "restorative yoga": "Yin/Restorative",
+    "yin restorative": "Yin/Restorative",
+    "aerial yoga": "Aerial",
+    "joga w hamakach": "Aerial",
+    "hamaki": "Aerial",
+    "antigravity": "Aerial",
+    "antigravity yoga": "Aerial",
+    "hot yoga": "Hot Yoga",
+    "bikram": "Hot Yoga",
+    "bikram yoga": "Hot Yoga",
+    "joga dla ciężarnych": "Pregnancy",
+    "joga dla kobiet w ciąży": "Pregnancy",
+    "prenatal": "Pregnancy",
+    "prenatal yoga": "Pregnancy",
+    "yoga nidra": "Nidra",
+    "joga nidra": "Nidra",
+    "mysore ashtanga": "Mysore",
+    "power yoga": "Power Yoga",
+    "power": "Power Yoga",
+    "jivamukti yoga": "Jivamukti",
+    "pilates matowy": "Pilates",
+    "pilates mat": "Pilates",
+    "pilates na reformerze": "Pilates Reformer",
+    "reformer": "Pilates Reformer",
+    "reformer pilates": "Pilates Reformer",
+    "rozciąganie": "Stretching",
+    "stretching": "Stretching",
+    "medytacja": "Meditation",
+    "meditation": "Meditation",
+    "mindfulness": "Meditation",
+    # Pranayama
+    "pranayama": "Pranayama",
+    "pranajama": "Pranayama",
+    # Therapeutic
+    "therapeutic": "Therapeutic",
+    "therapeutic yoga": "Therapeutic",
+    "yoga therapy": "Therapeutic",
+    "joga terapeutyczna": "Therapeutic",
+    # Tai Chi / Qigong
+    "tai chi": "Tai Chi",
+    "tai-chi": "Tai Chi",
+    "taichi": "Tai Chi",
+    "qigong": "Tai Chi",
+    "qi-gong": "Tai Chi",
+    "qi gong": "Tai Chi",
+    # Barre
+    "barre": "Barre",
+    "barre fitness": "Barre",
+    "barre pilates": "Barre",
+    # Polish generic names
+    "joga": "Hatha",
+    "yoga": "Hatha",
+}
+
+
+def normalize_style(name: str) -> Optional[str]:
+    """Map a style name to its canonical form. Returns None if not recognized."""
+    if not name or not isinstance(name, str):
+        return None
+    key = name.strip().lower()
+    return STYLE_ALIASES.get(key)
+
+
 # ── Required columns per table (the scraper reads/writes these) ──────────────
 # This is the contract with the SvelteKit Drizzle schema.
 # If a column is renamed/removed there, the scraper will fail loudly at startup.
@@ -242,6 +333,137 @@ def upsert_school(conn: libsql_client.ClientSync, school: dict) -> None:
     ])
 
 
+def compute_monthly_price(tiers: list[dict]) -> tuple[Optional[float], bool]:
+    """Pick the best monthly-equivalent price from pricing tiers.
+
+    Returns (price, is_estimated) tuple.
+    Skips discounted tiers (Multisport, Medicover, student, per-class packs)
+    and premium-only tiers (reformer, aerial).
+
+    Priority:
+    1. 'unlimited' tier with validity_days ~30, full price (not discounted)
+    2. 'membership' tier with validity_days ~30, full price
+    3. Any unlimited/membership tier — divide price by (validity_days/30)
+    4. Estimate from pack/single tiers: cheapest per-class × 12 classes/month
+    5. Fall back to (None, False)
+    """
+    PREMIUM_KEYWORDS = {"reformer", "aerial", "hamak", "hammock", "silk", "jedwab"}
+    DISCOUNT_KEYWORDS = {
+        "multisport", "medicover", "fitprofit", "gofit", "fit&more",
+        "student", "studenc", "senior", "emeryt", "promo", "promoc",
+        "porann",  # morning-only passes
+    }
+
+    def _is_premium_only(tier: dict) -> bool:
+        class_types = tier.get("class_types") or []
+        if not class_types:
+            return False
+        return all(
+            any(kw in ct.lower() for kw in PREMIUM_KEYWORDS)
+            for ct in class_types
+        )
+
+    def _is_discounted(tier: dict) -> bool:
+        name_lower = (tier.get("name") or "").lower()
+        notes_lower = (tier.get("notes") or "").lower()
+        combined = f"{name_lower} {notes_lower}"
+        return any(kw in combined for kw in DISCOUNT_KEYWORDS)
+
+    def _is_per_class_membership(tier: dict) -> bool:
+        """Skip memberships that are really per-class packs (e.g. '2-5 zajęć')."""
+        name_lower = (tier.get("name") or "").lower()
+        entries = tier.get("entries")
+        if entries and entries < 20:
+            return True
+        # Pattern: "od X do Y zajęć" or "X zajęć"
+        import re
+        if re.search(r'\d+\s*(do\s*\d+\s*)?(zajęci|wejś|entries|classes)', name_lower):
+            return True
+        return False
+
+    standard_monthly: list[float] = []
+    normalizable: list[float] = []
+
+    for tier in tiers:
+        tier_type = (tier.get("tier_type") or "").lower()
+        if tier_type not in ("unlimited", "membership"):
+            continue
+        if _is_premium_only(tier):
+            continue
+        if _is_discounted(tier):
+            continue
+        if _is_per_class_membership(tier):
+            continue
+
+        price = tier.get("price_pln")
+        validity = tier.get("validity_days")
+        if not price or price <= 0:
+            continue
+
+        if validity and 25 <= validity <= 35:
+            standard_monthly.append(price)
+        elif validity and validity > 35:
+            normalized = round(price * 30 / validity, 2)
+            normalizable.append(normalized)
+        elif validity is None:
+            name_lower = (tier.get("name") or "").lower()
+            # Explicit monthly keywords
+            if any(kw in name_lower for kw in ("miesi", "month", "30 dni")):
+                standard_monthly.append(price)
+            elif "open" in name_lower and tier_type == "unlimited":
+                standard_monthly.append(price)
+            elif not any(kw in name_lower for kw in ("rok", "year", "kwartal", "quarter", "półrocz", "6 mies", "12 mies")):
+                # No validity, no long-term keywords → assume monthly
+                standard_monthly.append(price)
+
+    # Prefer direct monthly; pick the MOST EXPENSIVE standard monthly
+    # (cheapest is often a limited/discounted tier that slipped through)
+    if standard_monthly:
+        # Among standard monthly tiers, the main "Karnet Open" is typically
+        # the most expensive non-premium one. Use max.
+        best = max(standard_monthly)
+        return (best, False) if best <= 600 else (None, False)
+
+    if normalizable:
+        best = max(normalizable)
+        return (best, False) if best <= 600 else (None, False)
+
+    # Fallback: estimate from pack tiers (e.g. "8 wejść" → per-class × 12)
+    # Assumes ~12 classes/month (3x/week) for a comparable monthly cost
+    CLASSES_PER_MONTH = 12
+    pack_per_class: list[float] = []
+
+    for tier in tiers:
+        tier_type = (tier.get("tier_type") or "").lower()
+        if tier_type not in ("pack", "single"):
+            continue
+        if _is_premium_only(tier):
+            continue
+        if _is_discounted(tier):
+            continue
+
+        price = tier.get("price_pln")
+        entries = tier.get("entries")
+        if not price or price <= 0:
+            continue
+
+        if tier_type == "single" and (entries is None or entries == 1):
+            pack_per_class.append(price)
+        elif tier_type == "pack" and entries and entries >= 4:
+            pack_per_class.append(price / entries)
+
+    if pack_per_class:
+        # Use the cheapest per-class rate (bulk discount = best deal)
+        best_per_class = min(pack_per_class)
+        estimated = round(best_per_class * CLASSES_PER_MONTH, 2)
+        # Floor at 100 PLN — below that is likely bad data (single cheap class)
+        if estimated < 100:
+            return (None, False)
+        return (estimated, True) if estimated <= 600 else (None, False)
+
+    return (None, False)
+
+
 def update_pricing(conn: libsql_client.ClientSync, school_id: str, pricing: dict) -> None:
     """Update pricing fields for a school.
 
@@ -267,9 +489,19 @@ def update_pricing(conn: libsql_client.ClientSync, school_id: str, pricing: dict
     if pricing.get("trial_info"):
         notes = f"{notes} | {pricing['trial_info']}" if notes else pricing["trial_info"]
 
+    # Compute normalized monthly price from tiers, with LLM fallback
+    tiers = pricing.get("tiers") or []
+    normalized_price, is_estimated = compute_monthly_price(tiers)
+    if normalized_price is None:
+        raw = pricing.get("monthly_pass_pln")
+        if raw is not None and raw <= 600:
+            normalized_price = raw
+            is_estimated = False
+
     conn.execute("""
         UPDATE schools SET
             price = ?,
+            price_estimated = ?,
             trial_price = ?,
             single_class_price = ?,
             pricing_notes = ?,
@@ -279,7 +511,8 @@ def update_pricing(conn: libsql_client.ClientSync, school_id: str, pricing: dict
             source = CASE WHEN source = 'google-places' THEN 'crawl4ai' ELSE source END
         WHERE id = ?
     """, [
-        pricing.get("monthly_pass_pln"),
+        normalized_price,
+        1 if is_estimated else 0,
         pricing.get("trial_price_pln"),
         pricing.get("single_class_pln"),
         notes or pricing.get("pricing_notes"),
@@ -310,30 +543,34 @@ def update_about(conn: libsql_client.ClientSync, school_id: str, about: dict) ->
         school_id,
     ])
 
-    # Update styles
-    styles = about.get("styles", [])
-    if styles:
+    # Update styles (normalized to canonical whitelist)
+    raw_styles = about.get("styles", [])
+    if raw_styles:
         existing = set(get_school_styles(conn, school_id))
-        for style_name in styles:
+        for raw in raw_styles:
             # Defensive: LLM may return dicts instead of strings
-            if isinstance(style_name, dict):
-                style_name = style_name.get("name", style_name.get("style", ""))
-            if not isinstance(style_name, str) or not style_name.strip():
+            if isinstance(raw, dict):
+                raw = raw.get("name", raw.get("style", ""))
+            if not isinstance(raw, str) or not raw.strip():
                 continue
-            style_name = style_name.strip()
-            if style_name in existing:
+            canonical = normalize_style(raw)
+            if canonical is None:
+                log.debug("Ignoring unrecognized style '%s' for %s", raw, school_id)
                 continue
-            rs = conn.execute("SELECT id FROM styles WHERE name = ?", [style_name])
+            if canonical in existing:
+                continue
+            rs = conn.execute("SELECT id FROM styles WHERE name = ?", [canonical])
             if rs.rows:
                 style_id = rs.rows[0][0]
             else:
-                conn.execute("INSERT INTO styles (name) VALUES (?)", [style_name])
-                rs = conn.execute("SELECT id FROM styles WHERE name = ?", [style_name])
+                conn.execute("INSERT INTO styles (name) VALUES (?)", [canonical])
+                rs = conn.execute("SELECT id FROM styles WHERE name = ?", [canonical])
                 style_id = rs.rows[0][0]
             conn.execute(
                 "INSERT OR IGNORE INTO school_styles (school_id, style_id) VALUES (?, ?)",
                 [school_id, style_id],
             )
+            existing.add(canonical)
 
 
 def update_description(conn: libsql_client.ClientSync, school_id: str, description: str) -> None:

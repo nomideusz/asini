@@ -1,0 +1,96 @@
+{
+  "nav_home": "Home",
+  "nav_explore": "Explore",
+  "nav_login": "Login",
+  "nav_signup": "Sign up",
+  "nav_logout": "Log out",
+
+  "home_title": "Find the Best Tours & Experiences",
+  "home_subtitle": "Connect with local guides for unforgettable adventures",
+  "home_explore": "Explore Tours",
+  "home_become_guide": "Become a Guide",
+
+  "footer_tagline": "thebest.travel — Find Your Next Adventure",
+
+  "auth_login_title": "Guide login",
+  "auth_login_email": "Email",
+  "auth_login_password": "Password",
+  "auth_login_submit": "Log in",
+  "auth_login_no_account": "No account yet?",
+  "auth_login_signup_link": "Sign up",
+
+  "auth_signup_title": "Create guide account",
+  "auth_signup_name": "Name",
+  "auth_signup_email": "Email",
+  "auth_signup_password": "Password",
+  "auth_signup_submit": "Sign up",
+  "auth_signup_has_account": "Already have an account?",
+  "auth_signup_login_link": "Log in",
+
+  "tours_page_title": "Explore Tours | thebest.travel",
+  "tours_page_meta": "Browse and book guided tours from local experts.",
+  "tours_heading": "Explore Tours",
+  "tours_subtitle": "Discover unique experiences led by local guides.",
+  "tours_empty": "No tours available yet. Check back soon!",
+  "tours_contact_pricing": "Contact for pricing",
+
+  "tour_duration": "Duration",
+  "tour_group_size": "Group size",
+  "tour_group_up_to": "Up to {capacity}",
+  "tour_languages": "Languages",
+  "tour_included": "What's included",
+  "tour_requirements": "Requirements",
+  "tour_per_person": "per person",
+  "tour_available_dates": "Available dates",
+  "tour_click_to_book": "Click a slot to book.",
+
+  "breadcrumb_home": "Home",
+  "breadcrumb_tours": "Tours",
+  "breadcrumb_book": "Book",
+
+  "book_heading": "Book: {tourName}",
+
+  "confirmed_title": "Booking Confirmed!",
+  "confirmed_thanks": "Thank you for booking {tourName}.",
+  "confirmed_email_sent": "A confirmation email has been sent to {email}.",
+  "confirmed_reference": "Reference",
+  "confirmed_qr_hint": "Show this QR code at your tour",
+  "confirmed_browse_more": "Browse more tours",
+
+  "cancel_title": "Cancel Booking",
+  "cancel_tour": "Tour: {tourName}",
+  "cancel_reference": "Reference: {reference}",
+  "cancel_participants": "Participants: {count}",
+  "cancel_amount_paid": "Amount paid: {amount}",
+  "cancel_refund": "Refund: {amount}",
+  "cancel_no_refund": "No refund applies per the cancellation policy.",
+  "cancel_confirm": "Confirm cancellation",
+  "cancel_keep": "Keep my booking",
+
+  "cancelled_title": "Booking Cancelled",
+  "cancelled_refund_notice": "Your booking has been cancelled. If a refund applies, it will appear within 5\u201310 business days.",
+
+  "guide_area": "Guide Area",
+  "guide_my_tours": "My Tours",
+  "guide_bookings": "Bookings",
+  "guide_settings": "Settings",
+
+  "guide_bookings_title": "Bookings",
+  "guide_bookings_empty": "No bookings yet.",
+  "guide_bookings_col_reference": "Reference",
+  "guide_bookings_col_tour": "Tour",
+  "guide_bookings_col_guest": "Guest",
+  "guide_bookings_col_date": "Date booked",
+  "guide_bookings_col_participants": "Participants",
+  "guide_bookings_col_amount": "Amount",
+  "guide_bookings_col_status": "Status",
+  "guide_bookings_col_payment": "Payment",
+
+  "settings_title": "Settings",
+  "settings_avatar": "Profile Avatar",
+  "settings_upload_avatar": "Upload Avatar",
+  "settings_stripe": "Stripe Payments",
+
+  "locale_en": "English",
+  "locale_pl": "Polski"
+}

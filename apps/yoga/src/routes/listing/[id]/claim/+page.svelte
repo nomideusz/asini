@@ -9,6 +9,8 @@
 <svelte:head>
   <title>Przejmij profil — {listing.name} | szkolyjogi.pl</title>
   <meta name="description" content="Przejmij profil studia {listing.name} w katalogu szkolyjogi.pl." />
+  <meta property="og:title" content="Przejmij profil — {listing.name} | szkolyjogi.pl" />
+  <link rel="canonical" href="https://szkolyjogi.pl/listing/{listing.id}/claim" />
 </svelte:head>
 
 <div class="sf-page-shell">
@@ -44,19 +46,22 @@
         </header>
 
         {#if form?.error}
-          <div class="form-error">
+          <div class="form-error" id="form-error" role="alert">
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.3"/><path d="M8 4.5V8.5M8 10.5V11" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
             {form.error}
           </div>
         {/if}
 
-        <form method="POST" class="claim-form">
+        <form method="POST" class="claim-form" novalidate>
           <div class="field">
             <label for="name" class="field-label">Imię i nazwisko <span class="required">*</span></label>
             <input
               type="text"
               id="name"
               name="name"
+              required
+              aria-required="true"
+              aria-describedby={form?.error ? 'form-error' : undefined}
               value={form?.name ?? ''}
               class="field-input"
               placeholder="Jan Kowalski"
@@ -66,9 +71,12 @@
           <div class="field">
             <label for="email" class="field-label">E-mail <span class="required">*</span></label>
             <input
-              type="text"
+              type="email"
               id="email"
               name="email"
+              required
+              aria-required="true"
+              aria-describedby={form?.error ? 'form-error' : undefined}
               value={form?.email ?? ''}
               class="field-input"
               placeholder="jan@studio.pl"
@@ -89,7 +97,7 @@
 
           <div class="field">
             <label for="role" class="field-label">Rola w studiu <span class="required">*</span></label>
-            <select id="role" name="role" class="field-input">
+            <select id="role" name="role" class="field-input" required aria-required="true">
               <option value="" disabled selected={!form?.role}>Wybierz...</option>
               <option value="owner" selected={form?.role === 'owner'}>Właściciel/ka</option>
               <option value="manager" selected={form?.role === 'manager'}>Manager/ka</option>
@@ -117,7 +125,7 @@
       <div class="sf-card panel studio-preview">
         <span class="panel-label">Studio</span>
         <h2 class="preview-name">{listing.name}</h2>
-        <p class="preview-address">{listing.address}, {listing.city}</p>
+        <p class="preview-address">{listing.address}{listing.address && !listing.address.includes(listing.city) ? `, ${listing.city}` : !listing.address ? listing.city : ''}</p>
         {#if listing.styles.length > 0}
           <p class="preview-styles">{listing.styles.join(', ')}</p>
         {/if}

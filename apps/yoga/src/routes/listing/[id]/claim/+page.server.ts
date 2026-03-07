@@ -2,6 +2,7 @@ import { error, fail, redirect } from '@sveltejs/kit';
 import { getListingById } from '$lib/server/db/queries';
 import { db } from '$lib/server/db';
 import { claimRequests } from '$lib/server/db/schema';
+import { sendClaimNotification } from '$lib/server/email';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ params }) => {
@@ -41,6 +42,8 @@ export const actions: Actions = {
       });
     }
 
+    const listing = await getListingById(params.id);
+
     await db.insert(claimRequests).values({
       schoolId: params.id,
       name,
@@ -50,7 +53,19 @@ export const actions: Actions = {
       message,
     });
 
-    // TODO: Send email notification to kontakt@szkolyjogi.pl about new claim request
+    try {
+      await sendClaimNotification({
+        schoolName: listing?.name ?? params.id,
+        schoolId: params.id,
+        claimantName: name,
+        claimantEmail: email,
+        claimantPhone: phone,
+        claimantRole: role,
+        message,
+      });
+    } catch {
+      // Email failure should not block the claim submission
+    }
 
     return { success: true };
   },

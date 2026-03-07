@@ -26,6 +26,7 @@
     ...(hideCityColumn
       ? []
       : [{ key: "city", label: "Miasto", align: "left" }]),
+    { key: "price", label: "Cena", align: "right", sortable: false },
     { key: "rating", label: "Ocena", align: "right" },
   ]);
 
@@ -41,9 +42,25 @@
   // Deduplicate and extract all unique styles
   const plCollator = new Intl.Collator('pl-PL');
 
-  let uniqueStyles = $derived(
-    Array.from(new Set(schools.flatMap((school) => school.styles))).sort(plCollator.compare),
+  /** Unique styles with school counts, sorted alphabetically */
+  let stylesWithCounts = $derived(
+    (() => {
+      const counts = new Map<string, number>();
+      for (const school of schools) {
+        for (const style of school.styles) {
+          counts.set(style, (counts.get(style) ?? 0) + 1);
+        }
+      }
+      return Array.from(counts.entries())
+        .map(([style, count]) => ({ style, count }))
+        .sort((a, b) => plCollator.compare(a.style, b.style));
+    })()
   );
+
+  let uniqueStyles = $derived(stylesWithCounts.map((s) => s.style));
+
+  /** Only show filters when there are enough schools and styles to make filtering useful */
+  let showStyleFilters = $derived(schools.length >= 5 && stylesWithCounts.length >= 3);
 
   let selectedStyle = $state("Wszystkie");
 
@@ -107,6 +124,13 @@
     return score;
   }
 
+  /** Get the effective sort value for a listing, handling price fallback */
+  function getSortValue(s: Listing, key: string): string | number | null {
+    if (key === 'price') return s.price ?? s.singleClassPrice ?? null;
+    // @ts-ignore
+    return s[key] ?? null;
+  }
+
   // Filter first, then sort (null values pushed to bottom)
   let filteredAndSortedSchools = $derived(
     [...schools]
@@ -115,10 +139,8 @@
         return school.styles.includes(selectedStyle);
       })
       .sort((a, b) => {
-        // @ts-ignore
-        const valA = a[sortKey];
-        // @ts-ignore
-        const valB = b[sortKey];
+        const valA = getSortValue(a, sortKey);
+        const valB = getSortValue(b, sortKey);
 
         // Push nulls to bottom regardless of sort direction
         if (valA == null && valB == null) {
@@ -156,7 +178,7 @@
 
   $effect(() => {
     if (selectedStyle === "Wszystkie") return;
-    if (!uniqueStyles.includes(selectedStyle)) {
+    if (!showStyleFilters || !uniqueStyles.includes(selectedStyle)) {
       selectedStyle = "Wszystkie";
     }
   });
@@ -191,6 +213,7 @@
 </script>
 
 <div class="filter-bar">
+  {#if showStyleFilters}
   <div class="filter-left">
     <span class="muted filter-label">Filtruj wg stylu:</span>
     <button
@@ -200,16 +223,17 @@
     >
       Wszystkie
     </button>
-    {#each uniqueStyles as style (style)}
+    {#each stylesWithCounts as { style, count } (style)}
       <button
         class="filter-btn"
         class:active={selectedStyle === style}
         onclick={() => (selectedStyle = style)}
       >
-        {style}
+        {style} <span class="filter-count">({count})</span>
       </button>
     {/each}
   </div>
+  {/if}
   <div class="view-toggle" role="radiogroup" aria-label="Widok listy">
     <button
       class="toggle-btn"
@@ -255,19 +279,28 @@
 <div class="table-card sf-card">
   <div class="table-header" class:hide-city={hideCityColumn}>
     {#each headers as header (header.key)}
-      <button
-        class="th"
-        class:sorted={sortKey === header.key}
-        class:align-right={header.align === "right"}
-        onclick={() => sortBy(header.key)}
-      >
-        {header.label}
-        {#if sortKey === header.key}
-          <span class="sort-icon">{sortDirection === 1 ? "▲" : "▼"}</span>
-        {:else}
-          <span class="sort-icon sort-icon-hidden">▲</span>
-        {/if}
-      </button>
+      {#if header.sortable === false}
+        <span
+          class="th th--static"
+          class:align-right={header.align === "right"}
+        >
+          {header.label}
+        </span>
+      {:else}
+        <button
+          class="th"
+          class:sorted={sortKey === header.key}
+          class:align-right={header.align === "right"}
+          onclick={() => sortBy(header.key)}
+        >
+          {header.label}
+          {#if sortKey === header.key}
+            <span class="sort-icon">{sortDirection === 1 ? "▲" : "▼"}</span>
+          {:else}
+            <span class="sort-icon sort-icon-hidden">▲</span>
+          {/if}
+        </button>
+      {/if}
     {/each}
   </div>
 
@@ -293,21 +326,14 @@
         <a href="/listing/{school.id}" class="school-link">{school.name}</a>
         {#if school.styles.length > 0}
           <span class="style-tags">
-            {#each school.styles as style (`${school.id}-${style}`)}
+            {#each school.styles as style, si (`${school.id}-${si}`)}
               <span class="style-tag">{style}</span>
             {/each}
           </span>
         {/if}
-        {#if school.price != null || school.singleClassPrice != null || school.trialPrice === 0}
+        {#if school.trialPrice === 0}
           <span class="name-meta">
-            {#if school.price != null}
-              <span class="inline-detail">{school.price} zł/mies.</span>
-            {:else if school.singleClassPrice != null}
-              <span class="inline-detail">{school.singleClassPrice} zł/wej.</span>
-            {/if}
-            {#if school.trialPrice === 0}
-              <span class="trial-badge">Bezpłatne zajęcia próbne</span>
-            {/if}
+            <span class="trial-badge">Bezpłatne zajęcia próbne</span>
           </span>
         {/if}
       </span>
@@ -320,6 +346,18 @@
           {/if}
         </span>
       {/if}
+
+      <span class="td td--price">
+        {#if school.price != null}
+          <span class="price-value">{school.price} zł</span>
+          <span class="price-period">/ mies.</span>
+        {:else if school.singleClassPrice != null}
+          <span class="price-value">{school.singleClassPrice} zł</span>
+          <span class="price-period">/ wej.</span>
+        {:else}
+          <span class="muted">—</span>
+        {/if}
+      </span>
 
       <span class="td td--rating">
         {#if school.rating != null}
@@ -336,6 +374,9 @@
   {:else}
     <div class="empty-state">
       Brak wyników — żadna ze szkół nie pasuje do wybranych kryteriów.
+      {#if selectedStyle !== "Wszystkie"}
+        <button class="empty-action" onclick={() => (selectedStyle = "Wszystkie")}>Pokaż wszystkie style</button>
+      {/if}
     </div>
   {/each}
 </div>
@@ -359,13 +400,17 @@
 
       {#if school.styles.length > 0}
         <div class="card-styles">
-          {#each school.styles.slice(0, 4) as style (`${school.id}-card-${style}`)}
+          {#each school.styles.slice(0, 4) as style, si (`${school.id}-card-${si}`)}
             <span class="style-tag">{style}</span>
           {/each}
           {#if school.styles.length > 4}
             <span class="style-tag style-tag--more">+{school.styles.length - 4}</span>
           {/if}
         </div>
+      {/if}
+
+      {#if school.trialPrice === 0}
+        <span class="card-badge">Darmowe pierwsze zajęcia</span>
       {/if}
 
       <div class="card-bottom">
@@ -394,13 +439,13 @@
         </div>
       </div>
 
-      {#if school.trialPrice === 0}
-        <div class="card-badge">Darmowe pierwsze zajęcia</div>
-      {/if}
     </a>
   {:else}
     <div class="empty-state">
       Brak wyników — żadna ze szkół nie pasuje do wybranych kryteriów.
+      {#if selectedStyle !== "Wszystkie"}
+        <button class="empty-action" onclick={() => (selectedStyle = "Wszystkie")}>Pokaż wszystkie style</button>
+      {/if}
     </div>
   {/each}
 </div>
@@ -429,7 +474,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: var(--spacing-xs);
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: var(--spacing-md);
     justify-content: space-between;
   }
@@ -456,7 +501,7 @@
     background: var(--sf-card);
     color: var(--sf-dark);
     border: 1px solid var(--sf-line);
-    padding: 5px 12px;
+    padding: 8px 16px;
     font-family: var(--font-body);
     font-size: 0.72rem;
     letter-spacing: 0.06em;
@@ -479,6 +524,11 @@
     font-weight: 600;
   }
 
+  .filter-count {
+    opacity: 0.65;
+    font-size: 0.64rem;
+  }
+
   /* ── Table card wrapper ── */
   .table-card {
     overflow-x: auto;
@@ -495,7 +545,7 @@
   .table-header,
   .table-row {
     display: grid;
-    grid-template-columns: 4fr 1.2fr 0.6fr;
+    grid-template-columns: 3.5fr 1.2fr 0.8fr 0.6fr;
     align-items: center;
     padding: 0 var(--spacing-md);
     min-width: 480px;
@@ -503,7 +553,7 @@
 
   .table-header.hide-city,
   .table-row.hide-city {
-    grid-template-columns: 4.5fr 0.6fr;
+    grid-template-columns: 4fr 0.8fr 0.6fr;
   }
 
   /* ── Header row ── */
@@ -529,6 +579,14 @@
 
   .th:hover {
     color: var(--sf-dark);
+  }
+
+  .th--static {
+    cursor: default;
+  }
+
+  .th--static:hover {
+    color: var(--sf-muted);
   }
 
   .th.sorted {
@@ -621,6 +679,25 @@
     text-overflow: ellipsis;
   }
 
+  .td--price {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .price-value {
+    font-weight: 600;
+    color: var(--sf-dark);
+  }
+
+  .price-period {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--sf-muted);
+    letter-spacing: 0.03em;
+    margin-left: 1px;
+  }
+
   .td--rating {
     text-align: right;
     font-variant-numeric: tabular-nums;
@@ -632,13 +709,6 @@
     flex-wrap: wrap;
     align-items: center;
     gap: 6px;
-  }
-
-  .inline-detail {
-    font-family: var(--font-mono);
-    font-size: 0.62rem;
-    color: var(--sf-muted);
-    letter-spacing: 0.03em;
   }
 
   .trial-badge {
@@ -687,6 +757,7 @@
     border-radius: var(--radius-sm);
     padding: 2px;
     flex-shrink: 0;
+    margin-left: auto;
   }
 
   .toggle-btn {
@@ -727,7 +798,6 @@
     gap: 12px;
     padding: var(--spacing-md);
     text-decoration: none;
-    position: relative;
   }
 
   .card-top {
@@ -829,9 +899,7 @@
   }
 
   .card-badge {
-    position: absolute;
-    top: 12px;
-    right: 12px;
+    align-self: flex-start;
     font-family: var(--font-mono);
     font-size: 0.56rem;
     text-transform: uppercase;
@@ -859,6 +927,27 @@
     font-size: 0.72rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
+  }
+
+  .empty-action {
+    display: block;
+    margin: 16px auto 0;
+    background: none;
+    border: 1px solid var(--sf-line);
+    color: var(--sf-accent);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    padding: 8px 20px;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    transition: border-color var(--dur-fast) ease;
+  }
+
+  .empty-action:hover {
+    border-color: var(--sf-accent);
   }
 
   /* ── Responsive ── */

@@ -26,7 +26,7 @@
 
   <PageHero
     tag="O projekcie"
-    title="Joga w jednym<br/>miejscu"
+    titleLines={["Joga w jednym", "miejscu"]}
     subtitle="Katalog szkół jogi w Polsce — przejrzysty, aktualny, bezpłatny."
     compact
   />
@@ -54,7 +54,7 @@
       </p>
       <p>
         Masz pytania? Napisz do nas na
-        <a href="mailto:kontakt@szkolyjogi.pl">kontakt@szkolyjogi.pl</a>.
+        <a href="mailto:joga@zaur.app">joga@zaur.app</a>.
       </p>
     </section>
   </div>

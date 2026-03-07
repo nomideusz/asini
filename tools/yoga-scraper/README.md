@@ -52,24 +52,29 @@ yoga-scraper seed
 yoga-scraper seed --cities Warszawa Kraków
 yoga-scraper seed --dry-run
 
-# Auto-discover pricing/schedule URLs
-yoga-scraper discover
-yoga-scraper discover --school yoga-republic
-yoga-scraper discover --probe-only
-
-# Scrape websites for pricing, schedules, styles
+# Scrape websites for pricing, about, schedules
 yoga-scraper scrape
 yoga-scraper scrape --school yoga-republic
 yoga-scraper scrape --prices-only
 yoga-scraper scrape --city Kraków
 yoga-scraper scrape --force --limit 5
 
-# Generate editorial descriptions
+# Scrape Fitssey schedules (Playwright XHR intercept)
+yoga-scraper scrape-schedules
+yoga-scraper scrape-schedules --school joga-centrum
+yoga-scraper scrape-schedules --retry-empty
+yoga-scraper scrape-schedules --engine crawl4ai
+
+# Generate editorial descriptions from raw text
 yoga-scraper normalize
 yoga-scraper normalize --school yoga-republic
 yoga-scraper normalize --force
 
-# Check data freshness
+# Consolidate duplicate yoga styles to canonical names
+yoga-scraper consolidate-styles --dry-run
+yoga-scraper consolidate-styles
+
+# Check data coverage
 yoga-scraper status
 yoga-scraper status --missing prices
 yoga-scraper status --missing schedules
@@ -83,11 +88,12 @@ yoga-scraper log --task scrape_pricing
 ## Full Pipeline
 
 ```bash
-yoga-scraper seed                    # 1. Discover schools
-yoga-scraper discover                # 2. Find pricing/schedule URLs
-yoga-scraper scrape                  # 3. Enrich with website data
-yoga-scraper normalize               # 4. Generate descriptions
-yoga-scraper status                  # 5. Check what's still missing
+yoga-scraper seed                    # 1. Discover schools via Google Places
+yoga-scraper scrape                  # 2. Enrich with website data (prices, about, schedule)
+yoga-scraper scrape-schedules        # 3. Scrape Fitssey schedules (XHR intercept)
+yoga-scraper normalize               # 4. Generate editorial descriptions
+yoga-scraper consolidate-styles      # 5. Merge duplicate yoga styles
+yoga-scraper status                  # 6. Check what's still missing
 ```
 
 ## Schema Validation
@@ -119,12 +125,15 @@ yoga-scraper/
 ├── seeds.yaml              # Known yoga schools with URLs
 ├── src/
 │   ├── cli.py              # Unified CLI entry point
-│   ├── db.py               # Database connection, schema validation, queries
+│   ├── db.py               # Database connection, schema validation, queries, style normalization
 │   ├── tracking.py         # Scrape log & freshness reporting
 │   ├── models.py           # Pydantic models for LLM extraction
 │   ├── seed_from_places.py # Google Places discovery
-│   ├── discover_urls.py    # URL probing + browser crawl
-│   ├── scrape_to_db.py     # Website scraping → DB
+│   ├── scrape.py           # Website scraping (crawl4ai + LLM) → DB
+│   ├── scrape_fitssey.py   # Fitssey schedule scraping (Playwright XHR intercept)
 │   └── normalize.py        # LLM description generation
+├── _dashboard.py           # Quick data coverage dashboard
+├── _overnight.py           # Batch scraper (all cities, subprocess per city)
+├── _validate.py            # Manual extraction quality review
 └── tests/
 ```

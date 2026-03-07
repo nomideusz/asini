@@ -1,8 +1,9 @@
 <script lang="ts">
   import type { PageData } from "./$types";
-  import { priceFreshness, formatDateEU, DAY_NAMES_PL } from "$lib/data";
+  import { priceFreshness, formatDateEU } from "$lib/data";
   import type { ScheduleEntry } from "$lib/data";
   import Breadcrumbs from "$lib/components/Breadcrumbs.svelte";
+  import ListingMap from "$lib/components/ListingMap.svelte";
   import {
     Calendar,
     createRecurringAdapter,
@@ -16,6 +17,7 @@
   let { data }: { data: PageData } = $props();
   let listing = $derived(data.listing);
   let freshness = $derived(priceFreshness(listing));
+  let googleMapsApiKey = $derived(data.googleMapsApiKey);
 
   let schedule = $derived(listing.schedule ?? []);
   let hasSchedule = $derived(schedule.length > 0);
@@ -32,7 +34,7 @@
   let showScheduleEmpty = $derived(!hasSchedule && hasScheduleUrl);
 
   /** For dated schedules, check if all dates are in the past */
-  let datedIsStale = $derived(() => {
+  let datedIsStale = $derived.by(() => {
     if (scheduleMode !== 'dated' || schedule.length === 0) return false;
     const today = new Date().toISOString().slice(0, 10);
     return schedule.every(e => e.date != null && e.date < today);
@@ -103,8 +105,21 @@
 
   let calendarAdapter = $derived(buildAdapter(schedule));
 
+  // ── Meta description ────────────────────────────────────
+  let metaDescription = $derived.by(() => {
+    if (listing.description) {
+      const clean = listing.description.replace(/\*\*/g, '');
+      return clean.length > 155 ? clean.slice(0, 152) + '...' : clean;
+    }
+    const parts: string[] = [`Studio jogi: ${listing.name} (${listing.address ? listing.address + (!listing.address.includes(listing.city) ? `, ${listing.city}` : '') : listing.city}).`];
+    if (listing.price) parts.push(`Miesięczny karnet: ${listing.price} PLN.`);
+    parts.push(`Style: ${listing.styles.length ? listing.styles.join(', ') : 'Joga'}.`);
+    parts.push('Sprawdź szczegóły na szkolyjogi.pl.');
+    return parts.join(' ');
+  });
+
   // ── JSON-LD structured data ──────────────────────────────
-  let jsonLd = $derived(() => {
+  let jsonLd = $derived.by(() => {
     const ld: Record<string, unknown> = {
       '@context': 'https://schema.org',
       '@type': 'SportsActivityLocation',
@@ -119,6 +134,12 @@
         addressCountry: 'PL',
       },
     };
+
+    // Description: prefer editorial, fall back to Google editorial summary
+    const desc = listing.description || listing.editorialSummary;
+    if (desc) {
+      ld.description = desc.replace(/\*\*/g, '');
+    }
 
     if (listing.latitude != null && listing.longitude != null) {
       ld.geo = {
@@ -142,7 +163,50 @@
     }
 
     if (listing.price != null) {
-      ld.priceRange = `~${listing.price} PLN/mies.`;
+      ld.priceRange = `$$`;
+    }
+
+    // Opening hours from pipe-separated string
+    if (listing.openingHours) {
+      const dayMap: Record<string, string> = {
+        'poniedziałek': 'Mo', 'wtorek': 'Tu', 'środa': 'We',
+        'czwartek': 'Th', 'piątek': 'Fr', 'sobota': 'Sa', 'niedziela': 'Su',
+      };
+      const specs = listing.openingHours.split('|').map(s => s.trim()).filter(Boolean).map(entry => {
+        const match = entry.match(/^(\S+):\s*(\d{2}:\d{2})\s*[-–]\s*(\d{2}:\d{2})$/);
+        if (!match) return null;
+        const [, dayPl, opens, closes] = match;
+        const dayEn = dayMap[dayPl.toLowerCase()];
+        if (!dayEn) return null;
+        return {
+          '@type': 'OpeningHoursSpecification',
+          dayOfWeek: `https://schema.org/${dayEn === 'Mo' ? 'Monday' : dayEn === 'Tu' ? 'Tuesday' : dayEn === 'We' ? 'Wednesday' : dayEn === 'Th' ? 'Thursday' : dayEn === 'Fr' ? 'Friday' : dayEn === 'Sa' ? 'Saturday' : 'Sunday'}`,
+          opens,
+          closes,
+        };
+      }).filter(Boolean);
+      if (specs.length > 0) {
+        ld.openingHoursSpecification = specs;
+      }
+    }
+
+    // sameAs: link to Google Maps
+    if (listing.googleMapsUrl) {
+      ld.sameAs = listing.googleMapsUrl;
+    }
+
+    // Offer catalog for single class price
+    if (listing.singleClassPrice != null) {
+      ld.hasOfferCatalog = {
+        '@type': 'OfferCatalog',
+        name: 'Zajęcia jogi',
+        itemListElement: [{
+          '@type': 'Offer',
+          name: 'Wejście jednorazowe',
+          price: listing.singleClassPrice,
+          priceCurrency: 'PLN',
+        }],
+      };
     }
 
     return ld;
@@ -154,11 +218,7 @@
   <title>{listing.name} | Joga {listing.city} | szkolyjogi.pl</title>
   <meta
     name="description"
-    content="Studio jogi: {listing.name} ({listing.address}, {listing.city}).{listing.price
-      ? ` Miesięczny karnet: ${listing.price} PLN.`
-      : ''} Style: {listing.styles.length
-      ? listing.styles.join(', ')
-      : 'Joga'}. Sprawdź szczegóły na szkolyjogi.pl."
+    content={metaDescription}
   />
   <meta property="og:title" content="{listing.name} | Joga {listing.city}" />
   <meta
@@ -174,7 +234,7 @@
     <meta property="og:image" content={listing.imageUrl} />
   {/if}
   <meta name="twitter:card" content="summary_large_image" />
-  {@html `<script type="application/ld+json">${JSON.stringify(jsonLd())}</script>`}
+  {@html `<script type="application/ld+json">${JSON.stringify(jsonLd).replace(/</g, '\\u003c')}</script>`}
 </svelte:head>
 
 <article class="sf-page-shell">
@@ -197,7 +257,7 @@
       {#if listing.rating != null}
         <span class="listing-meta-dot">·</span>
         <span class="listing-rating">
-          <span class="listing-rating-star">★</span>
+          <span class="listing-rating-star" aria-hidden="true">★</span>
           {listing.rating.toFixed(1)}
           {#if listing.reviews != null}
             <span class="listing-rating-count">({listing.reviews})</span>
@@ -207,7 +267,7 @@
       {#if listing.styles.length > 0}
         <span class="listing-meta-dot">·</span>
         <span class="listing-styles-inline">
-          {#each listing.styles as style, i (style)}
+          {#each listing.styles as style, i (i)}
             <a href="/category/{style.toLowerCase()}" class="style-link">{style}</a>{#if i < listing.styles.length - 1}<span class="style-sep">,</span>{/if}
           {/each}
         </span>
@@ -258,10 +318,10 @@
   <div class="listing-grid">
     <!-- Left column: description + schedule -->
     <div class="listing-main">
-      {#if listing.description}
+      {#if listing.description || listing.editorialSummary}
         <section class="description-section">
           <p class="lead">
-            {listing.description.replace(/\*\*/g, "")}
+            {(listing.description || listing.editorialSummary || '').replace(/\*\*/g, "")}
           </p>
         </section>
       {/if}
@@ -269,7 +329,7 @@
       {#if hasSchedule}
         <section class="schedule-calendar-section">
           <h2 class="panel-label">Grafik zajęć</h2>
-          {#if datedIsStale()}
+          {#if datedIsStale}
             <div class="schedule-stale-notice">
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.3"/><path d="M8 4.5V8.5M8 10.5V11" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
               Grafik może być nieaktualny — ostatnie zajęcia w przeszłości.
@@ -340,7 +400,10 @@
         <h2 class="panel-label">Cennik</h2>
         <div class="price-hero">
           <span class="price-hero-value">{listing.price != null ? `${listing.price}` : '—'}</span>
-          <span class="price-hero-unit">{listing.price != null ? 'PLN / miesiąc' : ''}</span>
+          <span class="price-hero-unit">{listing.price != null ? (listing.priceEstimated ? '~PLN / miesiąc' : 'PLN / miesiąc') : ''}</span>
+          {#if listing.priceEstimated}
+            <span class="estimated-badge" title="Cena szacunkowa obliczona na podstawie pakietów wejść (3x/tydzień)">szacunkowy</span>
+          {/if}
           {#if listing.trialPrice === 0}
             <span class="trial-badge">Pierwsze zajęcia gratis</span>
           {/if}
@@ -348,6 +411,9 @@
         {#if listing.price != null}
           <div class="freshness freshness-{freshness}">
             Weryfikacja: {formatDateEU(listing.lastPriceCheck)}
+            <span class="freshness-label">
+              {freshness === 'fresh' ? '· aktualne' : freshness === 'aging' ? '· wymaga sprawdzenia' : '· nieaktualne'}
+            </span>
           </div>
         {/if}
         <div class="price-rows">
@@ -366,6 +432,13 @@
           <p class="pricing-notes">{listing.pricingNotes}</p>
         {/if}
       </section>
+
+      {#if listing.latitude != null && listing.longitude != null && googleMapsApiKey}
+        <section class="panel sf-card map-card">
+          <h2 class="panel-label">Lokalizacja</h2>
+          <ListingMap lat={listing.latitude} lng={listing.longitude} name={listing.name} apiKey={googleMapsApiKey} />
+        </section>
+      {/if}
 
       {#if hasSchedule}
         <section class="panel sf-card schedule-summary-card">
@@ -413,7 +486,7 @@
       {listing.source === 'crawl4ai' ? 'Dane zweryfikowane automatycznie' : 'Dane wprowadzone ręcznie'} · Aktualizacja: {formatDateEU(listing.lastUpdated)}
     </span>
     <a
-      href="mailto:kontakt@szkolyjogi.pl?subject=Korekta%20danych%20studia%3A%20{encodeURIComponent(listing.name)}"
+      href="mailto:joga@zaur.app?subject=Korekta%20danych%20studia%3A%20{encodeURIComponent(listing.name)}"
       class="meta-link"
     >
       Zgłoś błędne dane
@@ -526,6 +599,10 @@
     margin-bottom: var(--spacing-sm);
   }
 
+  /* ── Map card ── */
+  .map-card { padding-bottom: 0; overflow: hidden; }
+  .map-card :global(.listing-map-wrap) { border: none; border-radius: 0; box-shadow: none; margin: 0 calc(-1 * var(--spacing-md)); margin-bottom: 0; width: calc(100% + 2 * var(--spacing-md)); }
+
   /* ── Pricing card ── */
   .price-hero { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px; margin-bottom: 4px; }
   .price-hero-value {
@@ -544,6 +621,15 @@
     border-radius: var(--radius-pill); font-weight: 600;
     white-space: nowrap; align-self: center;
   }
+  .estimated-badge {
+    font-family: var(--font-mono); font-size: 0.58rem;
+    text-transform: uppercase; letter-spacing: 0.04em;
+    color: var(--sf-muted); border: 1px solid var(--sf-line);
+    background: var(--sf-frost); padding: 3px 10px;
+    border-radius: var(--radius-pill); font-weight: 600;
+    white-space: nowrap; align-self: center;
+    cursor: help;
+  }
 
   .freshness {
     font-family: var(--font-mono); font-size: 0.62rem;
@@ -552,6 +638,7 @@
   .freshness-fresh { color: var(--sf-accent); }
   .freshness-aging { color: var(--sf-muted); }
   .freshness-stale { color: var(--sf-danger); }
+  .freshness-label { font-weight: 600; }
 
   .price-rows { border-top: 1px solid var(--sf-frost); padding-top: 8px; }
   .kv {

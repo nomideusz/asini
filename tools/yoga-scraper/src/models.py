@@ -70,7 +70,9 @@ class PricingData(BaseModel):
     )
     monthly_pass_pln: Optional[float] = Field(
         None,
-        description="Price of the largest unlimited/open monthly pass.",
+        description="Price of the standard ~30-day unlimited/open pass for regular yoga classes. "
+        "NOT quarterly (90-day), NOT yearly, NOT reformer-only or premium-only passes. "
+        "If no ~30-day unlimited pass exists, leave null.",
     )
     trial_price_pln: Optional[float] = Field(
         None,
@@ -109,8 +111,9 @@ class AboutData(BaseModel):
     """Extracted from a school's main/about page."""
     styles: list[str] = Field(
         default_factory=list,
-        description="Yoga styles offered. Standard names: Ashtanga, Vinyasa, Hatha, Iyengar, "
-        "Kundalini, Yin, Yin/Restorative, Aerial, Hot Yoga, Pregnancy, Nidra, Mysore, Power Yoga.",
+        description="Yoga styles offered. ONLY use these exact names: Ashtanga, Vinyasa, Hatha, "
+        "Iyengar, Kundalini, Yin, Yin/Restorative, Aerial, Hot Yoga, Pregnancy, Nidra, Mysore, "
+        "Power Yoga, Jivamukti, Pilates, Pilates Reformer, Stretching, Meditation.",
     )
     description_raw: str = Field(
         "",

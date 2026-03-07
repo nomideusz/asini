@@ -8,7 +8,13 @@
       "Bash(mkdir:*)",
       "Bash(cat:*)",
       "Bash(git -C /c/cmder/apps/asini log --oneline feat/svelte-media-svelte-qr)",
-      "Bash(git:*)"
+      "Bash(git:*)",
+      "Bash(.venv/Scripts/python.exe:*)",
+      "Bash(npx drizzle-kit push --force)",
+      "Bash(python:*)",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(gh api repos/nomideusz/yoga/git/trees/main --jq '.tree[].path')",
+      "Bash(rsync -av --delete --exclude='.git' --exclude='node_modules' --exclude='local.db' --exclude='local.db-shm' --exclude='local.db-wal' --exclude='.svelte-kit' --exclude='pnpm-lock.yaml' /c/cmder/apps/asini/apps/yoga/ /tmp/yoga-sync/)"
     ]
   },
   "enabledPlugins": {

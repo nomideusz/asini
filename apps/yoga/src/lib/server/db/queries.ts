@@ -42,6 +42,7 @@ export interface Listing {
   phone: string | null;
   email: string | null;
   price: number | null;
+  priceEstimated: boolean;
   trialPrice: number | null;
   singleClassPrice: number | null;
   pricingNotes: string | null;
@@ -111,6 +112,7 @@ function buildListing(
     phone: school.phone,
     email: school.email,
     price: school.price,
+    priceEstimated: school.priceEstimated ?? false,
     trialPrice: school.trialPrice,
     singleClassPrice: school.singleClassPrice,
     pricingNotes: school.pricingNotes,

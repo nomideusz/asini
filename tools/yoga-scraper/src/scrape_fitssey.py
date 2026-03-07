@@ -18,6 +18,7 @@ import csv
 import json
 import logging
 import re
+import time
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
@@ -298,16 +299,7 @@ async def crawl_with_playwright(school: dict, screenshot: bool = False) -> dict:
                 # Fallback: parse from rendered page text
                 text = await page.inner_text("body")
                 result["events"] = parse_from_text(text, school)
-                result["raw_text"] = text[:50000]  # Limit size
-                result["method"] = "text_fallback"
-                log.info(
-                    "[%s] Parsed %d events from text fallback",
-                    school["id"],
-                    len(result["events"]),
-                )
-                text = await page.inner_text("body")
-                result["events"] = parse_from_text(text, school)
-                result["raw_text"] = text
+                result["raw_text"] = text[:50_000]
                 result["method"] = "text_fallback"
 
             log.info(
@@ -783,8 +775,6 @@ async def run_scrape_schedules(
         log.info("=" * 60)
         log.info("  %s", school["name"])
         log.info("=" * 60)
-
-        import time
 
         start_time = time.monotonic()
 

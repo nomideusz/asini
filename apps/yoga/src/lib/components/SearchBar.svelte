@@ -2,59 +2,90 @@
   import { goto } from "$app/navigation";
 
   type CityCoord = { city: string; lat: number; lng: number };
+  type SearchSchool = { id: string; name: string; city: string };
 
   let {
     cities = [],
     styles = [],
+    schools = [],
     cityCoords = [],
   }: {
     cities: string[];
     styles: string[];
+    schools?: SearchSchool[];
     cityCoords?: CityCoord[];
   } = $props();
 
-  let cityQuery = $state("");
+  let query = $state("");
   let selectedStyle = $state("");
-  let showCitySuggestions = $state(false);
+  let showSuggestions = $state(false);
   let locating = $state(false);
 
-  let filteredCities = $derived(
-    cityQuery.length > 0
+  const MAX_CITIES = 4;
+  const MAX_SCHOOLS = 4;
+
+  let matchingCities = $derived(
+    query.length > 0
       ? cities.filter((c) =>
-          c.toLowerCase().startsWith(cityQuery.toLowerCase())
-        )
-      : cities
+          c.toLowerCase().startsWith(query.toLowerCase())
+        ).slice(0, MAX_CITIES)
+      : []
   );
+
+  let matchingSchools = $derived(
+    query.length >= 2
+      ? schools.filter((s) =>
+          s.name.toLowerCase().includes(query.toLowerCase())
+        ).slice(0, MAX_SCHOOLS)
+      : []
+  );
+
+  let hasSuggestions = $derived(matchingCities.length > 0 || matchingSchools.length > 0);
 
   function handleSearch() {
     const city = cities.find(
-      (c) => c.toLowerCase() === cityQuery.trim().toLowerCase()
+      (c) => c.toLowerCase() === query.trim().toLowerCase()
     );
-    if (city) {
+    const styleSlug = selectedStyle
+      ? selectedStyle.toLowerCase().replace(/\s+/g, "-")
+      : "";
+
+    if (city && styleSlug) {
+      goto(`/${city.toLowerCase()}?style=${encodeURIComponent(selectedStyle)}`);
+    } else if (city) {
       goto(`/${city.toLowerCase()}`);
-    } else if (cityQuery.trim()) {
-      goto(`/${cityQuery.trim().toLowerCase()}`);
+    } else if (styleSlug) {
+      goto(`/category/${encodeURIComponent(styleSlug)}`);
+    } else if (query.trim()) {
+      goto(`/${query.trim().toLowerCase()}`);
     }
   }
 
   function selectCity(city: string) {
-    cityQuery = city;
-    showCitySuggestions = false;
+    query = city;
+    showSuggestions = false;
+    goto(`/${city.toLowerCase()}`);
+  }
+
+  function selectSchool(school: SearchSchool) {
+    query = school.name;
+    showSuggestions = false;
+    goto(`/listing/${school.id}`);
   }
 
   function handleKeydown(e: KeyboardEvent) {
     if (e.key === "Enter") {
-      showCitySuggestions = false;
+      showSuggestions = false;
       handleSearch();
     }
     if (e.key === "Escape") {
-      showCitySuggestions = false;
+      showSuggestions = false;
     }
   }
 
   function handleBlur() {
     setTimeout(() => {
-      showCitySuggestions = false;
+      showSuggestions = false;
     }, 200);
   }
 
@@ -85,7 +116,7 @@
             nearest = cc;
           }
         }
-        cityQuery = nearest.city;
+        query = nearest.city;
         locating = false;
       },
       () => {
@@ -99,14 +130,14 @@
 <div class="search-bar">
   <div class="search-inner">
     <div class="search-field search-field--city">
-      <label for="city-input" class="search-label">Miasto</label>
+      <label for="city-input" class="search-label">Miasto lub szkoła</label>
       <div class="input-wrap">
         <input
           id="city-input"
           type="text"
-          placeholder="np. Warszawa, Kraków..."
-          bind:value={cityQuery}
-          onfocus={() => (showCitySuggestions = true)}
+          placeholder="np. Warszawa, Yoga Studio..."
+          bind:value={query}
+          onfocus={() => (showSuggestions = true)}
           onblur={handleBlur}
           onkeydown={handleKeydown}
           autocomplete="off"
@@ -121,25 +152,47 @@
             title="Znajdź najbliższe miasto"
           >
             {#if locating}
-              <svg class="locate-spin" width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" stroke-dasharray="28" stroke-dashoffset="8" stroke-linecap="round"/></svg>
+              <svg class="locate-spin" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" stroke-dasharray="28" stroke-dashoffset="8" stroke-linecap="round"/></svg>
             {:else}
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.5" fill="currentColor"/><path d="M8 1v2.5M8 12.5V15M1 8h2.5M12.5 8H15" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="8" cy="8" r="5" stroke="currentColor" stroke-width="1.2"/></svg>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="2.5" fill="currentColor"/><path d="M8 1v2.5M8 12.5V15M1 8h2.5M12.5 8H15" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="8" cy="8" r="5" stroke="currentColor" stroke-width="1.2"/></svg>
             {/if}
           </button>
         {/if}
-        {#if showCitySuggestions && filteredCities.length > 0}
+        {#if showSuggestions && hasSuggestions}
           <ul class="suggestions" role="listbox">
-            {#each filteredCities.slice(0, 8) as city (city)}
-              <li role="option" aria-selected="false">
-                <button
-                  type="button"
-                  class="suggestion-btn"
-                  onmousedown={() => selectCity(city)}
-                >
-                  {city}
-                </button>
-              </li>
-            {/each}
+            {#if matchingCities.length > 0}
+              <li class="suggestion-group" role="presentation">Miasta</li>
+              {#each matchingCities as city (city)}
+                <li role="option" aria-selected="false">
+                  <button
+                    type="button"
+                    class="suggestion-btn"
+                    onmousedown={() => selectCity(city)}
+                  >
+                    <svg class="suggestion-icon" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1C5.24 1 3 3.24 3 6c0 3.75 5 9 5 9s5-5.25 5-9c0-2.76-2.24-5-5-5z" stroke="currentColor" stroke-width="1.2"/><circle cx="8" cy="6" r="1.5" fill="currentColor"/></svg>
+                    {city}
+                  </button>
+                </li>
+              {/each}
+            {/if}
+            {#if matchingSchools.length > 0}
+              <li class="suggestion-group" role="presentation">Szkoły</li>
+              {#each matchingSchools as school (school.id)}
+                <li role="option" aria-selected="false">
+                  <button
+                    type="button"
+                    class="suggestion-btn"
+                    onmousedown={() => selectSchool(school)}
+                  >
+                    <svg class="suggestion-icon" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2" y="4" width="12" height="10" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5 4V2.5A1.5 1.5 0 0 1 6.5 1h3A1.5 1.5 0 0 1 11 2.5V4" stroke="currentColor" stroke-width="1.2"/></svg>
+                    <span>
+                      {school.name}
+                      <span class="suggestion-city">{school.city}</span>
+                    </span>
+                  </button>
+                </li>
+              {/each}
+            {/if}
           </ul>
         {/if}
       </div>
@@ -165,7 +218,7 @@
 
 <style>
   .search-bar {
-    padding: 36px 0 12px;
+    padding: 8px 0 12px;
   }
 
   .search-inner {
@@ -188,7 +241,8 @@
   .search-field {
     display: flex;
     flex-direction: column;
-    padding: 14px 20px 12px;
+    justify-content: center;
+    padding: 14px 20px;
     position: relative;
     flex: 1;
     min-width: 0;
@@ -302,9 +356,19 @@
     box-shadow: var(--shadow-lg);
     list-style: none;
     z-index: 100;
-    max-height: 280px;
+    max-height: 320px;
     overflow-y: auto;
     padding: 4px 0;
+  }
+
+  .suggestion-group {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--sf-muted);
+    font-weight: 600;
+    padding: 10px 20px 4px;
   }
 
   .suggestion-btn {
@@ -315,13 +379,30 @@
     font-family: var(--font-body);
     font-size: 0.9rem;
     color: var(--sf-dark);
-    padding: 10px 20px;
+    padding: 8px 20px;
     cursor: pointer;
     transition: background var(--dur-fast) ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
 
   .suggestion-btn:hover {
     background: var(--sf-frost);
+  }
+
+  .suggestion-icon {
+    flex-shrink: 0;
+    color: var(--sf-muted);
+  }
+
+  .suggestion-city {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--sf-muted);
+    margin-left: 6px;
   }
 
   .search-go {

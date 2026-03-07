@@ -1,4 +1,5 @@
 <script lang="ts">
+  import CityMap from "$lib/components/CityMap.svelte";
   import PageHero from "$lib/components/PageHero.svelte";
   import SearchBar from "$lib/components/SearchBar.svelte";
   import SectionLabel from "$lib/components/SectionLabel.svelte";
@@ -11,18 +12,16 @@
   const cityCoords = $derived(
     Object.entries(data.cityCoords).map(([city, coords]) => ({ city, ...coords }))
   );
+  const googleMapsApiKey = $derived(data.googleMapsApiKey);
 
   const totalSchools = $derived(listings.length);
 
-  /** Top 6 cities by school count */
-  const popularCities = $derived(
-    cities
-      .map((city) => ({
-        city,
-        count: listings.filter((l) => l.city === city).length,
-      }))
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 6)
+  /** City markers with school counts for the map */
+  const cityMarkers = $derived(
+    cityCoords.map((cc) => ({
+      ...cc,
+      count: listings.filter((l) => l.city === cc.city).length,
+    })).filter((c) => c.count > 0)
   );
 </script>
 
@@ -41,39 +40,45 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://szkolyjogi.pl/" />
   <meta name="twitter:card" content="summary_large_image" />
+  {@html `<script type="application/ld+json">${JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'szkolyjogi.pl',
+    url: 'https://szkolyjogi.pl/',
+    description: 'Katalog szkół jogi w Polsce — porównaj ceny karnetów, style i lokalizacje.',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: 'https://szkolyjogi.pl/{search_term_string}',
+      'query-input': 'required name=search_term_string',
+    },
+  }).replace(/</g, '\\u003c')}</script>`}
 </svelte:head>
 
 <div class="sf-page-shell">
   <PageHero
     tag="Katalog szkół jogi"
-    title="Spokojne<br/>miejsca<br/>do praktyki"
-    subtitle="{totalSchools} szkół jogi w {cities.length} miastach, {styles.length} stylów praktyki."
+    titleLines={["Spokojne", "miejsca", "do praktyki"]}
   />
 
-  <SearchBar {cities} {styles} {cityCoords} />
+  <SearchBar {cities} {styles} {cityCoords} schools={listings.map(l => ({ id: l.id, name: l.name, city: l.city }))} />
 
-  <!-- Popular cities -->
-  <section class="sf-section">
-    <SectionLabel text="Popularne miasta" />
-    <div class="city-tiles">
-      {#each popularCities as { city, count }, i}
-        <a
-          href="/{city.toLowerCase()}"
-          class="city-tile sf-card sf-animate"
-          style="animation-delay: {i * 50}ms"
-        >
-          <span class="city-tile-name">{city}</span>
-          <span class="city-tile-count">{count} {count === 1 ? 'szkoła' : count < 5 ? 'szkoły' : 'szkół'}</span>
-        </a>
-      {/each}
-    </div>
-  </section>
+  <p class="home-stats">
+    {totalSchools} szkół jogi w {cities.length} miastach, {styles.length} stylów praktyki.
+  </p>
 
-  <!-- Full table -->
-  <section class="sf-section">
-    <SectionLabel text="Pełna lista" />
+  <!-- Full table — the core content -->
+  <section class="sf-section sf-section--tight">
+    <SectionLabel text="Wszystkie szkoły" />
     <YogaSchoolTable schools={listings} />
   </section>
+
+  <!-- Map — secondary discovery -->
+  {#if googleMapsApiKey}
+    <section class="sf-section">
+      <SectionLabel text="Mapa szkół" />
+      <CityMap cities={cityMarkers} apiKey={googleMapsApiKey} />
+    </section>
+  {/if}
 
   <!-- How it works (studio owners) -->
   <section class="sf-section sf-how">
@@ -103,49 +108,23 @@
 </div>
 
 <style>
+  /* ── Stats below search ── */
+  .home-stats {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--sf-muted);
+    padding: 16px 0 0;
+  }
+
   /* ── Page sections ── */
   .sf-section {
     padding: 56px 0 40px;
   }
 
-  /* ── Popular city tiles ── */
-  .city-tiles {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-  }
-
-  .city-tile {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 28px 16px;
-    text-decoration: none;
-    text-align: center;
-    gap: 6px;
-    transition: border-color var(--dur-fast) ease, box-shadow var(--dur-fast) ease, transform var(--dur-fast) var(--ease-out);
-  }
-
-  .city-tile:hover {
-    border-color: var(--sf-accent);
-  }
-
-  .city-tile-name {
-    font-family: var(--font-display);
-    font-size: 1.15rem;
-    font-weight: 500;
-    color: var(--sf-dark);
-    line-height: 1.2;
-  }
-
-  .city-tile-count {
-    font-family: var(--font-mono);
-    font-size: 0.66rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--sf-muted);
-    font-weight: 500;
+  .sf-section--tight {
+    padding-top: 36px;
   }
 
   /* ── How it works ── */
@@ -200,15 +179,12 @@
     display: flex;
     gap: 14px;
     align-items: center;
+    justify-content: center;
     flex-wrap: wrap;
   }
 
   /* ── Responsive ── */
   @media (max-width: 768px) {
-    .city-tiles {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
     .how-steps {
       grid-template-columns: 1fr;
       gap: 32px;

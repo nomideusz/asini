@@ -25,8 +25,8 @@
   ]} />
 
   <PageHero
-    tag="Dla studiów"
-    title="Dodaj swoje<br/>studio"
+    tag="Prowadzisz studio?"
+    titleLines={["Dodaj swoje", "studio"]}
     subtitle="Przejmij profil lub zgłoś nowe studio — bezpłatnie, bez limitu czasu."
     compact
   />
@@ -46,7 +46,7 @@
       <h2 class="section-title">Nie możesz znaleźć swojego studia?</h2>
       <p>
         Napisz do nas na
-        <a href="mailto:kontakt@szkolyjogi.pl?subject=Nowe%20studio%20jogi">kontakt@szkolyjogi.pl</a>
+        <a href="mailto:joga@zaur.app?subject=Nowe%20studio%20jogi">joga@zaur.app</a>
         z nazwą i adresem studia — dodamy je do katalogu.
       </p>
     </section>

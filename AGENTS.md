@@ -45,6 +45,9 @@ asini/
     svelte-scheduler/       @nomideusz/svelte-scheduler — PUBLIC npm package (core logic implemented)
     svelte-notify/          @nomideusz/svelte-notify — PUBLIC npm package (email templates)
     svelte-payments/        @nomideusz/svelte-payments — PUBLIC npm package (Stripe Connect UI)
+    svelte-media/           @nomideusz/svelte-media — PUBLIC npm package (image upload + S3 storage)
+    svelte-qr/              @nomideusz/svelte-qr — PUBLIC npm package (QR generation, zero-dep)
+    svelte-i18n/            @nomideusz/svelte-i18n — PUBLIC npm package (i18n, runes-based)
 
   apps/
     thebest/                thebest.travel — SvelteKit, PRIVATE, new platform
@@ -55,6 +58,7 @@ asini/
 ```
 
 ### Reference paths (read-only — never run, never import from)
+
 ```
 C:\cmder\apps\tours\             ← Zaur — business logic reference only
 C:\cmder\apps\booking-platform\  ← abandoned prototype — secondary reference
@@ -68,6 +72,7 @@ Zaur is the reference implementation. It is complete and correct.
 It contains proven business logic for every feature thebest.travel needs.
 
 **How agents use Zaur:**
+
 - Read it to understand how a feature should work
 - Extract logic from it into packages (de-SvelteKit-ified, de-typed, pure)
 - Never copy UI, routes, or platform-specific code
@@ -76,19 +81,20 @@ It contains proven business logic for every feature thebest.travel needs.
 
 **What Zaur proves is correct (mine these files):**
 
-| Zaur file | Extract into | What it proves |
-|---|---|---|
-| `src/lib/utils/cancellation-policies.ts` | `packages/svelte-scheduler/src/core/policy.ts` | Policy configs, refund calculation, guide=full refund rule |
-| `src/lib/utils/pricing-calculations.ts` | `packages/svelte-scheduler/src/core/pricing/engine.ts` | Full pricing engine — 4 models, group discounts, add-ons, Stripe fees |
-| `src/lib/utils/refund-handler.ts` | Reference only for `apps/thebest` | Pre-transfer vs post-transfer refund paths |
-| `src/lib/utils/qr-generation.ts` | `packages/svelte-qr/src/core/encode.ts` (future) | QR PNG/SVG/Buffer generation |
-| `src/lib/db/schema/drizzle.ts` | Reference for `apps/thebest` DB schema | All entity shapes — tours, slots, bookings, payments, payouts |
-| `src/lib/email/templates/` | `packages/svelte-notify/src/lib/templates/` | Email template structure, all notification types |
-| `src/lib/utils/image-storage.ts` | `packages/svelte-media/` (future) | Image upload, sharp optimization, multi-size variants (thumbnail/medium/large) |
-| `src/lib/utils/minio-client.ts` | `packages/svelte-media/` (future) | MinIO S3-compatible client init, bucket management |
-| `src/lib/i18n.ts` + `messages/*.json` | `packages/svelte-i18n/` (future) | Language store, message loading, Paraglide runtime |
+| Zaur file                                | Extract into                                           | What it proves                                                                 |
+| ---------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------ |
+| `src/lib/utils/cancellation-policies.ts` | `packages/svelte-scheduler/src/core/policy.ts`         | Policy configs, refund calculation, guide=full refund rule                     |
+| `src/lib/utils/pricing-calculations.ts`  | `packages/svelte-scheduler/src/core/pricing/engine.ts` | Full pricing engine — 4 models, group discounts, add-ons, Stripe fees          |
+| `src/lib/utils/refund-handler.ts`        | Reference only for `apps/thebest`                      | Pre-transfer vs post-transfer refund paths                                     |
+| `src/lib/utils/qr-generation.ts`         | `packages/svelte-qr/src/core/encode.ts` (future)       | QR PNG/SVG/Buffer generation                                                   |
+| `src/lib/db/schema/drizzle.ts`           | Reference for `apps/thebest` DB schema                 | All entity shapes — tours, slots, bookings, payments, payouts                  |
+| `src/lib/email/templates/`               | `packages/svelte-notify/src/lib/templates/`            | Email template structure, all notification types                               |
+| `src/lib/utils/image-storage.ts`         | `packages/svelte-media/` (future)                      | Image upload, sharp optimization, multi-size variants (thumbnail/medium/large) |
+| `src/lib/utils/minio-client.ts`          | `packages/svelte-media/` (future)                      | MinIO S3-compatible client init, bucket management                             |
+| `src/lib/i18n.ts` + `messages/*.json`    | `packages/svelte-i18n/` (future)                       | Language store, message loading, Paraglide runtime                             |
 
 **What Zaur got wrong (do not replicate):**
+
 - In-progress schema migration — `refundStatus`/`refundStatusNew` dual columns. thebest.travel starts clean.
 - Naming: "Zaur", internal branding, all references disappear completely.
 - Monolithic structure — logic tangled with SvelteKit routes. Packages fix this.
@@ -101,22 +107,22 @@ It contains proven business logic for every feature thebest.travel needs.
 
 ### Currently in asini
 
-| Path | Package name | Status | Role |
-|---|---|---|---|
-| `packages/svelte-calendar` | `@nomideusz/svelte-calendar` | ✅ published | Calendar rendering |
-| `packages/svelte-scheduler` | `@nomideusz/svelte-scheduler` | ✅ complete (core + components + bridge) | Booking/scheduling logic |
-| `packages/svelte-notify` | `@nomideusz/svelte-notify` | ✅ 0.1.0 — 3 templates + tests | Email notification templates |
-| `packages/svelte-payments` | `@nomideusz/svelte-payments` | ✅ 0.1.0 — StripeConnectStatus | Stripe Connect UI components |
-| `apps/thebest` | private | ✅ Step 9a complete — auth, tours, bookings, Stripe, email | thebest.travel platform |
-| `apps/yoga` | private | ✅ live at szkolyjogi.pl | Real directory + package sandbox |
+| Path                        | Package name                  | Status                                                                          | Role                                           |
+| --------------------------- | ----------------------------- | ------------------------------------------------------------------------------- | ---------------------------------------------- |
+| `packages/svelte-calendar`  | `@nomideusz/svelte-calendar`  | ✅ published                                                                    | Calendar rendering                             |
+| `packages/svelte-scheduler` | `@nomideusz/svelte-scheduler` | ✅ complete (core + components + bridge)                                        | Booking/scheduling logic                       |
+| `packages/svelte-notify`    | `@nomideusz/svelte-notify`    | ✅ 0.1.0 — 3 templates + tests                                                  | Email notification templates                   |
+| `packages/svelte-payments`  | `@nomideusz/svelte-payments`  | ✅ 0.1.0 — StripeConnectStatus                                                  | Stripe Connect UI components                   |
+| `packages/svelte-media`     | `@nomideusz/svelte-media`     | ✅ 0.1.0 — S3 adapter + sharp processing + components                           | Image upload, optimization, multi-size storage |
+| `packages/svelte-qr`        | `@nomideusz/svelte-qr`        | ✅ 0.1.0 — pure TS encoder + SVG + QrCode component                             | QR code generation (zero dependencies)         |
+| `packages/svelte-i18n`      | `@nomideusz/svelte-i18n`      | ✅ 0.1.0 — runes store + interpolation + LocaleSwitcher                         | Internationalisation (EN/PL)                   |
+| `apps/thebest`              | private                       | ✅ Steps 8–12 complete — auth, tours, bookings, Stripe, email, images, QR, i18n | thebest.travel platform                        |
+| `apps/yoga`                 | private                       | ✅ live at szkolyjogi.pl                                                        | Real directory + package sandbox               |
 
 ### Future packages
 
-| Package | Role | Logic already proven in |
-|---|---|---|
-| `@nomideusz/svelte-qr` | QR generation + scanning | Zaur `src/lib/utils/qr-generation.ts` |
-| `@nomideusz/svelte-media` | Image upload, optimization (sharp), multi-size storage (MinIO/S3) | Zaur `src/lib/utils/image-storage.ts`, `avatar-storage.ts`, `minio-client.ts` |
-| `@nomideusz/svelte-i18n` | Multi-language support, message loading | Zaur `src/lib/i18n.ts`, `messages/{en,pl,de}.json`, Paraglide runtime |
+| Package                      | Role                         | Logic already proven in          |
+| ---------------------------- | ---------------------------- | -------------------------------- |
 | `@nomideusz/channel-manager` | Viator/GYG availability sync | Not yet — requires certification |
 
 ---
@@ -129,18 +135,21 @@ It contains proven business logic for every feature thebest.travel needs.
 apps/thebest   (private — thebest.travel)
 apps/yoga      (private — szkolyjogi.pl)
     ↓ both depend on
-packages/svelte-scheduler
-    ↓ peer dependency
+packages/svelte-scheduler, svelte-media, svelte-qr, svelte-notify, svelte-payments
+    ↓ peer dependency (scheduler only)
 packages/svelte-calendar
     ↓
 nothing
 
+svelte-notify → svelte-qr (workspace dependency for QR in emails)
+
 Future (same rule — downward only):
-apps/* → svelte-payments, svelte-media, svelte-i18n, svelte-qr, svelte-notify
+apps/* → svelte-i18n
 svelte-payments, svelte-media, etc. → nothing (or svelte-calendar/scheduler as peers)
 ```
 
 **Hard violations — never:**
+
 - Any package importing from `apps/`
 - Any package importing from Zaur (`C:\cmder\apps\tours\`)
 - Any package containing Stripe keys, DB credentials, or platform secrets
@@ -156,6 +165,7 @@ Built from scratch. Uses packages from day one.
 No Zaur code copied in. No Zaur naming anywhere.
 
 **Stack (same as Zaur — proven choices):**
+
 - SvelteKit 5 + Svelte 5
 - Tailwind CSS 4 + DaisyUI 5 (app-level styling — never in packages)
 - PostgreSQL + Drizzle ORM (clean schema — no migration debt)
@@ -165,6 +175,7 @@ No Zaur code copied in. No Zaur naming anywhere.
 - MinIO / S3
 
 **What it does NOT inherit from Zaur:**
+
 - Any UI components
 - Any route structure
 - Any Zaur-specific naming
@@ -172,6 +183,7 @@ No Zaur code copied in. No Zaur naming anywhere.
 - The monolithic util files
 
 **What it inherits via packages:**
+
 - All booking logic (via `@nomideusz/svelte-scheduler`)
 - All calendar rendering (via `@nomideusz/svelte-calendar`)
 - All pricing calculation (via scheduler's pricing module)
@@ -250,14 +262,14 @@ Every agent touching booking or cancellation logic must know this.
 
 ### Side effects per transition
 
-| Transition | Required side effects |
-|---|---|
-| → FULL | emit `slot:full`, block new bookings |
-| FULL → OPEN | emit `slot:available` |
-| → AT_RISK | emit `slot:at-risk`, notify guide + all guests |
-| → CANCELLED (auto) | emit `slot:cancelled`, full refund all, notify in guest language |
-| → CANCELLED (guide) | same — always 100% refund, no time window |
-| → COMPLETED | emit `slot:completed`, trigger payout (platform handles) |
+| Transition          | Required side effects                                            |
+| ------------------- | ---------------------------------------------------------------- |
+| → FULL              | emit `slot:full`, block new bookings                             |
+| FULL → OPEN         | emit `slot:available`                                            |
+| → AT_RISK           | emit `slot:at-risk`, notify guide + all guests                   |
+| → CANCELLED (auto)  | emit `slot:cancelled`, full refund all, notify in guest language |
+| → CANCELLED (guide) | same — always 100% refund, no time window                        |
+| → COMPLETED         | emit `slot:completed`, trigger payout (platform handles)         |
 
 **Non-negotiable (already correct in Zaur — preserve exactly):**
 Guide cancellation = full refund. Always. `cancelledBy === 'guide'` bypasses
@@ -276,12 +288,14 @@ When extracted into `packages/svelte-scheduler/src/core/pricing/engine.ts`:
 4. Must be a pure function — no DB, no Stripe, no side effects
 
 ### The 4 pricing models (from Zaur — all must work)
+
 - `per_person` — base price × participants
 - `participant_categories` — per-category prices (adult/child/senior/etc.) with group discounts
 - `group_tiers` — flat price per group size bracket
 - `private_tour` — flat rate regardless of participant count
 
 ### Discount application order
+
 1. Base price per model above
 2. Participant type modifiers
 3. Group discount tiers (percentage or fixed)
@@ -290,6 +304,7 @@ When extracted into `packages/svelte-scheduler/src/core/pricing/engine.ts`:
 6. Platform fee ← **not in Zaur** — add as step 6 in thebest
 
 ### STRIPE_FEES table
+
 Migrate verbatim from Zaur's `pricing-calculations.ts`.
 Includes PLN and Scandinavian currencies. Do not shrink it.
 
@@ -351,6 +366,7 @@ All packages use only `--asini-*` CSS custom properties internally.
 Never hardcode colors or fonts. Never use Tailwind or DaisyUI inside packages.
 
 **Apps** use Tailwind CSS 4 + DaisyUI 5 for styling:
+
 - `apps/thebest` — Tailwind CSS 4 (`@tailwindcss/vite` plugin) + DaisyUI 5 (`@plugin "daisyui"` in CSS)
 - `apps/yoga` — Tailwind CSS 4 + DaisyUI 5 (same setup)
 - Apps map `--asini-*` tokens to DaisyUI semantic colors so packages render correctly
@@ -457,28 +473,37 @@ Step 9 — Payments, email, guide tools ✅ DONE
   Gate:    Guide connects Stripe; tourist pays; webhook confirms + emails sent;
            guide sees bookings; tourist can cancel with policy-driven refund
 
-Step 10 — svelte-media (image upload + storage)
+Step 10 — svelte-media (image upload + storage) ✅ DONE
   Tasks:   Package scaffold (@nomideusz/svelte-media)
-           MinIO/S3 client (from Zaur minio-client.ts + image-storage.ts)
+           S3-compatible storage adapter (createS3Adapter, forcePathStyle for MinIO/R2)
            Image upload, sharp optimization, multi-size variants (thumbnail/medium/large)
            <ImageUpload> and <ImageGallery> Svelte components — no Tailwind, --asini-* only
-           Integrate into apps/thebest: tour photos, guide avatar
-           Integrate into apps/yoga: school photos
-  Gate:    Guide can upload tour photos; pnpm check passes in thebest + yoga
+           Integrate into apps/thebest: tour photos (guide/tours/[tourId]),
+             guide avatar (guide/settings), image proxy route (api/images/[...path])
+  Gate:    Guide can upload tour photos; pnpm check passes in thebest
+  Result:  0.1.0 — S3 adapter, sharp processing (4 sizes), cuid2 filenames,
+           ImageUpload + ImageGallery components, validation, processAndStore/deleteMedia/getMediaUrl
 
-Step 11 — svelte-qr (QR ticket generation)
+Step 11 — svelte-qr (QR ticket generation) ✅ DONE
   Tasks:   Package scaffold (@nomideusz/svelte-qr)
-           QR PNG/SVG generation (from Zaur qr-generation.ts)
-           <QrCode> display component
-           Integrate into apps/thebest: QR ticket in booking confirmation email + confirmed page
+           Pure TypeScript QR encoder (GF(256), Reed-Solomon, versions 1-40)
+           SVG renderer (matrixToSvg)
+           <QrCode> Svelte display component
+           Integrate into apps/thebest: QR on booking confirmed page
+           svelte-notify depends on svelte-qr for QR in email templates
   Gate:    Confirmed booking shows QR; pnpm check passes in thebest
+  Result:  0.1.0 — zero-dependency, 450-line encoder, SVG output, QrCode component
 
-Step 12 — svelte-i18n (internationalisation)
+Step 12 — svelte-i18n (internationalisation) ✅ DONE
   Tasks:   Package scaffold (@nomideusz/svelte-i18n)
-           Language store, message loading, Paraglide runtime (from Zaur i18n.ts)
-           Integrate into apps/thebest: EN primary, PL secondary
-           Integrate into apps/yoga: PL primary
+           Svelte 5 runes-based createI18n (locale $state, t(), setLocale(), isLoading)
+           {variable} interpolation, message caching, async loader
+           <LocaleSwitcher> component (—asini-* CSS tokens)
+           Integrate into apps/thebest: EN primary + PL secondary, LocaleSwitcher in navbar
+             13 routes wired with t(), 91-key EN + PL message files
+           Integrate into apps/yoga: PL primary, layout navigation wired with t()
   Gate:    Both apps render in correct language; pnpm check passes in both
+  Result:  0.1.0 — 10/10 interpolation tests, 0 errors in package + both apps
 
 Step 13 — Deploy thebest.travel (human decisions required)
   Tasks:   Choose hosting platform (Railway / Fly.io / VPS)
@@ -494,6 +519,7 @@ Step 13 — Deploy thebest.travel (human decisions required)
 ## Agent Boundaries
 
 ### Autonomous
+
 - Implementing within one package without cross-package type changes
 - UI, styling, component internals
 - Writing tests
@@ -501,6 +527,7 @@ Step 13 — Deploy thebest.travel (human decisions required)
 - Bug fixes not affecting public API
 
 ### Cross-package coordination — stop and flag
+
 - Changes to `TimelineEvent`, `CalendarAdapter`, `DateRange`
 - Changes to canonical types in `svelte-scheduler/src/core/types.ts`
 - Changes to `SchedulerAdapter` interface
@@ -509,6 +536,7 @@ Step 13 — Deploy thebest.travel (human decisions required)
 - Adding a new package
 
 ### Human decision required — stop, leave TODO
+
 - Platform fee model and payout timing for thebest.travel
 - Viator/GYG certification and integration
 - thebest.travel DB schema decisions (fresh, no Zaur migration)
@@ -521,6 +549,7 @@ Step 13 — Deploy thebest.travel (human decisions required)
 ## Validation Gates
 
 ### packages/svelte-calendar
+
 ```bash
 pnpm check     # zero errors
 pnpm test      # 100% pass
@@ -528,6 +557,7 @@ pnpm package   # dist/index.js + dist/widget.js produced
 ```
 
 ### packages/svelte-scheduler
+
 ```bash
 pnpm check       # zero errors, strict mode
 pnpm test        # all state machine transitions covered
@@ -536,6 +566,7 @@ pnpm package     # memory adapter alone runs complete booking flow
 ```
 
 ### apps/thebest
+
 ```bash
 pnpm check   # zero errors
 pnpm build   # succeeds
@@ -543,6 +574,7 @@ pnpm build   # succeeds
 ```
 
 ### apps/yoga
+
 ```bash
 pnpm check   # zero errors
 pnpm build   # succeeds
@@ -595,6 +627,7 @@ Always `category` on calendar events. Never direct `color`.
 ```
 
 Always stop when:
+
 - Canonical type change affects other packages
 - New npm dependency not already in package.json
 - DB schema decision for thebest.travel

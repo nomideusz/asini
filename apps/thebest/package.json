@@ -35,6 +35,7 @@
 		"@nomideusz/svelte-qr": "workspace:*",
 		"@nomideusz/svelte-notify": "workspace:*",
 		"@nomideusz/svelte-payments": "workspace:*",
+		"@nomideusz/svelte-i18n": "workspace:*",
 		"@nomideusz/svelte-scheduler": "workspace:*",
 		"drizzle-orm": "^0.45.1",
 		"lucia": "^3.2.2",

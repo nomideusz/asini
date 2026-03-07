@@ -13,6 +13,7 @@ export const schools = sqliteTable('schools', {
   email: text('email'),
 
   price: real('price'),
+  priceEstimated: integer('price_estimated', { mode: 'boolean' }).default(false),
   trialPrice: real('trial_price'),
   singleClassPrice: real('single_class_price'),
   pricingNotes: text('pricing_notes'),
