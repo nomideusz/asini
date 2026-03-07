@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm add stripe resend --filter thebest)",
+      "Bash(pnpm --filter thebest check)",
+      "Bash(pnpm install)",
+      "Bash(grep:*)",
+      "Bash(mkdir:*)",
+      "Bash(cat:*)",
+      "Bash(git -C /c/cmder/apps/asini log --oneline feat/svelte-media-svelte-qr)",
+      "Bash(git:*)"
+    ]
+  },
+  "enabledPlugins": {
+    "pr-review-toolkit@claude-plugins-official": true
+  }
+}

@@ -2,6 +2,10 @@ import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types.js';
 import { getDb } from '$lib/server/db/index.js';
 import { createDrizzleAdapter } from '$lib/server/scheduler/drizzle-adapter.js';
+import { tours } from '$lib/server/db/schema.js';
+import { eq } from 'drizzle-orm';
+import { processAndStore, deleteMedia } from '@nomideusz/svelte-media';
+import { getMediaAdapter } from '$lib/server/media.js';
 
 export const load: PageServerLoad = async ({ params }) => {
 	const adapter = createDrizzleAdapter(getDb());
@@ -50,6 +54,54 @@ export const actions = {
 			const message = err instanceof Error ? err.message : 'Failed to update tour';
 			return fail(500, { error: message });
 		}
+
+		return { success: true };
+	},
+
+	uploadPhoto: async ({ request, locals, params }) => {
+		if (!locals.user) return fail(401, { error: 'Unauthorized' });
+
+		const formData = await request.formData();
+		const file = formData.get('photo');
+		if (!(file instanceof File) || file.size === 0) {
+			return fail(400, { error: 'No file provided' });
+		}
+
+		const db = getDb();
+		const adapter = getMediaAdapter();
+
+		const [tour] = await db.select().from(tours).where(eq(tours.id, params.tourId));
+		if (!tour || tour.guideId !== locals.user.id) return fail(403, { error: 'Forbidden' });
+
+		const stored = await processAndStore(adapter, file, 'tours', params.tourId);
+
+		await db
+			.update(tours)
+			.set({ images: [...(tour.images ?? []), stored.filename] })
+			.where(eq(tours.id, params.tourId));
+
+		return { success: true };
+	},
+
+	deletePhoto: async ({ request, locals, params }) => {
+		if (!locals.user) return fail(401, { error: 'Unauthorized' });
+
+		const formData = await request.formData();
+		const filename = formData.get('filename') as string;
+		if (!filename) return fail(400, { error: 'No filename' });
+
+		const db = getDb();
+		const adapter = getMediaAdapter();
+
+		const [tour] = await db.select().from(tours).where(eq(tours.id, params.tourId));
+		if (!tour || tour.guideId !== locals.user.id) return fail(403, { error: 'Forbidden' });
+
+		await deleteMedia(adapter, 'tours', params.tourId, filename);
+
+		await db
+			.update(tours)
+			.set({ images: (tour.images ?? []).filter((f) => f !== filename) })
+			.where(eq(tours.id, params.tourId));
 
 		return { success: true };
 	},

@@ -1,7 +1,7 @@
 {
-  "name": "@nomideusz/svelte-notify",
+  "name": "@nomideusz/svelte-qr",
   "version": "0.1.0",
-  "description": "Email notification template library for the @nomideusz booking platform.",
+  "description": "Zero-dependency QR code generation for Svelte 5 — pure TypeScript encoder, SVG output.",
   "type": "module",
   "license": "MIT",
   "svelte": "./dist/index.js",
@@ -13,11 +13,7 @@
       "default": "./dist/index.js"
     }
   },
-  "files": [
-    "dist",
-    "!dist/**/*.test.*",
-    "!dist/**/*.spec.*"
-  ],
+  "files": ["dist", "!dist/**/*.test.*", "!dist/**/*.spec.*"],
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
@@ -27,15 +23,10 @@
     "prepare": "svelte-kit sync || echo ''",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "test": "vitest run --passWithNoTests",
+    "test": "vitest run",
     "test:watch": "vitest"
   },
-  "dependencies": {
-    "@nomideusz/svelte-qr": "workspace:*"
-  },
-  "peerDependencies": {
-    "svelte": "^5.0.0"
-  },
+  "peerDependencies": { "svelte": "^5.0.0" },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^7.0.0",
     "@sveltejs/kit": "^2.50.2",
@@ -47,5 +38,5 @@
     "vite": "^7.3.1",
     "vitest": "^4.0.18"
   },
-  "keywords": ["svelte", "email", "notifications", "templates", "booking"]
+  "keywords": ["svelte", "qr", "qr-code", "svg", "zero-dependency"]
 }

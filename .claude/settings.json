@@ -1,0 +1,20 @@
+{
+  "enabledPlugins": {
+    "frontend-design@claude-plugins-official": true,
+    "pr-review-toolkit@claude-plugins-official": true
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -c \"import sys, json, os; d=json.loads(os.environ.get('CLAUDE_TOOL_INPUT','{}')); f=d.get('file_path','').replace('\\\\\\\\','/'); name=f.split('/')[-1]; sys.exit(2) if name.startswith('.env') and name != '.env.example' else sys.exit(0)\"",
+            "timeout": 5000
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -119,5 +119,34 @@
 				{/each}
 			</div>
 		{/if}
+
+		<h2 class="text-lg font-semibold mt-8 mb-4">Tour Photos</h2>
+
+		{#if data.tour.images && data.tour.images.length > 0}
+			<div class="flex flex-wrap gap-3 mb-4">
+				{#each data.tour.images as filename (filename)}
+					<div class="relative">
+						<img
+							src="/api/images/tours/{data.tour.id}/thumb_{filename}"
+							alt="Tour photo"
+							width="120"
+							height="90"
+							class="rounded-box object-cover w-[120px] h-[90px]"
+						/>
+						<form method="POST" action="?/deletePhoto" class="absolute top-1 right-1">
+							<input type="hidden" name="filename" value={filename} />
+							<button type="submit" class="btn btn-xs btn-error btn-circle" title="Delete photo">✕</button>
+						</form>
+					</div>
+				{/each}
+			</div>
+		{:else}
+			<p class="text-base-content/60 mb-4">No photos yet.</p>
+		{/if}
+
+		<form method="POST" action="?/uploadPhoto" enctype="multipart/form-data" class="flex flex-col gap-2">
+			<input type="file" name="photo" accept="image/jpeg,image/png,image/webp" class="file-input file-input-bordered w-full max-w-xs" />
+			<button type="submit" class="btn btn-primary w-fit">Upload Photo</button>
+		</form>
 	{/if}
 </section>
