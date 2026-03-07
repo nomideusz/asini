@@ -1,26 +1,165 @@
 @import "tailwindcss";
-@plugin "daisyui" {
-  themes: light --default, dark --prefersdark;
+
+/* ── Geist font ── */
+body {
+  font-family: "Geist Sans", "Geist", ui-sans-serif, system-ui, sans-serif;
 }
 
-/* ── Map --asini-* tokens to DaisyUI 5 semantic colors ── */
+/* ── Light theme (default) ── */
 :root {
-  --asini-bg: var(--color-base-100);
-  --asini-surface: var(--color-base-200);
-  --asini-surface-raised: var(--color-base-300);
-  --asini-border: color-mix(in oklch, var(--color-base-content) 20%, transparent);
-  --asini-border-strong: color-mix(in oklch, var(--color-base-content) 40%, transparent);
-  --asini-text: var(--color-base-content);
-  --asini-text-2: color-mix(in oklch, var(--color-base-content) 70%, transparent);
-  --asini-text-3: color-mix(in oklch, var(--color-base-content) 50%, transparent);
-  --asini-accent: var(--color-primary);
-  --asini-accent-muted: color-mix(in oklch, var(--color-primary) 20%, transparent);
-  --asini-success: var(--color-success);
-  --asini-warning: var(--color-warning);
-  --asini-danger: var(--color-error);
-  --asini-info: var(--color-info);
-  --asini-font-sans: inherit;
-  --asini-font-mono: ui-monospace, monospace;
-  --asini-radius: var(--radius-box);
-  --asini-radius-sm: var(--radius-field);
+  --asini-bg: #ffffff;
+  --asini-bg-subtle: #f8f9fa;
+  --asini-surface: #f1f3f5;
+  --asini-border: #e2e5e9;
+  --asini-border-strong: #d0d4da;
+
+  --asini-text: #111318;
+  --asini-text-2: #6b7280;
+  --asini-text-3: #9ca3af;
+
+  --asini-accent: #2563eb;
+  --asini-accent-hover: #1d4ed8;
+  --asini-accent-subtle: #eff6ff;
+
+  --asini-success: #16a34a;
+  --asini-warning: #d97706;
+  --asini-danger: #dc2626;
+  --asini-info: #2563eb;
+
+  --asini-radius: 6px;
+  --asini-radius-sm: 4px;
+  --asini-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --asini-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+
+  --asini-font-mono: "Geist Mono", ui-monospace, monospace;
 }
+
+/* ── Dark theme ── */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --asini-bg: #0a0a0b;
+    --asini-bg-subtle: #111113;
+    --asini-surface: #18181b;
+    --asini-border: #27272a;
+    --asini-border-strong: #3f3f46;
+
+    --asini-text: #fafafa;
+    --asini-text-2: #a1a1aa;
+    --asini-text-3: #71717a;
+
+    --asini-accent: #3b82f6;
+    --asini-accent-hover: #60a5fa;
+    --asini-accent-subtle: #1e293b;
+
+    --asini-success: #22c55e;
+    --asini-warning: #f59e0b;
+    --asini-danger: #ef4444;
+    --asini-info: #3b82f6;
+
+    --asini-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --asini-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+}
+
+[data-theme="dark"] {
+  --asini-bg: #0a0a0b;
+  --asini-bg-subtle: #111113;
+  --asini-surface: #18181b;
+  --asini-border: #27272a;
+  --asini-border-strong: #3f3f46;
+
+  --asini-text: #fafafa;
+  --asini-text-2: #a1a1aa;
+  --asini-text-3: #71717a;
+
+  --asini-accent: #3b82f6;
+  --asini-accent-hover: #60a5fa;
+  --asini-accent-subtle: #1e293b;
+
+  --asini-success: #22c55e;
+  --asini-warning: #f59e0b;
+  --asini-danger: #ef4444;
+  --asini-info: #3b82f6;
+
+  --asini-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --asini-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* ── Buttons ── */
+.asini-btn {
+  @apply px-3 py-1.5 text-sm font-medium cursor-pointer inline-flex items-center gap-1.5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
+  border-radius: var(--asini-radius);
+  border: 1px solid var(--asini-border);
+  background: var(--asini-surface);
+  color: var(--asini-text);
+}
+.asini-btn:hover:not(:disabled) {
+  border-color: var(--asini-border-strong);
+  background: var(--asini-bg-subtle);
+}
+.asini-btn-primary {
+  background: var(--asini-accent);
+  color: #fff;
+  border-color: transparent;
+}
+.asini-btn-primary:hover:not(:disabled) {
+  background: var(--asini-accent-hover);
+  border-color: transparent;
+}
+.asini-btn-danger {
+  background: var(--asini-danger);
+  color: #fff;
+  border-color: transparent;
+}
+.asini-btn-danger:hover:not(:disabled) {
+  opacity: 0.9;
+  border-color: transparent;
+}
+.asini-btn-ghost {
+  background: transparent;
+  border-color: transparent;
+}
+.asini-btn-ghost:hover:not(:disabled) {
+  background: var(--asini-surface);
+  border-color: transparent;
+}
+.asini-btn-sm {
+  @apply px-2 py-1 text-xs;
+}
+.asini-btn-lg {
+  @apply px-4 py-2 text-sm;
+}
+
+/* ── Inputs ── */
+.asini-input {
+  @apply w-full px-3 py-1.5 text-sm transition-colors;
+  border-radius: var(--asini-radius);
+  border: 1px solid var(--asini-border);
+  background: var(--asini-bg);
+  color: var(--asini-text);
+}
+.asini-input::placeholder {
+  color: var(--asini-text-3);
+}
+.asini-input:focus {
+  outline: none;
+  border-color: var(--asini-accent);
+  box-shadow: 0 0 0 2px color-mix(in oklch, var(--asini-accent) 20%, transparent);
+}
+
+/* ── Badges ── */
+.asini-badge {
+  @apply inline-flex items-center px-2 py-0.5 text-xs font-medium;
+  border-radius: var(--asini-radius-sm);
+  background: var(--asini-surface);
+  color: var(--asini-text-2);
+  border: 1px solid var(--asini-border);
+}
+
+/* ── Temporary DaisyUI compat (remove in Phase 6) ── */
+.bg-base-100 { background: var(--asini-bg); }
+.bg-base-200 { background: var(--asini-surface); }
+.bg-base-300 { background: var(--asini-bg-subtle); }
+.text-base-content { color: var(--asini-text); }
+.border-base-200 { border-color: var(--asini-border); }
+.border-base-300 { border-color: var(--asini-border-strong); }
