@@ -95,44 +95,23 @@
 
       {#if data.tour.languages.length > 0}
         <div>
-          <h3 class="text-xl font-bold mb-4">{t("tour_languages")}</h3>
-          <div class="flex flex-wrap gap-2">
+          <h3 class="text-xs font-mono uppercase tracking-wide mb-2" style="color: var(--asini-text-3);">{t("tour_languages")}</h3>
+          <div class="flex flex-wrap gap-1.5">
             {#each data.tour.languages as lang}
-              <span
-                class="asini-badge py-1 text-sm border-0 font-bold px-4"
-                style="background: color-mix(in oklch, var(--asini-accent) 10%, transparent); color: var(--asini-accent);"
-                >{lang.toUpperCase()}</span
-              >
+              <span class="asini-badge text-[11px]">{lang.toUpperCase()}</span>
             {/each}
           </div>
         </div>
       {/if}
 
-      <div
-        class="grid sm:grid-cols-2 gap-8 divide-y sm:divide-y-0 sm:divide-x divide-(--asini-border) border-t border-(--asini-border) pt-8 mt-8"
-      >
+      <div class="grid sm:grid-cols-2 gap-6">
         {#if data.tour.includedItems.length > 0}
-          <div class="pt-4 sm:pt-0 sm:pr-8">
-            <h3 class="text-xl font-bold mb-4">{t("tour_included")}</h3>
-            <ul class="space-y-3">
+          <div>
+            <h3 class="text-xs font-mono uppercase tracking-wide mb-2" style="color: var(--asini-text-3);">{t("tour_included")}</h3>
+            <ul class="space-y-1.5">
               {#each data.tour.includedItems as item}
-                <li class="flex items-start gap-3" style="color: var(--asini-text-2);">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="shrink-0 mt-0.5"
-                    style="color: var(--asini-success);"
-                    ><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"
-                    ></path><polyline points="22 4 12 14.01 9 11.01"
-                    ></polyline></svg
-                  >
+                <li class="flex items-start gap-2 text-sm" style="color: var(--asini-text-2);">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 mt-0.5" style="color: var(--asini-success);"><polyline points="20 6 9 17 4 12"></polyline></svg>
                   <span>{item}</span>
                 </li>
               {/each}
@@ -141,31 +120,12 @@
         {/if}
 
         {#if data.tour.requirements.length > 0}
-          <div class="pt-8 sm:pt-0 sm:pl-8">
-            <h3 class="text-xl font-bold mb-4">{t("tour_requirements")}</h3>
-            <ul class="space-y-3">
+          <div>
+            <h3 class="text-xs font-mono uppercase tracking-wide mb-2" style="color: var(--asini-text-3);">{t("tour_requirements")}</h3>
+            <ul class="space-y-1.5">
               {#each data.tour.requirements as req}
-                <li class="flex items-start gap-3" style="color: var(--asini-text-2);">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="shrink-0 mt-0.5"
-                    style="color: var(--asini-warning);"
-                    ><circle cx="12" cy="12" r="10"></circle><line
-                      x1="12"
-                      y1="8"
-                      x2="12"
-                      y2="12"
-                    ></line><line x1="12" y1="16" x2="12.01" y2="16"
-                    ></line></svg
-                  >
+                <li class="flex items-start gap-2 text-sm" style="color: var(--asini-text-2);">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 mt-0.5" style="color: var(--asini-warning);"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
                   <span>{req}</span>
                 </li>
               {/each}
@@ -211,7 +171,7 @@
         </p>
         <div class="rounded-(--asini-radius) border border-(--asini-border) overflow-hidden mb-2" style="--dt-sans: 'Geist Sans', system-ui, sans-serif; --dt-mono: 'Geist Mono', monospace;">
           <Calendar
-            view="week-agenda"
+            view="day-agenda"
             adapter={calendarAdapter}
             height="auto"
             readOnly
