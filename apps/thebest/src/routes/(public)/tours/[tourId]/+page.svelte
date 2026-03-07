@@ -62,16 +62,11 @@
     <!-- Main content -->
     <div class="lg:col-span-8 space-y-10">
       {#if data.tour.images.length > 0}
-        <div
-          class="relative w-full aspect-21/9 rounded-4xl overflow-hidden"
-          style="box-shadow: var(--asini-shadow-sm);"
-        >
-          <img
-            src={data.tour.images[0]}
-            alt={data.tour.name}
-            class="w-full h-full object-cover transition-transform duration-1000 hover:scale-105"
-          />
-        </div>
+        <img
+          src={data.tour.images[0]}
+          alt={data.tour.name}
+          class="w-full aspect-video object-cover rounded-(--asini-radius)"
+        />
       {/if}
 
       <div class="space-y-2">
