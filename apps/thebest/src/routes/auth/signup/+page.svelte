@@ -6,63 +6,62 @@
   const t = i18n.t;
 </script>
 
-<div class="flex min-h-screen items-center justify-center bg-base-200">
-  <div class="card w-full max-w-sm bg-base-100 shadow-lg">
-    <div class="card-body">
-      <h1 class="card-title text-2xl">{t("auth_signup_title")}</h1>
+<div class="flex min-h-screen items-center justify-center bg-(--asini-bg-subtle)">
+  <div class="w-full max-w-sm rounded-(--asini-radius) border border-(--asini-border) bg-(--asini-bg) p-6" style="box-shadow: var(--asini-shadow);">
+      <h1 class="text-base font-semibold mb-4" style="color: var(--asini-text);">{t("auth_signup_title")}</h1>
 
       {#if form?.error}
-        <div role="alert" class="alert alert-error">
+        <div role="alert" class="flex items-center gap-2 px-3 py-2 text-sm rounded-(--asini-radius) bg-red-50 text-red-700 border border-red-200 mb-4">
           <span>{form.error}</span>
         </div>
       {/if}
 
       <form method="POST">
-        <fieldset class="fieldset">
-          <label class="fieldset-label" for="name"
+        <div class="space-y-1">
+          <label class="text-xs font-medium" style="color: var(--asini-text-2);" for="name"
             >{t("auth_signup_name")}</label
           >
           <input
             id="name"
             name="name"
             type="text"
-            class="input input-bordered w-full"
+            class="asini-input"
             required
             autocomplete="name"
           />
-        </fieldset>
+        </div>
 
-        <fieldset class="fieldset mt-2">
-          <label class="fieldset-label" for="email"
+        <div class="space-y-1 mt-2">
+          <label class="text-xs font-medium" style="color: var(--asini-text-2);" for="email"
             >{t("auth_signup_email")}</label
           >
           <input
             id="email"
             name="email"
             type="email"
-            class="input input-bordered w-full"
+            class="asini-input"
             required
             autocomplete="email"
           />
-        </fieldset>
+        </div>
 
-        <fieldset class="fieldset mt-2">
-          <label class="fieldset-label" for="password"
+        <div class="space-y-1 mt-2">
+          <label class="text-xs font-medium" style="color: var(--asini-text-2);" for="password"
             >{t("auth_signup_password")}</label
           >
           <input
             id="password"
             name="password"
             type="password"
-            class="input input-bordered w-full"
+            class="asini-input"
             required
             minlength="8"
             autocomplete="new-password"
           />
-        </fieldset>
+        </div>
 
         <div class="mt-4">
-          <button type="submit" class="btn btn-primary w-full"
+          <button type="submit" class="asini-btn asini-btn-primary w-full"
             >{t("auth_signup_submit")}</button
           >
         </div>
@@ -70,13 +69,12 @@
 
       <p class="mt-2 text-center text-sm">
         {t("auth_signup_has_account")}
-        <a href="/auth/login" class="link link-primary"
+        <a href="/auth/login" class="hover:underline" style="color: var(--asini-accent);"
           >{t("auth_signup_login_link")}</a
         >
       </p>
 
       <!-- TODO: Google OAuth -->
       <!-- TODO: email verification flow -->
-    </div>
   </div>
 </div>
