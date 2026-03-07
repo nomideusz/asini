@@ -29,6 +29,8 @@ export const guides = pgTable('guides', {
 	stripeAccountId: text('stripe_account_id'),
 	/** Whether the guide has completed Stripe Connect onboarding. */
 	stripeOnboardingComplete: boolean('stripe_onboarding_complete').notNull().default(false),
+	/** Guide avatar — filename stored in S3 under avatars/{guideId}/ */
+	avatar: text('avatar'),
 	createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
