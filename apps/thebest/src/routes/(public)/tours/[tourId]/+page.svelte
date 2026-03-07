@@ -3,7 +3,6 @@
   import { Calendar } from "@nomideusz/svelte-calendar";
   import type { TimelineEvent } from "@nomideusz/svelte-calendar";
   import { toCalendarAdapter } from "@nomideusz/svelte-scheduler";
-  import { QrCode } from "@nomideusz/svelte-qr";
   import { createFetchAdapter } from "$lib/fetch-adapter.js";
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
@@ -177,58 +176,40 @@
     </div>
 
     <!-- Sidebar: pricing + calendar -->
-    <div class="lg:col-span-4 space-y-6">
+    <div class="lg:col-span-4">
       <div
-        class="rounded-4xl p-8 sticky top-24 bg-(--asini-bg) border"
-        style="box-shadow: 0 8px 30px rgb(0 0 0 / 0.04); border-color: color-mix(in oklch, var(--asini-border) 60%, transparent);"
+        class="rounded-(--asini-radius) border border-(--asini-border) p-4 sticky top-20 bg-(--asini-bg)"
+        style="box-shadow: var(--asini-shadow);"
       >
-        <div class="text-3xl font-black tracking-tight mb-1">
-          {formatPrice(data.tour.pricing)}
-        </div>
-        <p class="text-base font-medium mb-6" style="color: var(--asini-text-3);">
+        <p class="text-xs font-mono uppercase tracking-wide mb-1" style="color: var(--asini-text-3);">
           {t("tour_per_person")}
         </p>
+        <div class="text-lg font-semibold mb-4">
+          {formatPrice(data.tour.pricing)}
+        </div>
 
         {#if data.tour.location}
-          <div
-            class="flex items-center gap-2 text-sm mb-4"
-            style="color: var(--asini-text-2);"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-              />
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-              />
+          <div class="flex items-center gap-2 text-sm mb-3" style="color: var(--asini-text-2);">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
             {data.tour.location}
           </div>
         {/if}
 
         {#if data.tour.categories.length > 0}
-          <div class="flex flex-wrap gap-2 mb-6">
+          <div class="flex flex-wrap gap-1.5 mb-4">
             {#each data.tour.categories as cat}
-              <span class="asini-badge px-2.5 py-1 text-sm border-0 bg-(--asini-surface)">{cat}</span>
+              <span class="asini-badge text-[11px]">{cat}</span>
             {/each}
           </div>
         {/if}
 
-        <!-- Calendar -->
-        <h3 class="font-bold text-xl mb-4">{t("tour_available_dates")}</h3>
-        <div class="rounded-(--asini-radius) border border-(--asini-border) overflow-hidden mb-3" style="--dt-sans: 'Geist Sans', system-ui, sans-serif; --dt-mono: 'Geist Mono', monospace;">
+        <p class="text-xs font-mono uppercase tracking-wide mb-2" style="color: var(--asini-text-3);">
+          {t("tour_available_dates")}
+        </p>
+        <div class="rounded-(--asini-radius) border border-(--asini-border) overflow-hidden mb-2" style="--dt-sans: 'Geist Sans', system-ui, sans-serif; --dt-mono: 'Geist Mono', monospace;">
           <Calendar
             view="week-agenda"
             adapter={calendarAdapter}
@@ -239,27 +220,9 @@
             oneventclick={handleEventClick}
           />
         </div>
-        <p class="text-sm font-medium text-center" style="color: var(--asini-text-3);">
+        <p class="text-xs text-center" style="color: var(--asini-text-3);">
           {t("tour_click_to_book")}
         </p>
-
-        <!-- Share QR -->
-        <div class="mt-10 pt-8 border-t border-(--asini-border) text-center">
-          <h3 class="font-bold text-lg mb-4">Share this tour</h3>
-          <div
-            class="flex justify-center bg-(--asini-surface) p-6 rounded-2xl w-max mx-auto"
-          >
-            <QrCode
-              data={`${typeof window !== "undefined" ? window.location.origin : ""}/tours/${data.tour.id}`}
-              size={120}
-              errorCorrection="M"
-              label="QR code for {data.tour.name}"
-            />
-          </div>
-          <p class="text-xs font-medium mt-4" style="color: var(--asini-text-3);">
-            Scan to view this tour on your phone
-          </p>
-        </div>
       </div>
     </div>
   </div>
