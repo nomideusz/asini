@@ -31,6 +31,7 @@
 	"dependencies": {
 		"@lucia-auth/adapter-drizzle": "^1.1.0",
 		"@nomideusz/svelte-calendar": "workspace:*",
+		"@nomideusz/svelte-media": "workspace:*",
 		"@nomideusz/svelte-notify": "workspace:*",
 		"@nomideusz/svelte-payments": "workspace:*",
 		"@nomideusz/svelte-scheduler": "workspace:*",
