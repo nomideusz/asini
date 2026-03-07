@@ -136,7 +136,7 @@
     </div>
 
     <!-- Sidebar: pricing + calendar -->
-    <div>
+    <div class="min-w-80">
       <div
         class="rounded-(--asini-radius) border border-(--asini-border) p-4 sticky top-20 bg-(--asini-bg)"
         style="box-shadow: var(--asini-shadow);"
