@@ -21,7 +21,7 @@
   >
     <div class="flex items-center gap-2">
       <!-- Mobile hamburger -->
-      <button onclick={() => menuOpen = true} class="asini-btn asini-btn-ghost lg:hidden">
+      <button onclick={() => menuOpen = true} class="asini-btn asini-btn-ghost lg:hidden" aria-label="open sidebar">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="h-5 w-5"
@@ -43,12 +43,12 @@
     <div class="hidden lg:flex items-center">
       <div class="flex items-center gap-1">
         <a
-          class="px-3 py-1.5 text-sm font-medium rounded-[var(--asini-radius)] transition-colors hover:bg-[var(--asini-surface)]"
+          class="px-3 py-1.5 text-sm font-medium rounded-(--asini-radius) transition-colors hover:bg-(--asini-surface)"
           style="color: var(--asini-text-2);"
           href="/">{t("nav_home")}</a
         >
         <a
-          class="px-3 py-1.5 text-sm font-medium rounded-[var(--asini-radius)] transition-colors hover:bg-[var(--asini-surface)]"
+          class="px-3 py-1.5 text-sm font-medium rounded-(--asini-radius) transition-colors hover:bg-(--asini-surface)"
           style="color: var(--asini-text-2);"
           href="/tours">{t("nav_explore")}</a
         >
@@ -118,11 +118,11 @@
     style="background: var(--asini-bg);"
   >
     <a href="/" class="text-base font-semibold mb-4" onclick={() => menuOpen = false}>thebest.travel</a>
-    <a href="/" class="px-3 py-2 text-sm rounded-[var(--asini-radius)] hover:bg-[var(--asini-surface)] transition-colors" style="color: var(--asini-text);" onclick={() => menuOpen = false}>{t("nav_home")}</a>
-    <a href="/tours" class="px-3 py-2 text-sm rounded-[var(--asini-radius)] hover:bg-[var(--asini-surface)] transition-colors" style="color: var(--asini-text);" onclick={() => menuOpen = false}>{t("nav_explore")}</a>
+    <a href="/" class="px-3 py-2 text-sm rounded-(--asini-radius) hover:bg-(--asini-surface) transition-colors" style="color: var(--asini-text);" onclick={() => menuOpen = false}>{t("nav_home")}</a>
+    <a href="/tours" class="px-3 py-2 text-sm rounded-(--asini-radius) hover:bg-(--asini-surface) transition-colors" style="color: var(--asini-text);" onclick={() => menuOpen = false}>{t("nav_explore")}</a>
     <div class="border-t my-2" style="border-color: var(--asini-border);"></div>
     {#if data.user}
-      <a href="/guide/tours" class="px-3 py-2 text-sm rounded-[var(--asini-radius)] hover:bg-[var(--asini-surface)] transition-colors" style="color: var(--asini-text);" onclick={() => menuOpen = false}>{t("guide_area")}</a>
+      <a href="/guide/tours" class="px-3 py-2 text-sm rounded-(--asini-radius) hover:bg-(--asini-surface) transition-colors" style="color: var(--asini-text);" onclick={() => menuOpen = false}>{t("guide_area")}</a>
       <form method="POST" action="/auth/logout">
         <button type="submit" class="asini-btn asini-btn-ghost asini-btn-sm w-full justify-start">{t("nav_logout")}</button>
       </form>
