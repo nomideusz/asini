@@ -3,6 +3,7 @@ import type { PageServerLoad } from './$types.js';
 import { getDb } from '$lib/server/db/index.js';
 import { bookings, tours } from '$lib/server/db/schema.js';
 import { eq } from 'drizzle-orm';
+import { env } from '$env/dynamic/private';
 
 export const load: PageServerLoad = async ({ params }) => {
 	const db = getDb();
@@ -12,5 +13,5 @@ export const load: PageServerLoad = async ({ params }) => {
 		.where(eq(bookings.bookingReference, params.ref));
 	if (!booking) error(404, 'Booking not found');
 	const [tour] = await db.select().from(tours).where(eq(tours.id, booking.tourId));
-	return { booking, tour };
+	return { booking, tour, verifyUrl: `${env.ORIGIN}/verify/${booking.bookingReference}` };
 };

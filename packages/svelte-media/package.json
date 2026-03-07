@@ -1,7 +1,7 @@
 {
-  "name": "@nomideusz/svelte-notify",
+  "name": "@nomideusz/svelte-media",
   "version": "0.1.0",
-  "description": "Email notification template library for the @nomideusz booking platform.",
+  "description": "Image upload, processing, and S3-compatible storage for Svelte 5 apps.",
   "type": "module",
   "license": "MIT",
   "svelte": "./dist/index.js",
@@ -13,11 +13,7 @@
       "default": "./dist/index.js"
     }
   },
-  "files": [
-    "dist",
-    "!dist/**/*.test.*",
-    "!dist/**/*.spec.*"
-  ],
+  "files": ["dist", "!dist/**/*.test.*", "!dist/**/*.spec.*"],
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
@@ -30,22 +26,23 @@
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest"
   },
+  "peerDependencies": { "svelte": "^5.0.0" },
   "dependencies": {
-    "@nomideusz/svelte-qr": "workspace:*"
-  },
-  "peerDependencies": {
-    "svelte": "^5.0.0"
+    "@aws-sdk/client-s3": "^3.0.0",
+    "@paralleldrive/cuid2": "^2.2.2",
+    "sharp": "^0.34.0"
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^7.0.0",
     "@sveltejs/kit": "^2.50.2",
     "@sveltejs/package": "^2.5.7",
     "@sveltejs/vite-plugin-svelte": "^6.2.4",
+    "@types/node": "^25.0.0",
     "svelte": "^5.51.0",
     "svelte-check": "^4.3.6",
     "typescript": "^5.9.3",
     "vite": "^7.3.1",
     "vitest": "^4.0.18"
   },
-  "keywords": ["svelte", "email", "notifications", "templates", "booking"]
+  "keywords": ["svelte", "image", "upload", "s3", "media", "sharp"]
 }
