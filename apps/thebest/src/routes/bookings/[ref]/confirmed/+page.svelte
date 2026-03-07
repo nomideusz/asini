@@ -9,19 +9,17 @@
 
 <section class="max-w-xl mx-auto px-4 py-12 text-center">
   <div class="text-5xl mb-4">✓</div>
-  <h1 class="text-2xl font-bold mb-2">{t("confirmed_title")}</h1>
-  <p class="text-base-content/70 mb-6">
+  <h1 class="text-2xl font-bold mb-2" style="color: var(--asini-text);">{t("confirmed_title")}</h1>
+  <p class="mb-6" style="color: var(--asini-text-2);">
     {t("confirmed_thanks", { tourName: data.tour?.name ?? "" })}
     {t("confirmed_email_sent", { email: data.booking.guestEmail })}
   </p>
-  <div class="stats shadow mb-6">
-    <div class="stat">
-      <div class="stat-title">{t("confirmed_reference")}</div>
-      <div class="stat-value text-lg">{data.booking.bookingReference}</div>
-    </div>
+  <div class="inline-flex flex-col items-center rounded-(--asini-radius) border border-(--asini-border) bg-(--asini-bg) p-4 mb-6" style="box-shadow: var(--asini-shadow);">
+    <div class="text-xs font-medium" style="color: var(--asini-text-2);">{t("confirmed_reference")}</div>
+    <div class="text-lg font-semibold font-mono" style="color: var(--asini-text);">{data.booking.bookingReference}</div>
   </div>
   <div class="flex flex-col items-center gap-2 mb-6">
-    <p class="text-sm text-base-content/60">{t("confirmed_qr_hint")}</p>
+    <p class="text-sm" style="color: var(--asini-text-3);">{t("confirmed_qr_hint")}</p>
     <QrCode
       data={data.verifyUrl}
       size={200}
@@ -29,5 +27,5 @@
       label="Booking QR code for {data.booking.bookingReference}"
     />
   </div>
-  <a href="/tours" class="btn btn-outline">{t("confirmed_browse_more")}</a>
+  <a href="/tours" class="asini-btn">{t("confirmed_browse_more")}</a>
 </section>

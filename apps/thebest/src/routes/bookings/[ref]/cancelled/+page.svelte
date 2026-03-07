@@ -4,9 +4,9 @@
 </script>
 
 <section class="max-w-xl mx-auto px-4 py-12 text-center">
-  <h1 class="text-2xl font-bold mb-4">{t("cancelled_title")}</h1>
-  <p class="text-base-content/70 mb-6">
+  <h1 class="text-2xl font-bold mb-4" style="color: var(--asini-text);">{t("cancelled_title")}</h1>
+  <p class="mb-6" style="color: var(--asini-text-2);">
     {t("cancelled_refund_notice")}
   </p>
-  <a href="/tours" class="btn btn-outline">{t("confirmed_browse_more")}</a>
+  <a href="/tours" class="asini-btn">{t("confirmed_browse_more")}</a>
 </section>
