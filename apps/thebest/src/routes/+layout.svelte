@@ -9,116 +9,126 @@
     children,
   }: { data: LayoutData; children: import("svelte").Snippet } = $props();
   const t = i18n.t;
+
+  let menuOpen = $state(false);
 </script>
 
-<!-- Mobile drawer wrapper -->
-<div class="drawer">
-  <input id="main-drawer" type="checkbox" class="drawer-toggle" />
+<div class="flex flex-col min-h-screen">
+  <!-- Navbar -->
+  <header
+    class="sticky top-0 z-50 flex items-center justify-between h-14 px-4 backdrop-blur-md border-b transition-all duration-300"
+    style="background: color-mix(in srgb, var(--asini-bg) 80%, transparent); border-color: var(--asini-border);"
+  >
+    <div class="flex items-center gap-2">
+      <!-- Mobile hamburger -->
+      <button onclick={() => menuOpen = true} class="asini-btn asini-btn-ghost lg:hidden">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16"
+          />
+        </svg>
+      </button>
+      <a href="/" class="asini-btn asini-btn-ghost text-base font-semibold">thebest.travel</a>
+    </div>
 
-  <div class="drawer-content flex flex-col min-h-screen">
-    <!-- Navbar -->
-    <header
-      class="navbar bg-base-100 border-b border-base-200 sticky top-0 z-50"
-    >
-      <div class="navbar-start">
-        <!-- Mobile hamburger -->
-        <label for="main-drawer" class="btn btn-ghost drawer-button lg:hidden">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M4 6h16M4 12h16M4 18h16"
-            />
-          </svg>
-        </label>
-        <a href="/" class="btn btn-ghost text-xl font-bold">thebest.travel</a>
+    <div class="hidden lg:flex items-center">
+      <div class="flex items-center gap-1">
+        <a
+          class="px-3 py-1.5 text-sm font-medium rounded-[var(--asini-radius)] transition-colors hover:bg-[var(--asini-surface)]"
+          style="color: var(--asini-text-2);"
+          href="/">{t("nav_home")}</a
+        >
+        <a
+          class="px-3 py-1.5 text-sm font-medium rounded-[var(--asini-radius)] transition-colors hover:bg-[var(--asini-surface)]"
+          style="color: var(--asini-text-2);"
+          href="/tours">{t("nav_explore")}</a
+        >
       </div>
+    </div>
 
-      <div class="navbar-center hidden lg:flex">
-        <ul class="menu menu-horizontal px-1 gap-1">
-          <li><a href="/">{t("nav_home")}</a></li>
-          <li><a href="/tours">{t("nav_explore")}</a></li>
-        </ul>
-      </div>
-
-      <div class="navbar-end gap-2">
-        <LocaleSwitcher
-          {i18n}
-          labels={{ en: t("locale_en"), pl: t("locale_pl") }}
-        />
-        {#if data.user}
-          <a href="/guide/tours" class="btn btn-ghost btn-sm"
+    <div class="flex items-center gap-3 pr-2">
+      <LocaleSwitcher
+        {i18n}
+        labels={{ en: t("locale_en"), pl: t("locale_pl") }}
+      />
+      {#if data.user}
+        <div class="hidden sm:flex items-center gap-2">
+          <a
+            href="/guide/dashboard"
+            class="asini-btn asini-btn-ghost asini-btn-sm"
             >{t("guide_area")}</a
           >
           <form method="POST" action="/auth/logout" class="inline">
-            <button type="submit" class="btn btn-outline btn-sm"
-              >{t("nav_logout")}</button
-            >
-          </form>
-        {:else}
-          <a href="/auth/login" class="btn btn-ghost btn-sm">{t("nav_login")}</a
-          >
-          <a href="/auth/signup" class="btn btn-primary btn-sm"
-            >{t("nav_signup")}</a
-          >
-        {/if}
-      </div>
-    </header>
-
-    <!-- Main content -->
-    <main class="flex-1">
-      {@render children()}
-    </main>
-
-    <!-- Footer -->
-    <footer
-      class="footer footer-center bg-base-200 border-t border-base-300 p-6 text-base-content/70"
-    >
-      <p class="text-sm">{t("footer_tagline")}</p>
-    </footer>
-  </div>
-
-  <!-- Mobile drawer sidebar -->
-  <div class="drawer-side z-50">
-    <label for="main-drawer" aria-label="close sidebar" class="drawer-overlay"
-    ></label>
-    <ul class="menu bg-base-100 min-h-full w-64 p-4 gap-1">
-      <li class="menu-title text-lg font-bold mb-2">
-        <a href="/">thebest.travel</a>
-      </li>
-      <li><a href="/">{t("nav_home")}</a></li>
-      <li><a href="/tours">{t("nav_explore")}</a></li>
-      <div class="divider"></div>
-      {#if data.user}
-        <li><a href="/guide/tours">{t("guide_area")}</a></li>
-        <li>
-          <form method="POST" action="/auth/logout">
             <button
               type="submit"
-              class="btn btn-ghost btn-sm justify-start w-full text-left"
+              class="asini-btn asini-btn-sm"
               >{t("nav_logout")}</button
             >
           </form>
-        </li>
+        </div>
       {:else}
-        <li>
-          <a href="/auth/login" class="btn btn-ghost btn-sm justify-start"
+        <div class="hidden sm:flex items-center gap-2">
+          <a href="/auth/login" class="asini-btn asini-btn-ghost asini-btn-sm"
             >{t("nav_login")}</a
           >
-        </li>
-        <li>
-          <a href="/auth/signup" class="btn btn-primary btn-sm justify-start"
+          <a
+            href="/auth/signup"
+            class="asini-btn asini-btn-primary asini-btn-sm"
             >{t("nav_signup")}</a
           >
-        </li>
+        </div>
       {/if}
-    </ul>
-  </div>
+    </div>
+  </header>
+
+  <!-- Main content -->
+  <main class="flex-1">
+    {@render children()}
+  </main>
+
+  <!-- Footer -->
+  <footer
+    class="flex items-center justify-center py-8 text-xs border-t"
+    style="background: var(--asini-surface); border-color: var(--asini-border); color: var(--asini-text-2);"
+  >
+    <p class="text-sm">{t("footer_tagline")}</p>
+  </footer>
 </div>
+
+<!-- Mobile sidebar overlay -->
+{#if menuOpen}
+  <!-- Overlay -->
+  <button
+    class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm"
+    onclick={() => menuOpen = false}
+    aria-label="close sidebar"
+  ></button>
+  <!-- Sidebar -->
+  <nav
+    class="fixed top-0 left-0 z-50 h-full w-64 p-5 flex flex-col gap-2 shadow-lg"
+    style="background: var(--asini-bg);"
+  >
+    <a href="/" class="text-base font-semibold mb-4" onclick={() => menuOpen = false}>thebest.travel</a>
+    <a href="/" class="px-3 py-2 text-sm rounded-[var(--asini-radius)] hover:bg-[var(--asini-surface)] transition-colors" style="color: var(--asini-text);" onclick={() => menuOpen = false}>{t("nav_home")}</a>
+    <a href="/tours" class="px-3 py-2 text-sm rounded-[var(--asini-radius)] hover:bg-[var(--asini-surface)] transition-colors" style="color: var(--asini-text);" onclick={() => menuOpen = false}>{t("nav_explore")}</a>
+    <div class="border-t my-2" style="border-color: var(--asini-border);"></div>
+    {#if data.user}
+      <a href="/guide/tours" class="px-3 py-2 text-sm rounded-[var(--asini-radius)] hover:bg-[var(--asini-surface)] transition-colors" style="color: var(--asini-text);" onclick={() => menuOpen = false}>{t("guide_area")}</a>
+      <form method="POST" action="/auth/logout">
+        <button type="submit" class="asini-btn asini-btn-ghost asini-btn-sm w-full justify-start">{t("nav_logout")}</button>
+      </form>
+    {:else}
+      <a href="/auth/login" class="asini-btn asini-btn-ghost asini-btn-sm justify-start" onclick={() => menuOpen = false}>{t("nav_login")}</a>
+      <a href="/auth/signup" class="asini-btn asini-btn-primary asini-btn-sm justify-start" onclick={() => menuOpen = false}>{t("nav_signup")}</a>
+    {/if}
+  </nav>
+{/if}
