@@ -1,12 +1,15 @@
 @import "tailwindcss";
 
-/* ── Geist font ── */
+/* ── Base ── */
 body {
   font-family: "Geist Sans", "Geist", ui-sans-serif, system-ui, sans-serif;
+  background-color: var(--asini-bg);
+  color: var(--asini-text);
 }
 
 /* ── Light theme (default) ── */
 :root {
+  color-scheme: light dark;
   --asini-bg: #ffffff;
   --asini-bg-subtle: #f8f9fa;
   --asini-surface: #f1f3f5;
@@ -154,4 +157,50 @@ body {
   background: var(--asini-surface);
   color: var(--asini-text-2);
   border: 1px solid var(--asini-border);
+}
+.asini-badge-success {
+  background: color-mix(in oklch, var(--asini-success) 10%, var(--asini-bg));
+  color: var(--asini-success);
+  border-color: color-mix(in oklch, var(--asini-success) 25%, transparent);
+}
+.asini-badge-warning {
+  background: color-mix(in oklch, var(--asini-warning) 10%, var(--asini-bg));
+  color: var(--asini-warning);
+  border-color: color-mix(in oklch, var(--asini-warning) 25%, transparent);
+}
+.asini-badge-danger {
+  background: color-mix(in oklch, var(--asini-danger) 10%, var(--asini-bg));
+  color: var(--asini-danger);
+  border-color: color-mix(in oklch, var(--asini-danger) 25%, transparent);
+}
+.asini-badge-info {
+  background: color-mix(in oklch, var(--asini-info) 10%, var(--asini-bg));
+  color: var(--asini-info);
+  border-color: color-mix(in oklch, var(--asini-info) 25%, transparent);
+}
+
+/* ── Alerts ── */
+.asini-alert {
+  @apply flex items-center gap-2 px-3 py-2 text-sm;
+  border-radius: var(--asini-radius);
+}
+.asini-alert-success {
+  background: color-mix(in oklch, var(--asini-success) 10%, var(--asini-bg));
+  color: var(--asini-success);
+  border: 1px solid color-mix(in oklch, var(--asini-success) 25%, transparent);
+}
+.asini-alert-warning {
+  background: color-mix(in oklch, var(--asini-warning) 10%, var(--asini-bg));
+  color: var(--asini-warning);
+  border: 1px solid color-mix(in oklch, var(--asini-warning) 25%, transparent);
+}
+.asini-alert-danger {
+  background: color-mix(in oklch, var(--asini-danger) 10%, var(--asini-bg));
+  color: var(--asini-danger);
+  border: 1px solid color-mix(in oklch, var(--asini-danger) 25%, transparent);
+}
+.asini-alert-info {
+  background: color-mix(in oklch, var(--asini-info) 10%, var(--asini-bg));
+  color: var(--asini-info);
+  border: 1px solid color-mix(in oklch, var(--asini-info) 25%, transparent);
 }

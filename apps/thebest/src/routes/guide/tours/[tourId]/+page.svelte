@@ -117,7 +117,7 @@
     <div class="flex flex-wrap gap-2 items-center">
       {#if data.tour.status === "active"}
         <span
-          class="asini-badge px-2.5 py-1 text-sm bg-green-50 text-green-700 border-green-200"
+          class="asini-badge asini-badge-success px-2.5 py-1 text-sm"
         >
           {data.tour.status}
         </span>
@@ -129,9 +129,9 @@
         </span>
       {/if}
       {#if data.tour.isPublic}
-        <span class="asini-badge px-2.5 py-1 text-sm bg-blue-50 text-blue-700 border-blue-200">Public</span>
+        <span class="asini-badge asini-badge-info px-2.5 py-1 text-sm">Public</span>
       {:else}
-        <span class="asini-badge px-2.5 py-1 text-sm bg-amber-50 text-amber-700 border-amber-200"
+        <span class="asini-badge asini-badge-warning px-2.5 py-1 text-sm"
           >Private</span
         >
       {/if}
@@ -182,7 +182,7 @@
 
   <!-- Feedback alerts -->
   {#if form?.error}
-    <div class="flex items-center gap-2 px-3 py-2 text-sm rounded-(--asini-radius) bg-red-50 text-red-700 border border-red-200 mb-6">
+    <div class="asini-alert asini-alert-danger flex items-center gap-2 px-3 py-2 text-sm rounded-(--asini-radius) mb-6">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         class="stroke-current shrink-0 h-6 w-6"
@@ -200,7 +200,7 @@
   {/if}
   {#if form?.success}
     <div
-      class="flex items-center gap-2 px-3 py-2 text-sm rounded-(--asini-radius) bg-green-50 text-green-700 border border-green-200 mb-6"
+      class="asini-alert asini-alert-success flex items-center gap-2 px-3 py-2 text-sm rounded-(--asini-radius) mb-6"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -219,7 +219,7 @@
   {/if}
   {#if form?.slotAdded}
     <div
-      class="flex items-center gap-2 px-3 py-2 text-sm rounded-(--asini-radius) bg-green-50 text-green-700 border border-green-200 mb-6"
+      class="asini-alert asini-alert-success flex items-center gap-2 px-3 py-2 text-sm rounded-(--asini-radius) mb-6"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -237,7 +237,7 @@
     </div>
   {/if}
   {#if form?.published !== undefined}
-    <div class="flex items-center gap-2 px-3 py-2 text-sm rounded-(--asini-radius) bg-green-50 text-green-700 border border-green-200 mb-4">
+    <div class="asini-alert asini-alert-success flex items-center gap-2 px-3 py-2 text-sm rounded-(--asini-radius) mb-4">
       <span>{form.published ? "Tour published!" : "Tour unpublished."}</span>
     </div>
   {/if}
@@ -644,7 +644,7 @@
       </fieldset>
 
       <div
-        class="flex items-center gap-2 px-3 py-2 text-sm rounded-(--asini-radius) bg-amber-50 text-amber-700 border border-amber-200 mt-4"
+        class="asini-alert asini-alert-warning flex items-center gap-2 px-3 py-2 text-sm rounded-(--asini-radius) mt-4"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -852,15 +852,15 @@
                 >{slot.bookedSpots}/{slot.availableSpots} booked</span
               >
               {#if slot.status === "open"}
-                <span class="asini-badge text-[11px] bg-green-50 text-green-700 border-green-200">
+                <span class="asini-badge asini-badge-success text-[11px]">
                   {slot.status}
                 </span>
               {:else if slot.status === "cancelled"}
-                <span class="asini-badge text-[11px] bg-red-50 text-red-700 border-red-200">
+                <span class="asini-badge asini-badge-danger text-[11px]">
                   {slot.status}
                 </span>
               {:else if slot.status === "full"}
-                <span class="asini-badge text-[11px] bg-amber-50 text-amber-700 border-amber-200">
+                <span class="asini-badge asini-badge-warning text-[11px]">
                   {slot.status}
                 </span>
               {:else}
@@ -958,7 +958,7 @@
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-8">
           {#each data.tour.images as filename (filename)}
             <div
-              class="relative group aspect-[4/3] rounded-(--asini-radius) overflow-hidden border border-(--asini-border)"
+              class="relative group aspect-4/3 rounded-(--asini-radius) overflow-hidden border border-(--asini-border)"
               style="box-shadow: var(--asini-shadow);"
             >
               <img

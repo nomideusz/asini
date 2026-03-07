@@ -29,7 +29,7 @@
         })}
       </p>
       {#if data.refundAmount > 0}
-        <div class="flex items-center gap-2 px-3 py-2 text-sm rounded-(--asini-radius) bg-blue-50 text-blue-700 border border-blue-200 mt-2">
+        <div class="asini-alert asini-alert-info mt-2">
           <span
             >{t("cancel_refund", {
               amount: formatMoney(data.refundAmount, data.booking.currency),
@@ -37,7 +37,7 @@
           >
         </div>
       {:else}
-        <div class="flex items-center gap-2 px-3 py-2 text-sm rounded-(--asini-radius) bg-amber-50 text-amber-700 border border-amber-200 mt-2">
+        <div class="asini-alert asini-alert-warning mt-2">
           <span>{t("cancel_no_refund")}</span>
         </div>
       {/if}

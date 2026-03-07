@@ -3,6 +3,7 @@
   import type { LayoutData } from "./$types.js";
   import { i18n } from "$lib/i18n.js";
   import { LocaleSwitcher } from "@nomideusz/svelte-i18n";
+  import { page } from "$app/state";
 
   let {
     data,
@@ -11,6 +12,7 @@
   const t = i18n.t;
 
   let menuOpen = $state(false);
+  const isGuide = $derived(page.url.pathname.startsWith("/guide"));
 </script>
 
 <div class="flex flex-col min-h-screen">
@@ -20,7 +22,8 @@
     style="background: color-mix(in srgb, var(--asini-bg) 80%, transparent); border-color: var(--asini-border);"
   >
     <div class="flex items-center gap-2">
-      <!-- Mobile hamburger -->
+      <!-- Mobile hamburger (public pages only, guide has its own bottom dock) -->
+      {#if !isGuide}
       <button onclick={() => menuOpen = true} class="asini-btn asini-btn-ghost lg:hidden" aria-label="open sidebar">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -37,55 +40,60 @@
           />
         </svg>
       </button>
+      {/if}
       <a href="/" class="asini-btn asini-btn-ghost text-base font-semibold">thebest.travel</a>
     </div>
 
-    <div class="hidden lg:flex items-center">
-      <div class="flex items-center gap-1">
-        <a
-          class="px-3 py-1.5 text-sm font-medium rounded-(--asini-radius) transition-colors hover:bg-(--asini-surface)"
-          style="color: var(--asini-text-2);"
-          href="/">{t("nav_home")}</a
-        >
-        <a
-          class="px-3 py-1.5 text-sm font-medium rounded-(--asini-radius) transition-colors hover:bg-(--asini-surface)"
-          style="color: var(--asini-text-2);"
-          href="/tours">{t("nav_explore")}</a
-        >
+    {#if !isGuide}
+      <div class="hidden lg:flex items-center">
+        <div class="flex items-center gap-1">
+          <a
+            class="px-3 py-1.5 text-sm font-medium rounded-(--asini-radius) transition-colors hover:bg-(--asini-surface)"
+            style="color: var(--asini-text-2);"
+            href="/">{t("nav_home")}</a
+          >
+          <a
+            class="px-3 py-1.5 text-sm font-medium rounded-(--asini-radius) transition-colors hover:bg-(--asini-surface)"
+            style="color: var(--asini-text-2);"
+            href="/tours">{t("nav_explore")}</a
+          >
+        </div>
       </div>
-    </div>
+    {/if}
 
     <div class="flex items-center gap-3 pr-2">
       <LocaleSwitcher
         {i18n}
         labels={{ en: t("locale_en"), pl: t("locale_pl") }}
       />
-      {#if data.user}
-        <div class="hidden sm:flex items-center gap-2">
-          <a
-            href="/guide/dashboard"
-            class="asini-btn asini-btn-ghost asini-btn-sm"
-            >{t("guide_area")}</a
-          >
-          <form method="POST" action="/auth/logout" class="inline">
-            <button
-              type="submit"
-              class="asini-btn asini-btn-sm"
-              >{t("nav_logout")}</button
+      {#if !isGuide}
+        {#if data.user}
+          <div class="hidden sm:flex items-center gap-2">
+            <a
+              href="/guide/dashboard"
+              class="asini-btn asini-btn-ghost asini-btn-sm"
+              >{t("guide_area")}</a
             >
-          </form>
-        </div>
-      {:else}
-        <div class="hidden sm:flex items-center gap-2">
-          <a href="/auth/login" class="asini-btn asini-btn-ghost asini-btn-sm"
-            >{t("nav_login")}</a
-          >
-          <a
-            href="/auth/signup"
-            class="asini-btn asini-btn-primary asini-btn-sm"
-            >{t("nav_signup")}</a
-          >
-        </div>
+            <form method="POST" action="/auth/logout" class="inline">
+              <button
+                type="submit"
+                class="asini-btn asini-btn-sm"
+                >{t("nav_logout")}</button
+              >
+            </form>
+          </div>
+        {:else}
+          <div class="hidden sm:flex items-center gap-2">
+            <a href="/auth/login" class="asini-btn asini-btn-ghost asini-btn-sm"
+              >{t("nav_login")}</a
+            >
+            <a
+              href="/auth/signup"
+              class="asini-btn asini-btn-primary asini-btn-sm"
+              >{t("nav_signup")}</a
+            >
+          </div>
+        {/if}
       {/if}
     </div>
   </header>
@@ -95,13 +103,15 @@
     {@render children()}
   </main>
 
-  <!-- Footer -->
-  <footer
-    class="flex items-center justify-center py-8 text-xs border-t"
-    style="background: var(--asini-surface); border-color: var(--asini-border); color: var(--asini-text-2);"
-  >
-    <p class="text-sm">{t("footer_tagline")}</p>
-  </footer>
+  {#if !isGuide}
+    <!-- Footer -->
+    <footer
+      class="flex items-center justify-center py-8 text-xs border-t"
+      style="background: var(--asini-surface); border-color: var(--asini-border); color: var(--asini-text-2);"
+    >
+      <p class="text-sm">{t("footer_tagline")}</p>
+    </footer>
+  {/if}
 </div>
 
 <!-- Mobile sidebar overlay -->

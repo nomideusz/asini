@@ -116,14 +116,14 @@
           style="box-shadow: var(--asini-shadow);"
         >
           {#if tour.images && tour.images.length > 0}
-            <div class="relative w-full aspect-[4/3] overflow-hidden">
+            <div class="relative w-full aspect-4/3 overflow-hidden">
               <img
                 src="/api/images/tours/{tour.id}/thumb_{tour.images[0]}"
                 alt={tour.name}
                 class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               />
               <div
-                class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"
+                class="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent"
               ></div>
               <div
                 class="absolute bottom-4 left-4 right-4 flex justify-between items-end"
@@ -137,7 +137,7 @@
             </div>
           {:else}
             <div
-              class="w-full aspect-[4/3] bg-(--asini-surface) flex items-center justify-center"
+              class="w-full aspect-4/3 bg-(--asini-surface) flex items-center justify-center"
               style="color: var(--asini-text-3);"
             >
               <svg

@@ -119,7 +119,7 @@ export const actions = {
 		const schedulePattern = form.get('schedulePattern')?.toString() ?? 'once';
 		const startTime = form.get('startTime')?.toString() ?? '09:00';
 		const endTime = form.get('endTime')?.toString() ?? '10:00';
-		const validFrom = form.get('validFrom')?.toString() ?? new Date().toISOString().slice(0, 10);
+		const validFrom = form.get('validFrom')?.toString() || form.get('slotDate')?.toString() || new Date().toISOString().slice(0, 10);
 		const validUntil = form.get('validUntil')?.toString() || undefined;
 		const timezone = form.get('timezone')?.toString() || 'Europe/Warsaw';
 
@@ -151,9 +151,22 @@ export const actions = {
 			});
 		}
 
+		// Included items & requirements (from extras section)
+		const includedItemsRaw = form.get('includedItems')?.toString().trim() ?? '';
+		const includedItems = includedItemsRaw
+			.split('\n')
+			.map((l) => l.trim())
+			.filter(Boolean);
+		const requirementsRaw = form.get('requirements')?.toString().trim() ?? '';
+		const requirements = requirementsRaw
+			.split('\n')
+			.map((l) => l.trim())
+			.filter(Boolean);
+
 		const adapter = createDrizzleAdapter(getDb());
+		let tour;
 		try {
-			await adapter.createTourForGuide(locals.user.id, {
+			tour = await adapter.createTourForGuide(locals.user.id, {
 				name,
 				description,
 				duration,
@@ -162,8 +175,8 @@ export const actions = {
 				maxCapacity,
 				languages,
 				categories: [],
-				includedItems: [],
-				requirements: [],
+				includedItems,
+				requirements,
 				images: [],
 				isPublic: false,
 				status: 'draft',
@@ -174,6 +187,27 @@ export const actions = {
 		} catch (err) {
 			const message = err instanceof Error ? err.message : 'Failed to create tour';
 			return fail(500, { error: message });
+		}
+
+		// After creating the tour, if single-date mode, create a manual slot
+		const slotDate = form.get('slotDate')?.toString();
+		if (schedulePattern === 'once' && slotDate) {
+			const slotStartTime = form.get('startTime')?.toString() ?? '09:00';
+			const slotEndTime = form.get('endTime')?.toString() ?? '10:00';
+			const slotStart = new Date(`${slotDate}T${slotStartTime}:00`);
+			const slotEnd = new Date(`${slotDate}T${slotEndTime}:00`);
+
+			if (!isNaN(slotStart.getTime()) && !isNaN(slotEnd.getTime()) && slotEnd > slotStart) {
+				await adapter.createSlot({
+					tourId: tour.id,
+					startTime: slotStart,
+					endTime: slotEnd,
+					availableSpots: maxCapacity,
+					bookedSpots: 0,
+					status: 'open',
+					isGenerated: false,
+				});
+			}
 		}
 
 		redirect(303, '/guide/tours');

@@ -11,7 +11,7 @@
       <h1 class="text-base font-semibold mb-4" style="color: var(--asini-text);">{t("auth_signup_title")}</h1>
 
       {#if form?.error}
-        <div role="alert" class="flex items-center gap-2 px-3 py-2 text-sm rounded-(--asini-radius) bg-red-50 text-red-700 border border-red-200 mb-4">
+        <div role="alert" class="asini-alert asini-alert-danger mb-4">
           <span>{form.error}</span>
         </div>
       {/if}
