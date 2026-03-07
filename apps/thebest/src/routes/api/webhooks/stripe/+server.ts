@@ -60,6 +60,7 @@ export const POST: RequestHandler = async ({ request }) => {
 			bookingReference: booking.bookingReference,
 			guideEmail: guide?.email ?? undefined,
 			guideName: guide?.name ?? undefined,
+			verifyUrl: `${env.ORIGIN}/verify/${booking.bookingReference}`,
 		};
 
 		Promise.all([

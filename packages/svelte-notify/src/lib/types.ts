@@ -9,6 +9,8 @@ export interface BookingNotificationData {
   bookingReference: string;
   guideName?: string;
   guideEmail?: string;
+  /** Optional booking verification URL — if provided, a QR code is inlined in the email. */
+  verifyUrl?: string;
 }
 
 export interface CancellationNotificationData extends BookingNotificationData {

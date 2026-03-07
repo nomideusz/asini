@@ -30,6 +30,9 @@
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest"
   },
+  "dependencies": {
+    "@nomideusz/svelte-qr": "workspace:*"
+  },
   "peerDependencies": {
     "svelte": "^5.0.0"
   },
