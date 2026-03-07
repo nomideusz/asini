@@ -20,13 +20,14 @@
 
 <section class="max-w-xl mx-auto px-4 py-8">
   <!-- Breadcrumb -->
-  <div class="breadcrumbs text-sm mb-6">
-    <ul>
-      <li><a href="/">{t("breadcrumb_home")}</a></li>
-      <li><a href="/tours">{t("breadcrumb_tours")}</a></li>
-      <li><a href="/tours/{data.tour.id}">{data.tour.name}</a></li>
-      <li>{t("breadcrumb_book")}</li>
-    </ul>
+  <div class="flex items-center gap-1 text-xs mb-6" style="color: var(--asini-text-3);">
+    <a href="/" class="hover:underline" style="color: var(--asini-accent);">{t("breadcrumb_home")}</a>
+    <span>/</span>
+    <a href="/tours" class="hover:underline" style="color: var(--asini-accent);">{t("breadcrumb_tours")}</a>
+    <span>/</span>
+    <a href="/tours/{data.tour.id}" class="hover:underline" style="color: var(--asini-accent);">{data.tour.name}</a>
+    <span>/</span>
+    <span class="font-medium" style="color: var(--asini-text);">{t("breadcrumb_book")}</span>
   </div>
 
   <h1 class="text-2xl font-bold mb-6">
