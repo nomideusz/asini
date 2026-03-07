@@ -3,6 +3,7 @@
   import { Calendar } from "@nomideusz/svelte-calendar";
   import type { TimelineEvent } from "@nomideusz/svelte-calendar";
   import { toCalendarAdapter } from "@nomideusz/svelte-scheduler";
+  import { QrCode } from "@nomideusz/svelte-qr";
   import { createFetchAdapter } from "$lib/fetch-adapter.js";
   import { i18n } from "$lib/i18n.js";
 
@@ -177,6 +178,23 @@
           ></a
         >
       {/if}
+    </div>
+  </div>
+
+  <!-- Share QR -->
+  <div class="flex items-center gap-4 mb-8 rounded-(--asini-radius) border border-(--asini-border) bg-(--asini-bg) p-4" style="box-shadow: var(--asini-shadow);">
+    <div class="bg-(--asini-surface) p-3 rounded-(--asini-radius)">
+      <QrCode
+        data={`${typeof window !== "undefined" ? window.location.origin : ""}/tours/${data.tour.id}`}
+        size={80}
+        errorCorrection="M"
+        label="QR code for {data.tour.name}"
+      />
+    </div>
+    <div>
+      <p class="text-sm font-medium" style="color: var(--asini-text);">Share this tour</p>
+      <p class="text-xs mt-0.5" style="color: var(--asini-text-3);">Scan QR or share the public link with guests</p>
+      <p class="text-xs font-mono mt-1" style="color: var(--asini-accent);">/tours/{data.tour.id}</p>
     </div>
   </div>
 
