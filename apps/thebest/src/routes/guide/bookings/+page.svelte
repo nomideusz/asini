@@ -10,12 +10,12 @@
   }
   function statusBadge(status: string) {
     const map: Record<string, string> = {
-      confirmed: "badge-success",
-      pending: "badge-warning",
-      cancelled: "badge-error",
-      completed: "badge-ghost",
+      confirmed: "bg-green-50 text-green-700 border-green-200",
+      pending: "bg-amber-50 text-amber-700 border-amber-200",
+      cancelled: "bg-red-50 text-red-700 border-red-200",
+      completed: "bg-transparent border-transparent",
     };
-    return map[status] ?? "badge-neutral";
+    return map[status] ?? "";
   }
 </script>
 
@@ -23,41 +23,41 @@
   <h1 class="text-2xl font-bold mb-6">{t("guide_bookings_title")}</h1>
 
   {#if data.bookings.length === 0}
-    <div class="text-base-content/50">{t("guide_bookings_empty")}</div>
+    <div style="color: var(--asini-text-3);">{t("guide_bookings_empty")}</div>
   {:else}
     <div class="overflow-x-auto">
-      <table class="table table-zebra">
+      <table class="w-full text-sm">
         <thead>
-          <tr>
-            <th>{t("guide_bookings_col_reference")}</th>
-            <th>{t("guide_bookings_col_tour")}</th>
-            <th>{t("guide_bookings_col_guest")}</th>
-            <th>{t("guide_bookings_col_date")}</th>
-            <th>{t("guide_bookings_col_participants")}</th>
-            <th>{t("guide_bookings_col_amount")}</th>
-            <th>{t("guide_bookings_col_status")}</th>
-            <th>{t("guide_bookings_col_payment")}</th>
+          <tr class="text-xs font-medium uppercase tracking-wide border-b border-(--asini-border)" style="color: var(--asini-text-3);">
+            <th class="text-left py-2 px-3">{t("guide_bookings_col_reference")}</th>
+            <th class="text-left py-2 px-3">{t("guide_bookings_col_tour")}</th>
+            <th class="text-left py-2 px-3">{t("guide_bookings_col_guest")}</th>
+            <th class="text-left py-2 px-3">{t("guide_bookings_col_date")}</th>
+            <th class="text-left py-2 px-3">{t("guide_bookings_col_participants")}</th>
+            <th class="text-left py-2 px-3">{t("guide_bookings_col_amount")}</th>
+            <th class="text-left py-2 px-3">{t("guide_bookings_col_status")}</th>
+            <th class="text-left py-2 px-3">{t("guide_bookings_col_payment")}</th>
           </tr>
         </thead>
         <tbody>
           {#each data.bookings as b}
-            <tr>
-              <td class="font-mono text-sm">{b.bookingReference}</td>
-              <td>{tourName(b.tourId)}</td>
-              <td>
+            <tr class="border-b border-(--asini-border) hover:bg-(--asini-bg-subtle)">
+              <td class="py-2 px-3" style="font-family: var(--asini-font-mono); font-size: 0.875rem;">{b.bookingReference}</td>
+              <td class="py-2 px-3">{tourName(b.tourId)}</td>
+              <td class="py-2 px-3">
                 <div>{b.guestName}</div>
-                <div class="text-xs text-base-content/60">{b.guestEmail}</div>
+                <div class="text-xs" style="color: var(--asini-text-3);">{b.guestEmail}</div>
               </td>
-              <td class="text-sm"
+              <td class="py-2 px-3 text-sm"
                 >{new Date(b.createdAt).toLocaleDateString()}</td
               >
-              <td>{b.participants}</td>
-              <td>{(b.totalAmount / 100).toFixed(2)} {b.currency}</td>
-              <td
-                ><span class="badge {statusBadge(b.status)}">{b.status}</span
+              <td class="py-2 px-3">{b.participants}</td>
+              <td class="py-2 px-3">{(b.totalAmount / 100).toFixed(2)} {b.currency}</td>
+              <td class="py-2 px-3"
+                ><span class="asini-badge {statusBadge(b.status)}">{b.status}</span
                 ></td
               >
-              <td><span class="badge badge-outline">{b.paymentStatus}</span></td
+              <td class="py-2 px-3"><span class="asini-badge">{b.paymentStatus}</span></td
               >
             </tr>
           {/each}
