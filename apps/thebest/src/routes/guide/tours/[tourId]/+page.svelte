@@ -821,7 +821,7 @@
 
     <!-- Calendar preview -->
     <h3 class="text-lg font-semibold mb-3" style="color: var(--asini-text);">Calendar Preview</h3>
-    <div class="border-(--asini-border) rounded-(--asini-radius) overflow-hidden border mb-6">
+    <div class="border-(--asini-border) rounded-(--asini-radius) overflow-hidden border mb-6" style="--dt-sans: 'Geist Sans', system-ui, sans-serif; --dt-mono: 'Geist Mono', monospace;">
       <Calendar
         adapter={calendarAdapter}
         view="week-planner"

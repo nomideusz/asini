@@ -85,10 +85,10 @@
     </div>
   {:else if calendarAdapter}
     <div
-      class="rounded-[1.5rem] bg-(--asini-bg) p-2 overflow-hidden mb-4 border"
-      style="box-shadow: 0 2px 20px -8px rgba(0,0,0,0.1); border-color: color-mix(in oklch, var(--asini-border) 60%, transparent);"
+      class="rounded-(--asini-radius) bg-(--asini-bg) p-2 overflow-hidden mb-4 border border-(--asini-border)"
+      style="box-shadow: 0 2px 20px -8px rgba(0,0,0,0.1); --dt-sans: 'Geist Sans', system-ui, sans-serif; --dt-mono: 'Geist Mono', monospace;"
     >
-      <div class="rounded-[1.25rem] overflow-hidden">
+      <div class="rounded-(--asini-radius) overflow-hidden">
         <Calendar
           adapter={calendarAdapter}
           view="week-planner"

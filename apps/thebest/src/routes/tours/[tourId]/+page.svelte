@@ -277,7 +277,7 @@
 
         <!-- Calendar -->
         <h3 class="font-bold text-xl mb-4">{t("tour_available_dates")}</h3>
-        <div class="rounded-2xl border border-(--asini-border) overflow-hidden mb-3">
+        <div class="rounded-(--asini-radius) border border-(--asini-border) overflow-hidden mb-3" style="--dt-sans: 'Geist Sans', system-ui, sans-serif; --dt-mono: 'Geist Mono', monospace;">
           <Calendar
             view="week-agenda"
             adapter={calendarAdapter}
