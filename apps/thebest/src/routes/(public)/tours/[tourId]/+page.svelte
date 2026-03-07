@@ -43,7 +43,7 @@
   <meta name="description" content={data.tour.description} />
 </svelte:head>
 
-<section class="max-w-6xl mx-auto px-4 md:px-8 py-8 min-h-screen">
+<section class="max-w-5xl mx-auto px-4 py-6">
   <!-- Breadcrumb -->
   <div class="flex items-center gap-1 text-xs mb-6" style="color: var(--asini-text-3);">
     <a href="/" class="hover:underline" style="color: var(--asini-accent);"
@@ -57,9 +57,9 @@
     <span class="font-medium" style="color: var(--asini-text);">{data.tour.name}</span>
   </div>
 
-  <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
     <!-- Main content -->
-    <div class="lg:col-span-8 space-y-10">
+    <div class="lg:col-span-2 space-y-6">
       {#if data.tour.images.length > 0}
         <img
           src={data.tour.images[0]}
@@ -136,7 +136,7 @@
     </div>
 
     <!-- Sidebar: pricing + calendar -->
-    <div class="lg:col-span-4">
+    <div>
       <div
         class="rounded-(--asini-radius) border border-(--asini-border) p-4 sticky top-20 bg-(--asini-bg)"
         style="box-shadow: var(--asini-shadow);"
