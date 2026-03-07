@@ -44,44 +44,100 @@
   <meta name="description" content={data.tour.description} />
 </svelte:head>
 
-<section class="max-w-5xl mx-auto px-4 py-8">
+<section class="max-w-6xl mx-auto px-4 md:px-8 py-8 min-h-screen">
   <!-- Breadcrumb -->
-  <div class="breadcrumbs text-sm mb-6">
-    <ul>
-      <li><a href="/">{t("breadcrumb_home")}</a></li>
-      <li><a href="/tours">{t("breadcrumb_tours")}</a></li>
-      <li>{data.tour.name}</li>
-    </ul>
+  <div class="flex items-center gap-1 text-xs mb-6" style="color: var(--asini-text-3);">
+    <a href="/" class="hover:underline" style="color: var(--asini-accent);"
+      >{t("breadcrumb_home")}</a
+    >
+    <span>/</span>
+    <a href="/tours" class="hover:underline" style="color: var(--asini-accent);"
+      >{t("breadcrumb_tours")}</a
+    >
+    <span>/</span>
+    <span class="font-medium" style="color: var(--asini-text);">{data.tour.name}</span>
   </div>
 
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
     <!-- Main content -->
-    <div class="lg:col-span-2 space-y-6">
+    <div class="lg:col-span-8 space-y-10">
       {#if data.tour.images.length > 0}
-        <img
-          src={data.tour.images[0]}
-          alt={data.tour.name}
-          class="w-full h-64 object-cover rounded-lg"
-        />
+        <div
+          class="relative w-full aspect-21/9 rounded-4xl overflow-hidden"
+          style="box-shadow: var(--asini-shadow-sm);"
+        >
+          <img
+            src={data.tour.images[0]}
+            alt={data.tour.name}
+            class="w-full h-full object-cover transition-transform duration-1000 hover:scale-105"
+          />
+        </div>
       {/if}
 
-      <h1 class="text-3xl font-bold">{data.tour.name}</h1>
-
-      {#if data.tour.description}
-        <p class="text-base-content/80 leading-relaxed">
-          {data.tour.description}
-        </p>
-      {/if}
+      <div class="space-y-4">
+        <h1
+          class="text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight"
+        >
+          {data.tour.name}
+        </h1>
+        {#if data.tour.description}
+          <p
+            class="text-lg leading-relaxed font-medium max-w-3xl"
+            style="color: var(--asini-text-2);"
+          >
+            {data.tour.description}
+          </p>
+        {/if}
+      </div>
 
       <!-- Tour details -->
-      <div class="grid grid-cols-2 gap-4">
-        <div class="stat bg-base-200 rounded-lg p-4">
-          <div class="stat-title text-xs">{t("tour_duration")}</div>
-          <div class="stat-value text-lg">{data.tour.duration} min</div>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div class="rounded-2xl p-5 border border-(--asini-border)" style="background: color-mix(in oklch, var(--asini-surface) 50%, transparent);">
+          <div
+            class="text-sm font-medium mb-1 flex items-center gap-2"
+            style="color: var(--asini-text-3);"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              ><circle cx="12" cy="12" r="10"></circle><polyline
+                points="12 6 12 12 16 14"
+              ></polyline></svg
+            >
+            {t("tour_duration")}
+          </div>
+          <div class="text-xl font-bold">{data.tour.duration} min</div>
         </div>
-        <div class="stat bg-base-200 rounded-lg p-4">
-          <div class="stat-title text-xs">{t("tour_group_size")}</div>
-          <div class="stat-value text-lg">
+        <div class="rounded-2xl p-5 border border-(--asini-border)" style="background: color-mix(in oklch, var(--asini-surface) 50%, transparent);">
+          <div
+            class="text-sm font-medium mb-1 flex items-center gap-2"
+            style="color: var(--asini-text-3);"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              ><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"
+              ></path><circle cx="9" cy="7" r="4"></circle><path
+                d="M22 21v-2a4 4 0 0 0-3-3.87"
+              ></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg
+            >
+            {t("tour_group_size")}
+          </div>
+          <div class="text-xl font-bold">
             {t("tour_group_up_to", { capacity: data.tour.capacity })}
           </div>
         </div>
@@ -89,10 +145,12 @@
 
       {#if data.tour.languages.length > 0}
         <div>
-          <h3 class="font-semibold mb-2">{t("tour_languages")}</h3>
-          <div class="flex gap-2">
+          <h3 class="text-xl font-bold mb-4">{t("tour_languages")}</h3>
+          <div class="flex flex-wrap gap-2">
             {#each data.tour.languages as lang}
-              <span class="badge badge-primary badge-outline"
+              <span
+                class="asini-badge py-1 text-sm border-0 font-bold px-4"
+                style="background: color-mix(in oklch, var(--asini-accent) 10%, transparent); color: var(--asini-accent);"
                 >{lang.toUpperCase()}</span
               >
             {/each}
@@ -100,40 +158,90 @@
         </div>
       {/if}
 
-      {#if data.tour.includedItems.length > 0}
-        <div>
-          <h3 class="font-semibold mb-2">{t("tour_included")}</h3>
-          <ul class="list-disc list-inside text-base-content/80 space-y-1">
-            {#each data.tour.includedItems as item}
-              <li>{item}</li>
-            {/each}
-          </ul>
-        </div>
-      {/if}
+      <div
+        class="grid sm:grid-cols-2 gap-8 divide-y sm:divide-y-0 sm:divide-x divide-(--asini-border) border-t border-(--asini-border) pt-8 mt-8"
+      >
+        {#if data.tour.includedItems.length > 0}
+          <div class="pt-4 sm:pt-0 sm:pr-8">
+            <h3 class="text-xl font-bold mb-4">{t("tour_included")}</h3>
+            <ul class="space-y-3">
+              {#each data.tour.includedItems as item}
+                <li class="flex items-start gap-3" style="color: var(--asini-text-2);">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="shrink-0 mt-0.5"
+                    style="color: var(--asini-success);"
+                    ><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"
+                    ></path><polyline points="22 4 12 14.01 9 11.01"
+                    ></polyline></svg
+                  >
+                  <span>{item}</span>
+                </li>
+              {/each}
+            </ul>
+          </div>
+        {/if}
 
-      {#if data.tour.requirements.length > 0}
-        <div>
-          <h3 class="font-semibold mb-2">{t("tour_requirements")}</h3>
-          <ul class="list-disc list-inside text-base-content/80 space-y-1">
-            {#each data.tour.requirements as req}
-              <li>{req}</li>
-            {/each}
-          </ul>
-        </div>
-      {/if}
+        {#if data.tour.requirements.length > 0}
+          <div class="pt-8 sm:pt-0 sm:pl-8">
+            <h3 class="text-xl font-bold mb-4">{t("tour_requirements")}</h3>
+            <ul class="space-y-3">
+              {#each data.tour.requirements as req}
+                <li class="flex items-start gap-3" style="color: var(--asini-text-2);">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="shrink-0 mt-0.5"
+                    style="color: var(--asini-warning);"
+                    ><circle cx="12" cy="12" r="10"></circle><line
+                      x1="12"
+                      y1="8"
+                      x2="12"
+                      y2="12"
+                    ></line><line x1="12" y1="16" x2="12.01" y2="16"
+                    ></line></svg
+                  >
+                  <span>{req}</span>
+                </li>
+              {/each}
+            </ul>
+          </div>
+        {/if}
+      </div>
     </div>
 
     <!-- Sidebar: pricing + calendar -->
-    <div class="space-y-6">
-      <div class="card bg-base-100 shadow border border-base-200 p-6">
-        <div class="text-2xl font-bold text-primary mb-1">
+    <div class="lg:col-span-4 space-y-6">
+      <div
+        class="rounded-4xl p-8 sticky top-24 bg-(--asini-bg) border"
+        style="box-shadow: 0 8px 30px rgb(0 0 0 / 0.04); border-color: color-mix(in oklch, var(--asini-border) 60%, transparent);"
+      >
+        <div class="text-3xl font-black tracking-tight mb-1">
           {formatPrice(data.tour.pricing)}
         </div>
-        <p class="text-sm text-base-content/60 mb-4">{t("tour_per_person")}</p>
+        <p class="text-base font-medium mb-6" style="color: var(--asini-text-3);">
+          {t("tour_per_person")}
+        </p>
 
         {#if data.tour.location}
           <div
-            class="flex items-center gap-2 text-sm text-base-content/70 mb-4"
+            class="flex items-center gap-2 text-sm mb-4"
+            style="color: var(--asini-text-2);"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -160,48 +268,48 @@
         {/if}
 
         {#if data.tour.categories.length > 0}
-          <div class="flex flex-wrap gap-1 mb-4">
+          <div class="flex flex-wrap gap-2 mb-6">
             {#each data.tour.categories as cat}
-              <span class="badge badge-sm">{cat}</span>
+              <span class="asini-badge px-2.5 py-1 text-sm border-0 bg-(--asini-surface)">{cat}</span>
             {/each}
           </div>
         {/if}
-      </div>
 
-      <!-- Calendar -->
-      <div class="card bg-base-100 shadow border border-base-200 p-4">
-        <h3 class="font-semibold mb-3">{t("tour_available_dates")}</h3>
-        <Calendar
-          view="week-agenda"
-          adapter={calendarAdapter}
-          height="auto"
-          readOnly
-          showNavigation
-          showDates
-          oneventclick={handleEventClick}
-        />
-        <p class="text-xs text-base-content/50 mt-2">
+        <!-- Calendar -->
+        <h3 class="font-bold text-xl mb-4">{t("tour_available_dates")}</h3>
+        <div class="rounded-2xl border border-(--asini-border) overflow-hidden mb-3">
+          <Calendar
+            view="week-agenda"
+            adapter={calendarAdapter}
+            height="auto"
+            readOnly
+            showNavigation
+            showDates
+            oneventclick={handleEventClick}
+          />
+        </div>
+        <p class="text-sm font-medium text-center" style="color: var(--asini-text-3);">
           {t("tour_click_to_book")}
         </p>
+
+        <!-- Share QR -->
+        <div class="mt-10 pt-8 border-t border-(--asini-border) text-center">
+          <h3 class="font-bold text-lg mb-4">Share this tour</h3>
+          <div
+            class="flex justify-center bg-(--asini-surface) p-6 rounded-2xl w-max mx-auto"
+          >
+            <QrCode
+              data={`${typeof window !== "undefined" ? window.location.origin : ""}/tours/${data.tour.id}`}
+              size={120}
+              errorCorrection="M"
+              label="QR code for {data.tour.name}"
+            />
+          </div>
+          <p class="text-xs font-medium mt-4" style="color: var(--asini-text-3);">
+            Scan to view this tour on your phone
+          </p>
+        </div>
       </div>
     </div>
-  </div>
-
-  <!-- Share QR -->
-  <div
-    class="card bg-base-100 shadow border border-base-200 p-6 mt-8 text-center"
-  >
-    <h3 class="font-semibold mb-3">Share this tour</h3>
-    <div class="flex justify-center">
-      <QrCode
-        data={`${typeof window !== "undefined" ? window.location.origin : ""}/tours/${data.tour.id}`}
-        size={160}
-        errorCorrection="M"
-        label="QR code for {data.tour.name}"
-      />
-    </div>
-    <p class="text-xs text-base-content/50 mt-2">
-      Scan to view this tour on your phone
-    </p>
   </div>
 </section>
