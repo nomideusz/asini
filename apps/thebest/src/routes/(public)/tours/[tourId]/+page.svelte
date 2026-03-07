@@ -74,73 +74,29 @@
         </div>
       {/if}
 
-      <div class="space-y-4">
-        <h1
-          class="text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight"
-        >
+      <div class="space-y-2">
+        <h1 class="text-xl font-semibold tracking-tight">
           {data.tour.name}
         </h1>
         {#if data.tour.description}
-          <p
-            class="text-lg leading-relaxed font-medium max-w-3xl"
-            style="color: var(--asini-text-2);"
-          >
+          <p class="text-sm leading-relaxed max-w-2xl" style="color: var(--asini-text-2);">
             {data.tour.description}
           </p>
         {/if}
       </div>
 
-      <!-- Tour details -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div class="rounded-2xl p-5 border border-(--asini-border)" style="background: color-mix(in oklch, var(--asini-surface) 50%, transparent);">
-          <div
-            class="text-sm font-medium mb-1 flex items-center gap-2"
-            style="color: var(--asini-text-3);"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              ><circle cx="12" cy="12" r="10"></circle><polyline
-                points="12 6 12 12 16 14"
-              ></polyline></svg
-            >
-            {t("tour_duration")}
-          </div>
-          <div class="text-xl font-bold">{data.tour.duration} min</div>
-        </div>
-        <div class="rounded-2xl p-5 border border-(--asini-border)" style="background: color-mix(in oklch, var(--asini-surface) 50%, transparent);">
-          <div
-            class="text-sm font-medium mb-1 flex items-center gap-2"
-            style="color: var(--asini-text-3);"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              ><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"
-              ></path><circle cx="9" cy="7" r="4"></circle><path
-                d="M22 21v-2a4 4 0 0 0-3-3.87"
-              ></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg
-            >
-            {t("tour_group_size")}
-          </div>
-          <div class="text-xl font-bold">
-            {t("tour_group_up_to", { capacity: data.tour.capacity })}
-          </div>
-        </div>
+      <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm" style="color: var(--asini-text-2);">
+        <span>{data.tour.duration} min</span>
+        <span style="color: var(--asini-text-3);">&middot;</span>
+        <span>{t("tour_group_up_to", { capacity: data.tour.capacity })}</span>
+        {#if data.tour.location}
+          <span style="color: var(--asini-text-3);">&middot;</span>
+          <span>{data.tour.location}</span>
+        {/if}
+        {#if data.tour.languages.length > 0}
+          <span style="color: var(--asini-text-3);">&middot;</span>
+          <span>{data.tour.languages.map(l => l.toUpperCase()).join(", ")}</span>
+        {/if}
       </div>
 
       {#if data.tour.languages.length > 0}
