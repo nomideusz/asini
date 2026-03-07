@@ -155,11 +155,3 @@ body {
   color: var(--asini-text-2);
   border: 1px solid var(--asini-border);
 }
-
-/* ── Temporary DaisyUI compat (remove in Phase 6) ── */
-.bg-base-100 { background: var(--asini-bg); }
-.bg-base-200 { background: var(--asini-surface); }
-.bg-base-300 { background: var(--asini-bg-subtle); }
-.text-base-content { color: var(--asini-text); }
-.border-base-200 { border-color: var(--asini-border); }
-.border-base-300 { border-color: var(--asini-border-strong); }
